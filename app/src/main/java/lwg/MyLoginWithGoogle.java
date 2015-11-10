@@ -126,6 +126,8 @@ public class MyLoginWithGoogle {
 			userName=person.getDisplayName();
 			userPhotoUrl=person.getImage().getUrl();
 			userGooglePlusProfileUrl=person.getUrl();
+
+
 			
 			userEmail=Plus.AccountApi.getAccountName(myGoogleApiClient.getGoogleApiClient());
 

@@ -97,7 +97,7 @@ public class MyLoginWithGoogle {
 				Person currentPerson = Plus.PeopleApi
 						.getCurrentPerson(myGoogleApiClient.getGoogleApiClient());
 
-				GooglePlusUser user=new GooglePlusUser(currentPerson);
+				GooglePlusUser user=new GooglePlusUser(currentPerson,myGoogleApiClient);
 
 
 				return user;
@@ -113,43 +113,62 @@ public class MyLoginWithGoogle {
 		return null;
 	}
 
+    public static class GooglePlusUser
+    {
+        //public final static String TAG="LWG "+MyLoginWithGoogle.class.getSimpleName();
 
-	class GooglePlusUser
-	{
-		String userName,userPhotoUrl,userGooglePlusProfileUrl,userEmail;
+        String userName,userPhotoUrl,userGooglePlusProfileUrl,userEmail;
 
-		private Person person;
+        private Person person;
 
-		public GooglePlusUser(Person currentPerson) {
-			this.person=currentPerson;
+        private MyGoogleApiClient myGoogleApiClient;
 
-			userName=person.getDisplayName();
-			userPhotoUrl=person.getImage().getUrl();
-			userGooglePlusProfileUrl=person.getUrl();
+        public GooglePlusUser(Person currentPerson, MyGoogleApiClient myGoogleApiClient) {
+            this.person=currentPerson;
+
+            this.myGoogleApiClient=myGoogleApiClient;
+
+            userName=person.getDisplayName();
+            userPhotoUrl=person.getImage().getUrl();
+            userGooglePlusProfileUrl=person.getUrl();
 
 
-			
-			userEmail=Plus.AccountApi.getAccountName(myGoogleApiClient.getGoogleApiClient());
 
-		}
+            userEmail=Plus.AccountApi.getAccountName(this.myGoogleApiClient.getGoogleApiClient());
 
-		public String getUserGooglePlusProfileUrl() {
-			return userGooglePlusProfileUrl;
-		}
+            printLog();
 
-		public void setUserGooglePlusProfileUrl(String userGooglePlusProfileUrl) {
-			this.userGooglePlusProfileUrl = userGooglePlusProfileUrl;
-		}
 
-		public String getUserEmail() {
-			return userEmail;
-		}
+        }
 
-		public void setUserEmail(String userEmail) {
-			this.userEmail = userEmail;
-		}
-	}
+        private void printLog()
+        {
+            Log.i(TAG,"display name: "+userName);
+            Log.i(TAG,"image url: "+userPhotoUrl);
+            Log.i(TAG,"profile url "+userGooglePlusProfileUrl);
+            Log.i(TAG,"email: "+userEmail);
+        }
+
+        public String getUserGooglePlusProfileUrl() {
+            return userGooglePlusProfileUrl;
+        }
+
+        public void setUserGooglePlusProfileUrl(String userGooglePlusProfileUrl) {
+            this.userGooglePlusProfileUrl = userGooglePlusProfileUrl;
+        }
+
+        public String getUserEmail() {
+            return userEmail;
+        }
+
+        public void setUserEmail(String userEmail) {
+            this.userEmail = userEmail;
+        }
+    }
+
 
 
 
 }
+
+

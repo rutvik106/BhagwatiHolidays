@@ -11,6 +11,7 @@ import android.view.Window;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 
+
 import lwg.MyGoogleApiClient;
 import lwg.MyGoogleApiClientListener;
 import lwg.MyLoginWithGoogle;
@@ -49,12 +50,21 @@ public class initial extends Activity implements MyGoogleApiClientListener{
     @Override
     public void onConnectionFailed(ConnectionResult result) {
 
-        //myLoginWithGoogle.signInWithGplus();
+
 
     }
 
     @Override
     public void onConnected(Bundle bundle) {
+
+        //User has logged in successfully (do something)
+
+
+
+        App app=(App) getApplication();
+
+        app.setUser( myLoginWithGoogle.getProfileInformation());
+
 
     }
 

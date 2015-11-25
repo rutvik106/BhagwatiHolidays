@@ -2,11 +2,9 @@ package com.rutvik.bhagwatiholidays;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
@@ -59,11 +57,9 @@ public class initial extends Activity implements MyGoogleApiClientListener{
 
         //User has logged in successfully (do something)
 
-
-
         App app=(App) getApplication();
 
-        app.setUser( myLoginWithGoogle.getProfileInformation());
+        app.setUser(myLoginWithGoogle.getProfileInformation());
 
 
     }
@@ -76,7 +72,7 @@ public class initial extends Activity implements MyGoogleApiClientListener{
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        Log.i(TAG,"request code: "+requestCode+" result code: "+resultCode);
+        Log.i(TAG,"request code: ("+requestCode+") result code: ("+resultCode+")");
 
     }
 }

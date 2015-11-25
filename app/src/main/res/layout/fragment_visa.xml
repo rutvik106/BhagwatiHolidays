@@ -26,56 +26,58 @@
                     android:id="@+id/et_mobileNo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
+                    android:textSize="16sp"
                     android:hint="Mobile No." />
 
                 <EditText
                     android:id="@+id/et_dateOfTravel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
+                    android:textSize="16sp"
                     android:hint="Date Of Travel" />
 
                 <EditText
                     android:id="@+id/et_destination"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
+                    android:textSize="16sp"
                     android:hint="Destination" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
                     android:orientation="horizontal">
 
                     <TextView
+                        android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Visa Type :"
-                        android:textSize="20dp" />
+                        android:text="Visa Type: "
+                        android:textSize="16sp"/>
 
                     <RadioGroup
-                        android:layout_width="fill_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
                         <RadioButton
                             android:id="@+id/rb_business"
+                            android:checked="true"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:text="Business"
-                            android:textSize="18dp" />
+                            android:textSize="16sp"
+                            android:text="Business" />
 
                         <RadioButton
                             android:id="@+id/rb_student"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="10dp"
-                            android:text="Student"
-                            android:textSize="18dp" />
+                            android:textSize="16sp"
+                            android:text="Student" />
                     </RadioGroup>
 
                 </LinearLayout>
@@ -91,14 +93,17 @@
         android:id="@+id/done"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:borderWidth="0dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_margin="16dp"
+        app:rippleColor="@android:color/transparent"
+        android:stateListAnimator="@anim/anim"
         android:src="@drawable/done"
-        app:elevation="16dp"
+        app:elevation="6dp"
+        app:backgroundTint="#2196f3"
         app:fabSize="normal"
-        app:layout_anchorGravity="bottom|right|end"
         app:pressedTranslationZ="12dp" />
 
 

@@ -27,7 +27,8 @@
                     android:id="@+id/et_mobileNo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
+                    android:textSize="16sp"
                     android:hint="Mobile No." />
 
                 <EditText
@@ -35,6 +36,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:textSize="16sp"
                     android:hint="Booking Date" />
 
                 <LinearLayout
@@ -47,7 +49,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Type :"
-                        android:textSize="20dp" />
+                        android:layout_gravity="center"
+                        android:textSize="16sp" />
 
                     <RadioGroup
                         android:layout_width="fill_parent"
@@ -56,11 +59,12 @@
 
                         <RadioButton
                             android:id="@+id/rb_india"
+                            android:checked="true"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
                             android:text="India"
-                            android:textSize="20dp" />
+                            android:textSize="16sp" />
 
                         <RadioButton
                             android:id="@+id/rb_worldWild"
@@ -69,7 +73,7 @@
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
                             android:text="Worldwild"
-                            android:textSize="20dp" />
+                            android:textSize="16sp" />
                     </RadioGroup>
 
                 </LinearLayout>
@@ -85,7 +89,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="A"
-                        android:textSize="20dp" />
+                        android:textSize="16sp" />
 
                     <Spinner
                         android:id="@+id/sp_adult"
@@ -97,7 +101,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="C"
-                        android:textSize="20dp" />
+                        android:textSize="16sp" />
 
                     <Spinner
                         android:id="@+id/sp_child"
@@ -109,7 +113,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="I"
-                        android:textSize="20dp" />
+                        android:textSize="16sp" />
 
                     <Spinner
                         android:id="@+id/sp_infant"
@@ -126,7 +130,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:hint="Destination"
-                    android:textSize="20dp" />
+                    android:textSize="16sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -138,7 +142,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="No of Nights :"
-                        android:textSize="20dp" />
+                        android:textSize="16sp" />
 
                     <Spinner
                         android:id="@+id/sp_noOfNights"
@@ -158,7 +162,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Hotel Type :"
-                        android:textSize="20dp" />
+                        android:layout_gravity="center"
+                        android:textSize="16sp" />
 
                     <RatingBar
                         android:id="@+id/rb_hotelType"
@@ -178,12 +183,16 @@
         android:id="@+id/done"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:borderWidth="0dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_margin="16dp"
+        app:rippleColor="@android:color/transparent"
+        android:stateListAnimator="@anim/anim"
         android:src="@drawable/done"
-        app:elevation="16dp"
+        app:elevation="6dp"
+        app:backgroundTint="#2196f3"
         app:fabSize="normal"
         app:pressedTranslationZ="12dp" />
 

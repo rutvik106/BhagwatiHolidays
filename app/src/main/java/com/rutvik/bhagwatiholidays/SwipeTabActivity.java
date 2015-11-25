@@ -1,5 +1,6 @@
 package com.rutvik.bhagwatiholidays;
 
+import android.graphics.Color;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -36,8 +37,8 @@ public class SwipeTabActivity extends AppCompatActivity {
         setupViewPager(viewPager);
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
-        //tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-        //tabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.colorAccent));
+        tabLayout.setBackgroundColor(Color.parseColor("#2973bd"));
+        tabLayout.setTabTextColors(Color.parseColor("#a9c7e5"),Color.WHITE);
         tabLayout.setupWithViewPager(viewPager);
     }
 

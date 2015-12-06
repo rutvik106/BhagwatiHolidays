@@ -37,8 +37,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".OffersActivity" />
-        <activity android:name=".BusActivity" />
+        <activity android:name=".OffersActivity"
+            android:label="Offers"/>
+        <activity android:name=".BusActivity"
+            android:label="Bus"/>
         <activity android:name=".SettingsActivity"></activity>
     </application>
 

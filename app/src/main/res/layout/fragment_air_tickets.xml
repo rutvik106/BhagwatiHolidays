@@ -92,11 +92,17 @@
                     android:layout_marginTop="10dp"
                     android:orientation="horizontal">
 
-                    <TextView
+                    <!--<TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="A"
-                        android:textSize="16sp" />
+                        android:textSize="16sp" />-->
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/adult" />
 
                     <Spinner
                         android:id="@+id/sp_adult"
@@ -104,11 +110,17 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp" />
 
-                    <TextView
+                    <!--<TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="C"
-                        android:textSize="16sp" />
+                        android:textSize="16sp" />-->
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/child" />
 
                     <Spinner
                         android:id="@+id/sp_child"
@@ -116,11 +128,17 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp" />
 
-                    <TextView
+                    <!--<TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="I"
-                        android:textSize="16sp" />
+                        android:textSize="16sp" />-->
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/infant" />
 
                     <Spinner
                         android:id="@+id/sp_infant"
@@ -223,6 +241,13 @@
 
     </ScrollView>
 
+    <com.andexert.library.RippleView
+        android:id="@+id/more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        rv_centered="true">
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/done"
         android:layout_width="wrap_content"
@@ -233,12 +258,13 @@
         android:layout_alignParentRight="true"
         android:layout_margin="16dp"
         app:rippleColor="@android:color/transparent"
-        android:stateListAnimator="@anim/anim"
         android:src="@drawable/done"
         app:elevation="6dp"
         app:backgroundTint="#2196f3"
         app:fabSize="normal"
         app:pressedTranslationZ="12dp" />
+
+    </com.andexert.library.RippleView>
 
 
 </RelativeLayout>

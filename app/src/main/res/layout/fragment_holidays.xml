@@ -28,16 +28,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:textSize="16sp"
-                    android:hint="Mobile No." />
+                    android:hint="Mobile No."
+                    android:textSize="16sp" />
 
                 <EditText
                     android:id="@+id/et_bookingDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:textSize="16sp"
-                    android:hint="Booking Date" />
+                    android:hint="Booking Date"
+                    android:textSize="16sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -46,9 +46,9 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:text="Type :"
                         android:textSize="16sp" />
 
@@ -59,10 +59,10 @@
 
                         <RadioButton
                             android:id="@+id/rb_india"
-                            android:checked="true"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
+                            android:checked="true"
                             android:text="India"
                             android:textSize="16sp" />
 
@@ -85,11 +85,16 @@
                     android:layout_marginTop="5dp"
                     android:orientation="horizontal">
 
-                    <TextView
+                    <!--<TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="A"
-                        android:textSize="16sp" />
+                        android:textSize="16sp" />-->
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/adult" />
 
                     <Spinner
                         android:id="@+id/sp_adult"
@@ -97,11 +102,16 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp" />
 
-                    <TextView
+                    <!--<TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="C"
-                        android:textSize="16sp" />
+                        android:textSize="16sp" />-->
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/child" />
 
                     <Spinner
                         android:id="@+id/sp_child"
@@ -109,11 +119,17 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp" />
 
-                    <TextView
+                    <!--<TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="I"
-                        android:textSize="16sp" />
+                        android:textSize="16sp" />-->
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/infant" />
 
                     <Spinner
                         android:id="@+id/sp_infant"
@@ -161,8 +177,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Package Type :"
                         android:layout_gravity="center"
+                        android:text="Package Type :"
                         android:textSize="16sp" />
 
                     <RatingBar
@@ -183,17 +199,17 @@
         android:id="@+id/done"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:borderWidth="0dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_margin="16dp"
-        app:rippleColor="@android:color/transparent"
-        android:stateListAnimator="@anim/anim"
         android:src="@drawable/done"
-        app:elevation="6dp"
+        android:stateListAnimator="@anim/anim"
         app:backgroundTint="#2196f3"
+        app:borderWidth="0dp"
+        app:elevation="6dp"
         app:fabSize="normal"
-        app:pressedTranslationZ="12dp" />
+        app:pressedTranslationZ="12dp"
+        app:rippleColor="@android:color/transparent" />
 
 </RelativeLayout>

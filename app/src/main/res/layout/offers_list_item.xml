@@ -30,9 +30,10 @@
                     android:src="@drawable/logo_bg" />
 
                 <TextView
+                    android:id="@+id/tv_packageTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Detasils"
+                    android:text=""
                     android:textSize="16sp" />
 
             </LinearLayout>

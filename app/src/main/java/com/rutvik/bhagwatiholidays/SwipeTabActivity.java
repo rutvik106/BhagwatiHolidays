@@ -1,5 +1,6 @@
 package com.rutvik.bhagwatiholidays;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,9 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +42,7 @@ public class SwipeTabActivity extends AppCompatActivity {
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setBackgroundColor(Color.parseColor("#2973bd"));
-        tabLayout.setTabTextColors(Color.parseColor("#a9c7e5"),Color.WHITE);
+        tabLayout.setTabTextColors(Color.parseColor("#a9c7e5"), Color.WHITE);
         tabLayout.setupWithViewPager(viewPager);
     }
 
@@ -50,6 +54,37 @@ public class SwipeTabActivity extends AppCompatActivity {
         adapter.addFragment(new FragmentHolidays(), "HOLIDAYS");
         adapter.addFragment(new FragmentVisa(), "VISA");
         viewPager.setAdapter(adapter);
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.bh_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId())
+        {
+            case R.id.menu_offers:
+                startActivity(new Intent(SwipeTabActivity.this,OffersActivity.class));
+                break;
+
+            case R.id.menu_bus:
+                startActivity(new Intent(SwipeTabActivity.this,BusActivity.class));
+                break;
+
+            case R.id.menu_settings:
+                startActivity(new Intent(SwipeTabActivity.this,SettingsActivity.class));
+                break;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {

@@ -25,196 +25,189 @@ import android.content.Context;
 import android.util.Log;
 
 
-
 public class PostHandler {
 
-	private String tag;
+    private String tag;
 
-	private int maxAttempts = 5;
+    private int maxAttempts = 5;
 
-	private int backOff = 2000;
+    private int backOff = 2000;
 
-	public PostHandler(String logtag, int maxAttempts, int backOff) {
+    public PostHandler(String logtag, int maxAttempts, int backOff) {
 
-		tag=logtag+ " " +PostHandler.class.getSimpleName();
-		this.maxAttempts=maxAttempts;
-		this.backOff=backOff;		
+        tag = logtag + " " + PostHandler.class.getSimpleName();
+        this.maxAttempts = maxAttempts;
+        this.backOff = backOff;
 
-	}
+    }
 
 
-	public String doPostRequest(String serverUrl, HashMap<String, String> params) {
+    public String doPostRequest(String serverUrl, HashMap<String, String> params) {
 
-		// Once GCM returns a registration id, we need to register on our server
-		// As the server might be down, we will retry it a couple
-		// times.
-		for (int i = 1; i <= maxAttempts; i++) {
+        // Once GCM returns a registration id, we need to register on our server
+        // As the server might be down, we will retry it a couple
+        // times.
+        for (int i = 1; i <= maxAttempts; i++) {
 
-			Log.d(tag, "Attempt #" + i + " to register");
+            Log.d(tag, "Attempt #" + i + " to register");
 
-			try
-			{
-				
+            try {
 
-				return post(serverUrl, params);
 
-			} catch (IOException e) {
+                return post(serverUrl, params);
 
-				// Here we are simplifying and retrying on any error; in a real
-				// application, it should retry only on unrecoverable errors
-				// (like HTTP error code 503).
-				Log.e(tag, "Failed to register on attempt " + i + ":" + e);
+            } catch (IOException e) {
 
-				if (i == maxAttempts) {
-					break;
-				}
-				try {
+                // Here we are simplifying and retrying on any error; in a real
+                // application, it should retry only on unrecoverable errors
+                // (like HTTP error code 503).
+                Log.e(tag, "Failed to register on attempt " + i + ":" + e);
 
-					Log.d(tag, "Sleeping for " + backOff + " ms before retry");
-					Thread.sleep(backOff);
-				} catch (InterruptedException e1) {
+                if (i == maxAttempts) {
+                    break;
+                }
+                try {
 
-					// Activity finished before we complete - exit.
-					Log.d(tag, "Thread interrupted: abort remaining retries!");
-					Thread.currentThread().interrupt();
-					return "";
-				}
+                    Log.d(tag, "Sleeping for " + backOff + " ms before retry");
+                    Thread.sleep(backOff);
+                } catch (InterruptedException e1) {
 
-				// increase backoff exponentially
-				backOff *= 2;
-			}
-		}
-		return "";
-	} 
+                    // Activity finished before we complete - exit.
+                    Log.d(tag, "Thread interrupted: abort remaining retries!");
+                    Thread.currentThread().interrupt();
+                    return "";
+                }
 
+                // increase backoff exponentially
+                backOff *= 2;
+            }
+        }
+        return "";
+    }
 
-	private String constructBody(Map<String, String> params)
-	{
-		StringBuilder bodyBuilder = new StringBuilder();
 
-		Iterator<Entry<String, String>> iterator = params.entrySet().iterator();
+    private String constructBody(Map<String, String> params) {
+        StringBuilder bodyBuilder = new StringBuilder();
 
-		// constructs the POST body using the parameters
-		while (iterator.hasNext()) {
+        Iterator<Entry<String, String>> iterator = params.entrySet().iterator();
 
-			Entry<String, String> param = iterator.next();
+        // constructs the POST body using the parameters
+        while (iterator.hasNext()) {
 
-			bodyBuilder.append(param.getKey()).append('=').append(param.getValue());
+            Entry<String, String> param = iterator.next();
 
-			if (iterator.hasNext()) {
-				bodyBuilder.append('&');
-			}
+            bodyBuilder.append(param.getKey()).append('=').append(param.getValue());
 
-		}
+            if (iterator.hasNext()) {
+                bodyBuilder.append('&');
+            }
 
-		return bodyBuilder.toString();
-	}
+        }
 
+        return bodyBuilder.toString();
+    }
 
-	//Issue a POST request to the server.
 
-	private String post(String endpoint, Map<String, String> params)
-			throws IOException {    
+    //Issue a POST request to the server.
 
-		URL url;
+    private String post(String endpoint, Map<String, String> params)
+            throws IOException {
 
-		String body="";
+        URL url;
 
-		String response = "";
+        String body = "";
 
-		byte[] bytes;
+        String response = "";
 
-		Log.i(tag, "URL: " + endpoint);
+        byte[] bytes;
 
-		try {
+        Log.i(tag, "URL: " + endpoint);
 
-			url = new URL(endpoint);
+        try {
 
-		} catch (MalformedURLException e) {
+            url = new URL(endpoint);
 
-			throw new IllegalArgumentException("invalid url: " + endpoint);
+        } catch (MalformedURLException e) {
 
-		}
+            throw new IllegalArgumentException("invalid url: " + endpoint);
 
-		StringBuilder bodyBuilder = new StringBuilder();
+        }
 
-		Iterator<Entry<String, String>> iterator = params.entrySet().iterator();
+        StringBuilder bodyBuilder = new StringBuilder();
 
-		// constructs the POST body using the parameters
-		while (iterator.hasNext()) {
+        Iterator<Entry<String, String>> iterator = params.entrySet().iterator();
 
-			Entry<String, String> param = iterator.next();
+        // constructs the POST body using the parameters
+        while (iterator.hasNext()) {
 
-			bodyBuilder.append(param.getKey()).append('=').append(param.getValue());
+            Entry<String, String> param = iterator.next();
 
-			if (iterator.hasNext()) {
-				bodyBuilder.append('&');
-			}
+            bodyBuilder.append(param.getKey()).append('=').append(param.getValue());
 
-		}
+            if (iterator.hasNext()) {
+                bodyBuilder.append('&');
+            }
 
-		body=bodyBuilder.toString();
+        }
 
-		Log.v(tag, "Posting: " + body + "' to " + url);
+        body = bodyBuilder.toString();
 
-		bytes = body.getBytes();
+        Log.v(tag, "Posting: " + body + "' to " + url);
 
-		HttpURLConnection conn = null;
+        bytes = body.getBytes();
 
-		try 
-		{
+        HttpURLConnection conn = null;
 
-			Log.i(tag, "URL->" + url);
+        try {
 
-			conn = (HttpURLConnection) url.openConnection();
-			conn.setDoOutput(true);
-			conn.setUseCaches(false);
+            Log.i(tag, "URL->" + url);
 
-			conn.setFixedLengthStreamingMode(bytes.length);
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setUseCaches(false);
 
-			conn.setRequestMethod("POST");
-			conn.setRequestProperty("Content-Type","application/x-www-form-urlencoded;charset=UTF-8");
+            conn.setFixedLengthStreamingMode(bytes.length);
 
-			// post the request
-			OutputStream out = conn.getOutputStream();
-			out.write(bytes);
-			out.close();
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
 
-			// handle the response
-			int status = conn.getResponseCode();
+            // post the request
+            OutputStream out = conn.getOutputStream();
+            out.write(bytes);
+            out.close();
 
-			Log.i(tag, "RESPONSE from server: "+status);
+            // handle the response
+            int status = conn.getResponseCode();
 
-			Log.i(tag, "JSON Response Message: "+conn.getResponseMessage());
+            Log.i(tag, "RESPONSE from server: " + status);
 
-			if (status == HttpURLConnection.HTTP_OK) {
-				String line;
-				BufferedReader br=new BufferedReader(new InputStreamReader(conn.getInputStream()));
-				while ((line=br.readLine()) != null) {
-					response+=line;
-				}
-				Log.i(tag, "RESPONSE STRING: "+response);
-				
-				
-				
-			}
-			else
-			{
-				throw new IOException("Post failed with error code " + status);
-			}
+            Log.i(tag, "JSON Response Message: " + conn.getResponseMessage());
 
+            if (status == HttpURLConnection.HTTP_OK) {
+                String line;
+                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                while ((line = br.readLine()) != null) {
+                    response += line;
+                }
+                Log.i(tag, "RESPONSE STRING: " + response);
 
-		} finally {
 
-			if (conn != null) {
+            } else {
+                throw new IOException("Post failed with error code " + status);
+            }
 
-				conn.disconnect();
 
-			}
+        } finally {
 
-		}
-		return response;
-	}
+            if (conn != null) {
+
+                conn.disconnect();
+
+            }
+
+        }
+        return response;
+    }
 
 
 }

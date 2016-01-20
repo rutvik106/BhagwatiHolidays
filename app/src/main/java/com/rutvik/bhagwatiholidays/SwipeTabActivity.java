@@ -1,7 +1,9 @@
 package com.rutvik.bhagwatiholidays;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -28,6 +30,7 @@ public class SwipeTabActivity extends AppCompatActivity {
     private Toolbar mToolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,18 +70,17 @@ public class SwipeTabActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId())
-        {
+        switch (item.getItemId()) {
             case R.id.menu_offers:
-                startActivity(new Intent(SwipeTabActivity.this,OffersActivity.class));
+                startActivity(new Intent(SwipeTabActivity.this, OffersActivity.class));
                 break;
 
             case R.id.menu_bus:
-                startActivity(new Intent(SwipeTabActivity.this,BusActivity.class));
+                startActivity(new Intent(SwipeTabActivity.this, BusActivity.class));
                 break;
 
             case R.id.menu_settings:
-                startActivity(new Intent(SwipeTabActivity.this,SettingsActivity.class));
+                startActivity(new Intent(SwipeTabActivity.this, SettingsActivity.class));
                 break;
 
             default:
@@ -115,4 +117,5 @@ public class SwipeTabActivity extends AppCompatActivity {
             return mFragmentTitleList.get(position);
         }
     }
+
 }

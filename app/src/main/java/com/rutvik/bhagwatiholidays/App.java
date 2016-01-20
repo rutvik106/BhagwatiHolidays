@@ -75,11 +75,7 @@ class test extends AsyncTask<Void, Void, Void>
                 {
                     Log.i("BWT",heading);
                 }
-
-
             }
-
-
             //Log.i("BWT", packageList.toString());
 
         } catch (JSONException e) {

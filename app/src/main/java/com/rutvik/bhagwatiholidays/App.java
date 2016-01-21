@@ -3,6 +3,7 @@ package com.rutvik.bhagwatiholidays;
 import android.app.Application;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 
 import org.json.JSONException;
 
@@ -30,12 +31,77 @@ public class App extends Application {
         return user;
     }
 
+    static final String[] hotelAdult = new String[] { "1","2","3","4" };
+    static final String[] hotelChild = new String[] { "0","1","2" };
+    static final String[] hotelInfant = new String[] { "0","1","2" };
+
+    static final String[] flightAdult = new String[] { "1","2","3","4","5","6" };
+    static final String[] flightChild = new String[] { "0","1","2","3","4","5","6" };
+    static final String[] flightInfant = new String[] { "0","1","2","3","4","5","6" };
+
+
+
+    ArrayAdapter<String> hotelAdultAdapter;
+    ArrayAdapter<String> hotelChildAdapter;
+    ArrayAdapter<String> hotelInfantAdapter;
+
+    ArrayAdapter<String> flightAdultAdapter;
+    ArrayAdapter<String> flightChildAdapter;
+    ArrayAdapter<String> flightInfantAdapter;
+
+
+
+
 
     @Override
     public void onCreate() {
         super.onCreate();
-        new test().execute();
+
+        hotelAdultAdapter =new ArrayAdapter<String>(getApplicationContext(),R.layout.my_spinner_item, hotelAdult);
+        hotelChildAdapter =new ArrayAdapter<String>(getApplicationContext(),R.layout.my_spinner_item, hotelChild);
+        hotelInfantAdapter =new ArrayAdapter<String>(getApplicationContext(),R.layout.my_spinner_item, hotelInfant);
+
+        flightAdultAdapter =new ArrayAdapter<String>(getApplicationContext(),R.layout.my_spinner_item, flightAdult);
+        flightChildAdapter =new ArrayAdapter<String>(getApplicationContext(),R.layout.my_spinner_item, flightChild);
+        flightInfantAdapter =new ArrayAdapter<String>(getApplicationContext(),R.layout.my_spinner_item, flightInfant);
+
+
+
+        //new test().execute();
     }
+
+    public ArrayAdapter<String> getHotelAdultAdapter()
+    {
+        return hotelAdultAdapter;
+    }
+
+    public ArrayAdapter<String> getHotelChildAdapter()
+    {
+        return hotelChildAdapter;
+    }
+
+    public ArrayAdapter<String> getHotelInfantAdapter()
+    {
+        return hotelInfantAdapter;
+    }
+
+
+
+    public ArrayAdapter<String> getFlightAdultAdapter()
+    {
+        return flightAdultAdapter;
+    }
+
+    public ArrayAdapter<String> getFlightChildAdapter()
+    {
+        return flightChildAdapter;
+    }
+
+    public ArrayAdapter<String> getFlightInfantAdapter()
+    {
+        return flightInfantAdapter;
+    }
+
 }
 
 

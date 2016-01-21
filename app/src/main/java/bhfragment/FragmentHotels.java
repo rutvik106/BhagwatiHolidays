@@ -1,16 +1,19 @@
 package bhfragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RatingBar;
 import android.widget.Spinner;
 
+import com.rutvik.bhagwatiholidays.App;
 import com.rutvik.bhagwatiholidays.R;
 
 /**
@@ -23,6 +26,15 @@ public class FragmentHotels extends Fragment {
     Spinner spAdult, spChild, spInfant,spNoOfNights;
     RatingBar rbHotelType;
     FloatingActionButton fabDone;
+
+    App app;
+
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        app=(App)activity.getApplication();
+    }
 
     public FragmentHotels() {
         // Required empty public constructor
@@ -40,10 +52,16 @@ public class FragmentHotels extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_hotels, container, false);
 
         spAdult = (Spinner) rootView.findViewById(R.id.sp_adult);
+        spAdult.setAdapter(app.getHotelAdultAdapter());
+        spAdult.setSelection(0);
 
         spChild = (Spinner) rootView.findViewById(R.id.sp_child);
+        spChild.setAdapter(app.getHotelChildAdapter());
+        spChild.setSelection(0);
 
         spInfant = (Spinner) rootView.findViewById(R.id.sp_infant);
+        spInfant.setAdapter(app.getHotelInfantAdapter());
+        spInfant.setSelection(0);
 
         spNoOfNights = (Spinner) rootView.findViewById(R.id.sp_noOfNights);
 

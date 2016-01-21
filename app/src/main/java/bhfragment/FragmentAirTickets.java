@@ -1,5 +1,6 @@
 package bhfragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 
+import com.rutvik.bhagwatiholidays.App;
 import com.rutvik.bhagwatiholidays.R;
 
 /**
@@ -22,6 +24,14 @@ public class FragmentAirTickets extends Fragment {
     Spinner spAdult, spChild, spInfant;
     FloatingActionButton fabDone;
 
+    App app;
+
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        app=(App)activity.getApplication();
+    }
 
     public FragmentAirTickets() {
         // Required empty public constructor
@@ -47,10 +57,16 @@ public class FragmentAirTickets extends Fragment {
         etDepartureDate = (EditText) rootView.findViewById(R.id.et_departureDate);
 
         spAdult = (Spinner) rootView.findViewById(R.id.sp_adult);
+        spAdult.setAdapter(app.getFlightAdultAdapter());
+        spAdult.setSelection(0);
 
         spChild = (Spinner) rootView.findViewById(R.id.sp_child);
+        spChild.setAdapter(app.getFlightChildAdapter());
+        spChild.setSelection(0);
 
         spInfant = (Spinner) rootView.findViewById(R.id.sp_infant);
+        spInfant.setAdapter(app.getFlightInfantAdapter());
+        spInfant.setSelection(0);
 
         fabDone = (FloatingActionButton) rootView.findViewById(R.id.done);
 

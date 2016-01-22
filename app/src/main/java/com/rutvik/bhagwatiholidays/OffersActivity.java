@@ -45,6 +45,8 @@ public class OffersActivity extends AppCompatActivity {
 
     private OffersAdapter offersAdapter;
 
+    LazyAdapter lazyAdapter;
+
     private ListView lvOffers;
 
     private ProgressDialog progressDialog;
@@ -87,7 +89,9 @@ public class OffersActivity extends AppCompatActivity {
 
         offersAdapter = new OffersAdapter(OffersActivity.this,packages);
 
-        lvOffers.setAdapter(offersAdapter);
+        lazyAdapter=new LazyAdapter(this,packages);
+
+        lvOffers.setAdapter(lazyAdapter);
 
         loadOffersAsync();
 
@@ -136,7 +140,7 @@ public class OffersActivity extends AppCompatActivity {
 
             progressDialog.dismiss();
 
-            offersAdapter.notifyDataSetChanged();
+            lazyAdapter.notifyDataSetChanged();
 
         }
     }.execute();

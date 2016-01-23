@@ -1,5 +1,6 @@
 package bhfragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.widget.RadioButton;
 import android.widget.RatingBar;
 import android.widget.Spinner;
 
+import com.rutvik.bhagwatiholidays.App;
 import com.rutvik.bhagwatiholidays.R;
 
 /**
@@ -24,9 +26,17 @@ public class FragmentHolidays extends Fragment {
     RatingBar rbPackageType;
     FloatingActionButton fabDone;
 
+    App app;
+
 
     public FragmentHolidays() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        app=(App)activity.getApplication();
     }
 
     @Override
@@ -41,10 +51,16 @@ public class FragmentHolidays extends Fragment {
         View rootView =  inflater.inflate(R.layout.fragment_holidays, container, false);
 
         spAdult = (Spinner) rootView.findViewById(R.id.sp_adult);
+        spAdult.setAdapter(app.getHotelAdultAdapter());
+        spAdult.setSelection(0);
 
         spChild = (Spinner) rootView.findViewById(R.id.sp_child);
+        spChild.setAdapter(app.getHotelChildAdapter());
+        spChild.setSelection(0);
 
         spInfant = (Spinner) rootView.findViewById(R.id.sp_infant);
+        spInfant.setAdapter(app.getHotelInfantAdapter());
+        spInfant.setSelection(0);
 
         spNoOfNights = (Spinner) rootView.findViewById(R.id.sp_noOfNights);
 

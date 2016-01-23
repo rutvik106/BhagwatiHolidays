@@ -61,6 +61,10 @@ public class initial extends Activity implements MyGoogleApiClientListener{
 
         app.setUser(myLoginWithGoogle.getProfileInformation());
 
+        Intent i=new Intent(this,SwipeTabActivity.class);
+
+        startActivity(i);
+
 
     }
 

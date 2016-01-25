@@ -19,9 +19,10 @@
 
     <ListView
         android:id="@+id/lv_offers"
-        android:layout_marginTop="5dp"
         android:layout_below="@+id/toolbar"
         android:layout_width="match_parent"
+        android:divider="@null"
+        android:dividerHeight="0dp"
         android:layout_height="match_parent"></ListView>
 
 </RelativeLayout>

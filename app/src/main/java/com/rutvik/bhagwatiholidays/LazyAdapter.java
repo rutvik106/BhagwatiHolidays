@@ -3,6 +3,7 @@ package com.rutvik.bhagwatiholidays;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +34,7 @@ import jsonobj.PackageList;
 /**
  * Created by ACER on 22-Jan-16.
  */
-public class LazyAdapter extends BaseAdapter {
+public class LazyAdapter extends RecyclerView.Adapter<LazyAdapter.ViewHolder> {
 
     public static final String TAG="bwt "+LazyAdapter.class.getSimpleName();
 
@@ -81,21 +82,69 @@ public class LazyAdapter extends BaseAdapter {
 
     }
 
+    public class ViewHolder extends RecyclerView.ViewHolder
+    {
+        TextView packageName, packageDays, packageNights, packagePlace;
+        ImageView packageImage;
+        ProgressBar pb;
 
+        public ViewHolder(View itemView) {
+            super(itemView);
+            packageName = (TextView) itemView.findViewById(R.id.tv_packageTitle);
+            packageDays = (TextView) itemView.findViewById(R.id.tv_packageDays);
+            packageNights = (TextView) itemView.findViewById(R.id.tv_packageNights);
+            packagePlace = (TextView) itemView.findViewById(R.id.tv_packagePlace);
+            packageImage = (ImageView) itemView.findViewById(R.id.iv_packageImage);
+            pb=(ProgressBar) itemView.findViewById(R.id.pb);
+        }
+    }
 
-    public int getCount() {
+/*    public int getCount() {
         return packages.size();
     }
 
     public Object getItem(int position) {
         return position;
+    }*/
+
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View vi = inflater.inflate(R.layout.offers_list_item, null);
+
+        ViewHolder vh=new ViewHolder(vi);
+
+        return vh;
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        holder.packageName.setText(packages.get(position).getPackage_name());
+        holder.packageDays.setText(packages.get(position).getDays()+" Days");
+        holder.packageNights.setText(packages.get(position).getNights()+" Nights");
+        holder.packagePlace.setText(packages.get(position).getPlaces());
+
+        //loadBitmap(viewHolder.packageImage, "http://www.bhagwatiholidays.com/admin/images/package_icons/"+packages.get(position).getThumb_href());
+
+        try {
+            display(holder.packageImage, "http://www.bhagwatiholidays.com/admin/images/package_icons/" + packages.get(position).getThumb_href(), holder.pb);
+        }
+        catch (NullPointerException e)
+        {
+            e.printStackTrace();
+        }
+
     }
 
     public long getItemId(int position) {
         return position;
     }
 
-    public View getView(int position, View convertView, ViewGroup parent) {
+    @Override
+    public int getItemCount() {
+        return packages.size();
+    }
+
+    /*public View getView(int position, View convertView, ViewGroup parent) {
         View vi = null;
         convertView=null;
         vi=convertView;
@@ -107,14 +156,9 @@ public class LazyAdapter extends BaseAdapter {
 
             vi = inflater.inflate(R.layout.offers_list_item, null);
 
-            viewHolder=new ViewHolder();
+            viewHolder=new ViewHolder(vi);
 
-            viewHolder.packageName = (TextView) vi.findViewById(R.id.tv_packageTitle);
-            viewHolder.packageDays = (TextView) vi.findViewById(R.id.tv_packageDays);
-            viewHolder.packageNights = (TextView) vi.findViewById(R.id.tv_packageNights);
-            viewHolder.packagePlace = (TextView) vi.findViewById(R.id.tv_packagePlace);
-            viewHolder.packageImage = (ImageView) vi.findViewById(R.id.iv_packageImage);
-            viewHolder.pb=(ProgressBar) vi.findViewById(R.id.pb);
+
 
             viewHolder.packageName.setText(packages.get(position).getPackage_name());
             viewHolder.packageDays.setText(packages.get(position).getDays()+" Days");
@@ -139,11 +183,11 @@ public class LazyAdapter extends BaseAdapter {
 
         return vi;
 
-    }
+    }*/
 
     public void display(ImageView img, String url, final ProgressBar spinner)
     {
-        Log.i(TAG , "url: " + url);
+        Log.i(TAG , "loading image from url: " + url);
         imageLoader.displayImage(url, img, options, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
@@ -166,11 +210,6 @@ public class LazyAdapter extends BaseAdapter {
 
         });
     }
-    public static class ViewHolder
-    {
-        TextView packageName, packageDays, packageNights, packagePlace;
-        ImageView packageImage;
-        ProgressBar pb;
-    }
+
 
 }

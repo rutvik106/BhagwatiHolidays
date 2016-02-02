@@ -37,17 +37,17 @@ public class OffersActivity extends AppCompatActivity {
 
     private Toolbar mToolbar;
 
-    /*private RecyclerView mRecyclerView;
+    private RecyclerView mRecyclerView;
 
     private RecyclerView.Adapter mAdapter;
 
-    private RecyclerView.LayoutManager mLayoutManager;*/
+    private RecyclerView.LayoutManager mLayoutManager;
 
-    private OffersAdapter offersAdapter;
+    //private OffersAdapter offersAdapter;
 
-    LazyAdapter lazyAdapter;
+    //LazyAdapter lazyAdapter;
 
-    private ListView lvOffers;
+    //private ListView lvOffers;
 
     private ProgressDialog progressDialog;
 
@@ -70,7 +70,7 @@ public class OffersActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        /*mRecyclerView = (RecyclerView) findViewById(R.id.rcv_offers);
+        mRecyclerView = (RecyclerView) findViewById(R.id.rcv_offers);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
@@ -82,16 +82,18 @@ public class OffersActivity extends AppCompatActivity {
 
         //set Offers Adapter
 
-        mAdapter = new OffersAdapter(OffersActivity.this,packageName,packageDays,packageNights,packagePlace,packageImage);
-        mRecyclerView.setAdapter(mAdapter);*/
+        mAdapter = new LazyAdapter(this,packages);
+        mRecyclerView.setAdapter(mAdapter);
 
-        lvOffers = (ListView) findViewById(R.id.lv_offers);
+        //lvOffers = (ListView) findViewById(R.id.lv_offers);
 
-        offersAdapter = new OffersAdapter(OffersActivity.this,packages);
+        //offersAdapter = new OffersAdapter(OffersActivity.this,packages);
 
-        lazyAdapter=new LazyAdapter(this,packages);
+        //lazyAdapter=new LazyAdapter(this,packages);
 
-        lvOffers.setAdapter(lazyAdapter);
+        //lvOffers.setAdapter(lazyAdapter);
+
+
 
         loadOffersAsync();
 
@@ -140,7 +142,7 @@ public class OffersActivity extends AppCompatActivity {
 
             progressDialog.dismiss();
 
-            lazyAdapter.notifyDataSetChanged();
+            mAdapter.notifyDataSetChanged();
 
         }
     }.execute();

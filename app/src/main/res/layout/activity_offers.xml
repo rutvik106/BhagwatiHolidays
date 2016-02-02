@@ -17,12 +17,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>-->
 
-    <ListView
-        android:id="@+id/lv_offers"
+    <view
+        android:id="@+id/rcv_offers"
         android:layout_below="@+id/toolbar"
+        class="android.support.v7.widget.RecyclerView"
         android:layout_width="match_parent"
-        android:divider="@null"
-        android:dividerHeight="0dp"
-        android:layout_height="match_parent"></ListView>
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true" />
 
 </RelativeLayout>

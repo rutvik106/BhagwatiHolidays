@@ -19,6 +19,8 @@ import webservicehandler.PostHandler;
  */
 public class App extends Application {
 
+    public static final String APP_TAG="BWT ";
+
     MyLoginWithGoogle.GooglePlusUser user;
 
     public void setUser(MyLoginWithGoogle.GooglePlusUser user)

@@ -36,6 +36,6 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>-->
 
-    <style name="Login" parent="@android:style/Theme.Black.NoTitleBar.Fullscreen"></style>
+    <style name="Login" parent="Theme.AppCompat.Light.NoActionBar"></style>
 
 </resources>

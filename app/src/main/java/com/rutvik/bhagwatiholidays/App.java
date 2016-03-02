@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 import jsonobj.PackageItenary;
 import jsonobj.PackageList;
-import lwg.MyLoginWithGoogle;
+import model.User;
 import webservicehandler.PostHandler;
 
 /**
@@ -21,17 +21,16 @@ public class App extends Application {
 
     public static final String APP_TAG="BWT ";
 
-    MyLoginWithGoogle.GooglePlusUser user;
+    private User user;
 
-    public void setUser(MyLoginWithGoogle.GooglePlusUser user)
-    {
+    public void setUser(User user){
         this.user=user;
     }
 
-    public MyLoginWithGoogle.GooglePlusUser getUser()
-    {
+    public User getUser(){
         return user;
     }
+
 
     static final String[] hotelAdult = new String[] { "1","2","3","4" };
     static final String[] hotelChild = new String[] { "0","1","2" };
@@ -107,6 +106,7 @@ public class App extends Application {
 }
 
 
+/*
 class test extends AsyncTask<Void, Void, Void>
 {
     @Override
@@ -158,4 +158,4 @@ class test extends AsyncTask<Void, Void, Void>
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
     }
-}
+}*/

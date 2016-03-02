@@ -25,6 +25,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -118,19 +119,26 @@ public class OffersActivity extends AppCompatActivity {
 
             postParams.put("method","get_package_list");
 
-            String response = new PostHandler("BWT",4,2000).doPostRequest("http://bhagwatiholidays.com/admin/webservice/index.php",postParams);
-
-            try {
-                PackageList packageList = new PackageList(response, "package_list");
-                packages.clear();
-                for(PackageList.Package p:packageList.getPackageList()) {
-                    packages.add(p);
+            new PostHandler("BWT",4,2000).doPostRequest("http://bhagwatiholidays.com/admin/webservice/index.php",postParams, new PostHandler.ResponseCallback() {
+                @Override
+                public void response(int status, String response) {
+                    if(status== HttpURLConnection.HTTP_OK){
+                        try {
+                            PackageList packageList = new PackageList(response, "package_list");
+                            packages.clear();
+                            for(PackageList.Package p:packageList.getPackageList()) {
+                                packages.add(p);
+                            }
+                        }
+                        catch (JSONException e)
+                        {
+                            e.printStackTrace();
+                        }
+                    }
                 }
-            }
-            catch (JSONException e)
-            {
-                e.printStackTrace();
-            }
+            });
+
+
 
 
 

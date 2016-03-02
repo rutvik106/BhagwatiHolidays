@@ -55,7 +55,11 @@ public class initial extends LoginWithGoogle {
     protected void loggedIn(GoogleSignInAccount account) {
 
         App app = (App) getApplication();
-        app.setUser(new User(account.getDisplayName(), account.getEmail(), account.getPhotoUrl().toString()));
+        if (account.getPhotoUrl() == null) {
+            app.setUser(new User(account.getDisplayName(), account.getEmail(), "https://lh3.googleusercontent.com/-Wlkp-_tMv-Y/AAAAAAAAAAI/AAAAAAAAAAA/NbvcGT31kjM/s144-p-k-rw-no/photo.jpg"));
+        } else {
+            app.setUser(new User(account.getDisplayName(), account.getEmail(), account.getPhotoUrl().toString()));
+        }
 
         Intent intent = new Intent(this, RegistrationIntentService.class);
         intent.putExtra("name", account.getDisplayName());

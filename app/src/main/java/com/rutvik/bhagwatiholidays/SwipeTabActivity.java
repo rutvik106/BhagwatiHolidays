@@ -32,10 +32,16 @@ public class SwipeTabActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private ProgressDialog mProgressDialog;
 
+    private App app;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_swipe_tab);
+
+        app=(App) getApplication();
+
+        app.trackScreenView("Swipe Tab Activity");
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);

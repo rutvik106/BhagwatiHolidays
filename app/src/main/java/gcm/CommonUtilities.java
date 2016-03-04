@@ -11,7 +11,7 @@ public final class CommonUtilities {
 	public static final String TAG = App.APP_TAG+CommonUtilities.class.getSimpleName();
 	
 	// give your server registration url here
-	public static final String SERVER_URL = "http://192.168.1.110/bwt-gcm-server/register.php";
+	public static final String SERVER_URL = "http://bhagwatiholidays.com/bwt-gcm-server/app/templates/GCM/register.php";
 
 
 }

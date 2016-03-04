@@ -32,11 +32,17 @@ public class initial extends LoginWithGoogle {
     // Bool to track whether the app is already resolving an error
     private boolean mResolvingError = false;
 
+    private App app;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_initial);
+
+        app=(App) getApplication();
+
+        app.trackScreenView("Login Screen");
 
         btnSignIn = (SignInButton) findViewById(R.id.btn_signIn);
 

@@ -10,11 +10,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,13 +32,16 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import jsonobj.PackageList;
 import webservicehandler.PostHandler;
 
-public class OffersActivity extends AppCompatActivity {
+public class OffersActivity extends AppCompatActivity implements TextWatcher {
 
     private Toolbar mToolbar;
+
+    private EditText etSearchBox;
 
     private RecyclerView mRecyclerView;
 
@@ -45,7 +51,7 @@ public class OffersActivity extends AppCompatActivity {
 
     private ProgressDialog progressDialog;
 
-    ArrayList<PackageList.Package> packages = new ArrayList<>();
+    private List<PackageList.Package> packages;
 
 
     @Override
@@ -61,6 +67,10 @@ public class OffersActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        etSearchBox=(EditText) findViewById(R.id.et_searchBox);
+
+        etSearchBox.addTextChangedListener(this);
+
         mRecyclerView = (RecyclerView) findViewById(R.id.rcv_offers);
 
         // use this setting to improve performance if you know that changes
@@ -73,9 +83,9 @@ public class OffersActivity extends AppCompatActivity {
 
         //set Offers Adapter
 
-        mAdapter = new LazyAdapter(this, packages);
+        packages = new ArrayList<>();
 
-        mRecyclerView.setAdapter(mAdapter);
+
 
         loadOffersAsync();
 
@@ -126,12 +136,56 @@ public class OffersActivity extends AppCompatActivity {
 
                 progressDialog.dismiss();
 
+                mAdapter = new LazyAdapter(OffersActivity.this, packages);
+
+                mRecyclerView.setAdapter(mAdapter);
+
                 mAdapter.notifyDataSetChanged();
 
             }
         }.execute();
 
     }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count,
+                                  int after) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before,
+                              int count) {
+
+        final List<PackageList.Package> filteredModelList = filter(packages, s.toString());
+        ((LazyAdapter)mAdapter).animateTo(filteredModelList);
+        mRecyclerView.scrollToPosition(0);
+
+
+    }
+
+
+    private List<PackageList.Package> filter(List<PackageList.Package> models, String query) {
+        query = query.toLowerCase();
+
+        final List<PackageList.Package> filteredModelList = new ArrayList<>();
+        for (PackageList.Package model : models) {
+            final String text = model.getPackage_name().toLowerCase();
+            if (text.contains(query)) {
+                filteredModelList.add(model);
+            }
+        }
+        return filteredModelList;
+    }
+
+
 }
 
 

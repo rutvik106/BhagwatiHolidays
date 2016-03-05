@@ -28,6 +28,7 @@ import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import jsonobj.PackageList;
 
@@ -43,13 +44,13 @@ public class LazyAdapter extends RecyclerView.Adapter<LazyAdapter.ViewHolder> {
     public ImageLoader imageLoader;
     DisplayImageOptions options;
 
-    ArrayList<PackageList.Package> packages = new ArrayList<>();
+    private List<PackageList.Package> packages;
 
-    public LazyAdapter(Activity a, ArrayList<PackageList.Package> packages) {
+    public LazyAdapter(Activity a, List<PackageList.Package> packages) {
 
         activity = a;
 
-        this.packages = packages;
+        this.packages = new ArrayList<>(packages);
 
         inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         File cacheDir = StorageUtils.getOwnCacheDirectory(a, "MyFolderCache");
@@ -131,6 +132,67 @@ public class LazyAdapter extends RecyclerView.Adapter<LazyAdapter.ViewHolder> {
     public int getItemCount() {
         return packages.size();
     }
+
+
+
+    public void removeItem(int position) {
+        final PackageList.Package model = packages.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public void addItem(int position, PackageList.Package model) {
+        packages.add(position, model);
+        notifyItemInserted(position);
+    }
+
+    public void moveItem(int fromPosition, int toPosition) {
+        final PackageList.Package model = packages.remove(fromPosition);
+        packages.add(toPosition, model);
+        notifyItemMoved(fromPosition, toPosition);
+    }
+
+
+
+    public void animateTo(List<PackageList.Package> models) {
+        applyAndAnimateRemovals(models);
+        applyAndAnimateAdditions(models);
+        applyAndAnimateMovedItems(models);
+
+    }
+
+
+    private void applyAndAnimateRemovals(List<PackageList.Package> newModels) {
+        for (int i = packages.size() - 1; i >= 0; i--) {
+            final PackageList.Package model = packages.get(i);
+            if (!newModels.contains(model)) {
+                removeItem(i);
+            }
+        }
+    }
+
+
+
+    private void applyAndAnimateAdditions(List<PackageList.Package> newModels) {
+        for (int i = 0, count = newModels.size(); i < count; i++) {
+            final PackageList.Package model = newModels.get(i);
+            if (!packages.contains(model)) {
+                addItem(i, model);
+            }
+        }
+    }
+
+
+    private void applyAndAnimateMovedItems(List<PackageList.Package> newModels) {
+        for (int toPosition = newModels.size() - 1; toPosition >= 0; toPosition--) {
+            final PackageList.Package model = newModels.get(toPosition);
+            final int fromPosition = packages.indexOf(model);
+            if (fromPosition >= 0 && fromPosition != toPosition) {
+                moveItem(fromPosition, toPosition);
+            }
+        }
+    }
+
+
 
 
     public void display(ImageView img, String url, final ProgressBar spinner) {

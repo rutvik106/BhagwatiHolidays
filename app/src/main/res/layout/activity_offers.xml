@@ -9,17 +9,16 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar" />
 
-    <!--<android.support.v7.widget.RecyclerView
-        android:id="@+id/rcv_offers"
-        android:scrollbars="vertical"
-        android:layout_marginTop="5dp"
-        android:layout_below="@+id/toolbar"
+    <EditText
+        android:id="@+id/et_searchBox"
+        android:hint="Search offers"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>-->
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"/>
 
     <view
         android:id="@+id/rcv_offers"
-        android:layout_below="@+id/toolbar"
+        android:layout_below="@+id/et_searchBox"
         class="android.support.v7.widget.RecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

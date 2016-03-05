@@ -18,19 +18,10 @@
 
         <activity
             android:name=".initial"
-            android:theme="@style/Login">
-
-
-        </activity>
+            android:theme="@style/Login"></activity>
         <activity
             android:name=".SwipeTabActivity"
             android:label="Bhagwati Holidays">
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
 
         </activity>
         <activity
@@ -39,7 +30,18 @@
         <activity
             android:name=".BusActivity"
             android:label="Bus" />
-        <activity android:name=".SettingsActivity"></activity>
+        <activity android:name=".SettingsActivity" />
+
+        <activity
+            android:name=".SplashScreen"
+            android:screenOrientation="portrait"
+            android:theme="@style/splashScreenTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

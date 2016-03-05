@@ -38,4 +38,10 @@
 
     <style name="Login" parent="Theme.AppCompat.Light.NoActionBar"></style>
 
+    <style name="splashScreenTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowBackground">@drawable/splash</item>
+    </style>
+
 </resources>

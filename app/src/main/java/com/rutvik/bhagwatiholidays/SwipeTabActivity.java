@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,21 +17,24 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import bhfragment.FragmentAirTickets;
+import bhfragment.FragmentDrawer;
 import bhfragment.FragmentHolidays;
 import bhfragment.FragmentHotels;
 import bhfragment.FragmentVisa;
 
-public class SwipeTabActivity extends AppCompatActivity {
+public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener{
 
     private Toolbar mToolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private ProgressDialog mProgressDialog;
+    private FragmentDrawer drawerFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,14 +43,21 @@ public class SwipeTabActivity extends AppCompatActivity {
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mToolbar.setLogo(R.drawable.bh);
 
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         setupViewPager(viewPager);
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setBackgroundColor(Color.parseColor("#2973bd"));
-        tabLayout.setTabTextColors(Color.parseColor("#a9c7e5"), Color.WHITE);
+        //tabLayout.setBackgroundColor(Color.parseColor("#2973bd"));
+        //tabLayout.setTabTextColors(Color.parseColor("#a9c7e5"), Color.BLACK);
         tabLayout.setupWithViewPager(viewPager);
+
+        drawerFragment = (FragmentDrawer)
+                getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
+        drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
+        drawerFragment.setDrawerListener(this);
     }
 
 
@@ -70,7 +81,7 @@ public class SwipeTabActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()) {
+       /* switch (item.getItemId()) {
             case R.id.menu_offers:
                 startActivity(new Intent(SwipeTabActivity.this, OffersActivity.class));
                 break;
@@ -85,8 +96,13 @@ public class SwipeTabActivity extends AppCompatActivity {
 
             default:
                 return super.onOptionsItemSelected(item);
-        }
+        }*/
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDrawerItemSelected(View view, int position) {
+
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {

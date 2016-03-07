@@ -1,5 +1,7 @@
 package webservicehandler;
 
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -7,22 +9,9 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import jsonobj.PackageList;
-import jsonobj.PackageList.Package;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.content.Context;
-
-import android.util.Log;
 
 
 public class PostHandler {
@@ -33,6 +22,10 @@ public class PostHandler {
 
     private int backOff = 2000;
 
+    public static interface ResponseCallback {
+        public void response(int status, String response);
+    }
+
     public PostHandler(String logtag, int maxAttempts, int backOff) {
 
         tag = logtag + " " + PostHandler.class.getSimpleName();
@@ -42,7 +35,7 @@ public class PostHandler {
     }
 
 
-    public String doPostRequest(String serverUrl, HashMap<String, String> params) {
+    public void doPostRequest(String serverUrl, Map<String, String> params, ResponseCallback callback) {
 
         // Once GCM returns a registration id, we need to register on our server
         // As the server might be down, we will retry it a couple
@@ -54,7 +47,9 @@ public class PostHandler {
             try {
 
 
-                return post(serverUrl, params);
+                post(serverUrl, params, callback);
+
+                break;
 
             } catch (IOException e) {
 
@@ -75,14 +70,12 @@ public class PostHandler {
                     // Activity finished before we complete - exit.
                     Log.d(tag, "Thread interrupted: abort remaining retries!");
                     Thread.currentThread().interrupt();
-                    return "";
                 }
 
                 // increase backoff exponentially
                 backOff *= 2;
             }
         }
-        return "";
     }
 
 
@@ -110,7 +103,7 @@ public class PostHandler {
 
     //Issue a POST request to the server.
 
-    private String post(String endpoint, Map<String, String> params)
+    private void post(String endpoint, Map<String, String> params, ResponseCallback callback)
             throws IOException {
 
         URL url;
@@ -191,6 +184,7 @@ public class PostHandler {
                 }
                 Log.i(tag, "RESPONSE STRING: " + response);
 
+                callback.response(status,response);
 
             } else {
                 throw new IOException("Post failed with error code " + status);
@@ -206,7 +200,6 @@ public class PostHandler {
             }
 
         }
-        return response;
     }
 
 

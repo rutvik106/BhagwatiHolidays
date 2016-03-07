@@ -28,6 +28,7 @@ import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import jsonobj.PackageList;
 
@@ -36,23 +37,22 @@ import jsonobj.PackageList;
  */
 public class LazyAdapter extends RecyclerView.Adapter<LazyAdapter.ViewHolder> {
 
-    public static final String TAG="bwt "+LazyAdapter.class.getSimpleName();
+    public static final String TAG = App.APP_TAG + LazyAdapter.class.getSimpleName();
 
     private Activity activity;
-    //private String data[];
-    private LayoutInflater inflater=null;
+    private LayoutInflater inflater = null;
     public ImageLoader imageLoader;
     DisplayImageOptions options;
 
-    ArrayList<PackageList.Package> packages=new ArrayList<PackageList.Package>();
+    private List<PackageList.Package> packages;
 
-    public LazyAdapter(Activity a,  ArrayList<PackageList.Package> packages) {
+    public LazyAdapter(Activity a, List<PackageList.Package> packages) {
+
         activity = a;
-        //data=d;
 
-        this.packages=packages;
+        this.packages = new ArrayList<>(packages);
 
-        inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         File cacheDir = StorageUtils.getOwnCacheDirectory(a, "MyFolderCache");
 
 
@@ -69,7 +69,7 @@ public class LazyAdapter extends RecyclerView.Adapter<LazyAdapter.ViewHolder> {
 
         ImageLoader.getInstance().init(config);
 
-        imageLoader=ImageLoader.getInstance();
+        imageLoader = ImageLoader.getInstance();
 
         // END - UNIVERSAL IMAGE LOADER SETUP
 
@@ -82,8 +82,7 @@ public class LazyAdapter extends RecyclerView.Adapter<LazyAdapter.ViewHolder> {
 
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder
-    {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         TextView packageName, packageDays, packageNights, packagePlace;
         ImageView packageImage;
         ProgressBar pb;
@@ -95,23 +94,15 @@ public class LazyAdapter extends RecyclerView.Adapter<LazyAdapter.ViewHolder> {
             packageNights = (TextView) itemView.findViewById(R.id.tv_packageNights);
             packagePlace = (TextView) itemView.findViewById(R.id.tv_packagePlace);
             packageImage = (ImageView) itemView.findViewById(R.id.iv_packageImage);
-            pb=(ProgressBar) itemView.findViewById(R.id.pb);
+            pb = (ProgressBar) itemView.findViewById(R.id.pb);
         }
     }
-
-/*    public int getCount() {
-        return packages.size();
-    }
-
-    public Object getItem(int position) {
-        return position;
-    }*/
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View vi = inflater.inflate(R.layout.offers_list_item, null);
 
-        ViewHolder vh=new ViewHolder(vi);
+        ViewHolder vh = new ViewHolder(vi);
 
         return vh;
     }
@@ -119,17 +110,15 @@ public class LazyAdapter extends RecyclerView.Adapter<LazyAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.packageName.setText(packages.get(position).getPackage_name());
-        holder.packageDays.setText(packages.get(position).getDays()+" Days");
-        holder.packageNights.setText(packages.get(position).getNights()+" Nights");
+        holder.packageDays.setText(packages.get(position).getDays() + " Days");
+        holder.packageNights.setText(packages.get(position).getNights() + " Nights");
         holder.packagePlace.setText(packages.get(position).getPlaces());
 
         //loadBitmap(viewHolder.packageImage, "http://www.bhagwatiholidays.com/admin/images/package_icons/"+packages.get(position).getThumb_href());
 
         try {
             display(holder.packageImage, "http://www.bhagwatiholidays.com/admin/images/package_icons/" + packages.get(position).getThumb_href(), holder.pb);
-        }
-        catch (NullPointerException e)
-        {
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
 
@@ -144,65 +133,88 @@ public class LazyAdapter extends RecyclerView.Adapter<LazyAdapter.ViewHolder> {
         return packages.size();
     }
 
-    /*public View getView(int position, View convertView, ViewGroup parent) {
-        View vi = null;
-        convertView=null;
-        vi=convertView;
-
-        ViewHolder viewHolder;
 
 
-        if(convertView==null) {
+    public void removeItem(int position) {
+        final PackageList.Package model = packages.remove(position);
+        notifyItemRemoved(position);
+    }
 
-            vi = inflater.inflate(R.layout.offers_list_item, null);
+    public void addItem(int position, PackageList.Package model) {
+        packages.add(position, model);
+        notifyItemInserted(position);
+    }
 
-            viewHolder=new ViewHolder(vi);
+    public void moveItem(int fromPosition, int toPosition) {
+        final PackageList.Package model = packages.remove(fromPosition);
+        packages.add(toPosition, model);
+        notifyItemMoved(fromPosition, toPosition);
+    }
 
 
 
-            viewHolder.packageName.setText(packages.get(position).getPackage_name());
-            viewHolder.packageDays.setText(packages.get(position).getDays()+" Days");
-            viewHolder.packageNights.setText(packages.get(position).getNights()+" Nights");
-            viewHolder.packagePlace.setText(packages.get(position).getPlaces());
+    public void animateTo(List<PackageList.Package> models) {
+        applyAndAnimateRemovals(models);
+        applyAndAnimateAdditions(models);
+        applyAndAnimateMovedItems(models);
 
-            //loadBitmap(viewHolder.packageImage, "http://www.bhagwatiholidays.com/admin/images/package_icons/"+packages.get(position).getThumb_href());
+    }
 
-            try {
-                display(viewHolder.packageImage, "http://www.bhagwatiholidays.com/admin/images/package_icons/" + packages.get(position).getThumb_href(), viewHolder.pb);
+
+    private void applyAndAnimateRemovals(List<PackageList.Package> newModels) {
+        for (int i = packages.size() - 1; i >= 0; i--) {
+            final PackageList.Package model = packages.get(i);
+            if (!newModels.contains(model)) {
+                removeItem(i);
             }
-            catch (NullPointerException e)
-            {
-                e.printStackTrace();
-            }
-
-            //imageLoader.displayImage(data.get(position).toString(), image,options);
-
-            vi.setTag(viewHolder);
-
         }
+    }
 
-        return vi;
 
-    }*/
 
-    public void display(ImageView img, String url, final ProgressBar spinner)
-    {
-        Log.i(TAG , "loading image from url: " + url);
+    private void applyAndAnimateAdditions(List<PackageList.Package> newModels) {
+        for (int i = 0, count = newModels.size(); i < count; i++) {
+            final PackageList.Package model = newModels.get(i);
+            if (!packages.contains(model)) {
+                addItem(i, model);
+            }
+        }
+    }
+
+
+    private void applyAndAnimateMovedItems(List<PackageList.Package> newModels) {
+        for (int toPosition = newModels.size() - 1; toPosition >= 0; toPosition--) {
+            final PackageList.Package model = newModels.get(toPosition);
+            final int fromPosition = packages.indexOf(model);
+            if (fromPosition >= 0 && fromPosition != toPosition) {
+                moveItem(fromPosition, toPosition);
+            }
+        }
+    }
+
+
+
+
+    public void display(ImageView img, String url, final ProgressBar spinner) {
+        Log.i(TAG, "loading image from url: " + url);
         imageLoader.displayImage(url, img, options, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
                 spinner.setVisibility(View.VISIBLE);
             }
+
             @Override
             public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
                 spinner.setVisibility(View.GONE);
 
 
             }
+
             @Override
             public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                 spinner.setVisibility(View.GONE);
             }
+
             @Override
             public void onLoadingCancelled(String imageUri, View view) {
 

@@ -1,6 +1,5 @@
 package com.rutvik.bhagwatiholidays;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
@@ -15,15 +14,13 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.SignInButton;
 
-
+import gcm.RegistrationIntentService;
 import lwg.LoginWithGoogle;
-import lwg.MyGoogleApiClient;
-import lwg.MyGoogleApiClientListener;
-import lwg.MyLoginWithGoogle;
+import model.User;
 
 public class initial extends LoginWithGoogle {
 
-    public final static String TAG="BWT "+initial.class.getSimpleName();
+    public final static String TAG = "BWT " + initial.class.getSimpleName();
 
     SignInButton btnSignIn;
 
@@ -35,24 +32,21 @@ public class initial extends LoginWithGoogle {
     // Bool to track whether the app is already resolving an error
     private boolean mResolvingError = false;
 
-    //MyGoogleApiClient myGoogleApiClient;
-    //MyLoginWithGoogle myLoginWithGoogle;
+    private App app;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_initial);
+
+        app=(App) getApplication();
+
+        app.trackScreenView("Login Screen");
 
         btnSignIn = (SignInButton) findViewById(R.id.btn_signIn);
 
-        //btnSignIn.setSize(SignInButton.SIZE_STANDARD);
         btnSignIn.setColorScheme(SignInButton.COLOR_DARK);
-
-        //myGoogleApiClient = new MyGoogleApiClient(this,this);
-
-        //myLoginWithGoogle = new MyLoginWithGoogle(myGoogleApiClient,this);
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,7 +59,21 @@ public class initial extends LoginWithGoogle {
 
     @Override
     protected void loggedIn(GoogleSignInAccount account) {
-        Intent i=new Intent(this,SwipeTabActivity.class);
+
+        App app = (App) getApplication();
+        if (account.getPhotoUrl() == null) {
+            app.setUser(new User(account.getDisplayName(), account.getEmail(), "https://lh3.googleusercontent.com/-Wlkp-_tMv-Y/AAAAAAAAAAI/AAAAAAAAAAA/NbvcGT31kjM/s144-p-k-rw-no/photo.jpg"));
+        } else {
+            app.setUser(new User(account.getDisplayName(), account.getEmail(), account.getPhotoUrl().toString()));
+        }
+
+        Intent intent = new Intent(this, RegistrationIntentService.class);
+        intent.putExtra("name", account.getDisplayName());
+        intent.putExtra("email", account.getEmail());
+        startService(intent);
+
+        Intent i = new Intent(this, SwipeTabActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(i);
     }
 

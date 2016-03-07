@@ -5,13 +5,24 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.StandardExceptionParser;
+import com.google.android.gms.analytics.Tracker;
+import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
+import com.nostra13.universalimageloader.core.*;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+
 import org.json.JSONException;
 
 import java.util.HashMap;
 
+import extras.AnalyticsTrackers;
 import jsonobj.PackageItenary;
 import jsonobj.PackageList;
-import lwg.MyLoginWithGoogle;
+import model.User;
 import webservicehandler.PostHandler;
 
 /**
@@ -21,17 +32,16 @@ public class App extends Application {
 
     public static final String APP_TAG="BWT ";
 
-    MyLoginWithGoogle.GooglePlusUser user;
+    private User user;
 
-    public void setUser(MyLoginWithGoogle.GooglePlusUser user)
-    {
+    public void setUser(User user){
         this.user=user;
     }
 
-    public MyLoginWithGoogle.GooglePlusUser getUser()
-    {
+    public User getUser(){
         return user;
     }
+
 
     static final String[] hotelAdult = new String[] { "1","2","3","4" };
     static final String[] hotelChild = new String[] { "0","1","2" };
@@ -52,12 +62,34 @@ public class App extends Application {
     ArrayAdapter<String> flightInfantAdapter;
 
 
+    private ImageLoaderConfiguration imageLoaderConfiguration;
 
 
 
     @Override
     public void onCreate() {
         super.onCreate();
+
+
+        // UNIVERSAL IMAGE LOADER SETUP
+        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
+                .cacheOnDisc(true).cacheInMemory(true)
+                .imageScaleType(ImageScaleType.EXACTLY)
+                .displayer(new FadeInBitmapDisplayer(300)).build();
+
+        imageLoaderConfiguration = new ImageLoaderConfiguration.Builder(
+                getApplicationContext())
+                .defaultDisplayImageOptions(defaultOptions)
+                .memoryCache(new WeakMemoryCache()).build();
+
+        ImageLoader.getInstance().init(imageLoaderConfiguration);
+
+        // END - UNIVERSAL IMAGE LOADER SETUP
+
+
+
+        AnalyticsTrackers.initialize(this);
+        AnalyticsTrackers.getInstance().get(AnalyticsTrackers.Target.APP);
 
         hotelAdultAdapter =new ArrayAdapter<String>(getApplicationContext(),R.layout.my_spinner_item, hotelAdult);
         hotelChildAdapter =new ArrayAdapter<String>(getApplicationContext(),R.layout.my_spinner_item, hotelChild);
@@ -104,9 +136,68 @@ public class App extends Application {
         return flightInfantAdapter;
     }
 
+
+
+    public synchronized Tracker getGoogleAnalyticsTracker() {
+        AnalyticsTrackers analyticsTrackers = AnalyticsTrackers.getInstance();
+        return analyticsTrackers.get(AnalyticsTrackers.Target.APP);
+    }
+
+    /**
+     * Tracking screen view
+     *
+     * @param screenName screen name to be displayed on GA dashboard
+     */
+    public void trackScreenView(String screenName) {
+        Tracker t = getGoogleAnalyticsTracker();
+
+        // Set screen name.
+        t.setScreenName(screenName);
+
+        // Send a screen view.
+        t.send(new HitBuilders.ScreenViewBuilder().build());
+
+        GoogleAnalytics.getInstance(this).dispatchLocalHits();
+    }
+
+    /**
+     * Tracking exception
+     *
+     * @param e exception to be tracked
+     */
+    public void trackException(Exception e) {
+        if (e != null) {
+            Tracker t = getGoogleAnalyticsTracker();
+
+            t.send(new HitBuilders.ExceptionBuilder()
+                            .setDescription(
+                                    new StandardExceptionParser(this, null)
+                                            .getDescription(Thread.currentThread().getName(), e))
+                            .setFatal(false)
+                            .build()
+            );
+        }
+    }
+
+    /**
+     * Tracking event
+     *
+     * @param category event category
+     * @param action   action of the event
+     * @param label    label
+     */
+    public void trackEvent(String category, String action, String label) {
+        Tracker t = getGoogleAnalyticsTracker();
+
+        // Build and send an Event.
+        t.send(new HitBuilders.EventBuilder().setCategory(category).setAction(action).setLabel(label).build());
+    }
+
+
 }
 
 
+/*
 class test extends AsyncTask<Void, Void, Void>
 {
     @Override
@@ -158,4 +249,4 @@ class test extends AsyncTask<Void, Void, Void>
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
     }
-}
+}*/

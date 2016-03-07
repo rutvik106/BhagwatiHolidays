@@ -50,6 +50,8 @@
             android:label="Bus" />
 
 
+
+
         <activity android:name=".SettingsActivity"></activity>
 
 
@@ -88,6 +90,7 @@
             android:name="gcm.RegistrationIntentService"></service>
 
 
+
         <activity
             android:name=".SplashScreen"
             android:screenOrientation="portrait"
@@ -99,6 +102,7 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".SingleOfferViewActivity" />
 
     </application>
 

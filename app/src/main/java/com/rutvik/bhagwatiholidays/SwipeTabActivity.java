@@ -18,11 +18,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.*;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,6 +93,7 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
 
 
         ((TextView) drawerFragment.getView().findViewById(R.id.tv_userName)).setText(app.getUser().getName());
+
 
     }
 

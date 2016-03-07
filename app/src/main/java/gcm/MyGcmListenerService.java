@@ -46,10 +46,10 @@ public class MyGcmListenerService extends GcmListenerService {
         try{
             JSONObject obj=new JSONObject(message).getJSONObject("push_message");
             Log.i(TAG,"TITLE: "+obj.getString("title"));
-            Log.i(TAG,"MESSAGE: "+obj.getString("message"));
-            Log.i(TAG,"TYPE: "+obj.getString("type"));
+            Log.i(TAG,"DESCRIPTION: "+obj.getString("description"));
+            Log.i(TAG,"OFFER_TYPE: "+obj.getString("offer_type"));
 
-            sendNotification(obj.getString("title"),obj.getString("message"),obj.getString("type"),obj.getString("image_url"));
+            sendNotification(obj.getString("title"),obj.getString("description"),obj.getString("offer_type"),obj.getString("image_url"));
 
         }catch(JSONException e){
             Log.i(TAG,"JSON EXCEPTION: "+e.getMessage());
@@ -136,6 +136,10 @@ public class MyGcmListenerService extends GcmListenerService {
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         notificationManager.notify(0 /* ID of notification */, myNotification);
+
+
+        sendBroadcast(new Intent("bhagwatiholidays.OFFER_NOTIFICATION"));
+
 
     }
 

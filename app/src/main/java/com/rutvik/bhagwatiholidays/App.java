@@ -9,6 +9,11 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.StandardExceptionParser;
 import com.google.android.gms.analytics.Tracker;
+import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
+import com.nostra13.universalimageloader.core.*;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
 import org.json.JSONException;
 
@@ -57,12 +62,31 @@ public class App extends Application {
     ArrayAdapter<String> flightInfantAdapter;
 
 
+    private ImageLoaderConfiguration imageLoaderConfiguration;
 
 
 
     @Override
     public void onCreate() {
         super.onCreate();
+
+
+        // UNIVERSAL IMAGE LOADER SETUP
+        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
+                .cacheOnDisc(true).cacheInMemory(true)
+                .imageScaleType(ImageScaleType.EXACTLY)
+                .displayer(new FadeInBitmapDisplayer(300)).build();
+
+        imageLoaderConfiguration = new ImageLoaderConfiguration.Builder(
+                getApplicationContext())
+                .defaultDisplayImageOptions(defaultOptions)
+                .memoryCache(new WeakMemoryCache()).build();
+
+        ImageLoader.getInstance().init(imageLoaderConfiguration);
+
+        // END - UNIVERSAL IMAGE LOADER SETUP
+
+
 
         AnalyticsTrackers.initialize(this);
         AnalyticsTrackers.getInstance().get(AnalyticsTrackers.Target.APP);

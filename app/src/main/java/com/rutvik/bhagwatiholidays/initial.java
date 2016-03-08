@@ -46,8 +46,6 @@ public class initial extends LoginWithGoogle {
 
         btnSignIn = (SignInButton) findViewById(R.id.btn_signIn);
 
-        btnSignIn.setColorScheme(SignInButton.COLOR_DARK);
-
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

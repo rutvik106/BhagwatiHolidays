@@ -26,6 +26,12 @@ public class OffersAndPromotionsAdapter extends RecyclerView.Adapter<RecyclerVie
 
     Context context;
 
+    private OnOfferClickListener offerClickListener;
+
+    public static interface OnOfferClickListener{
+        public void onOfferClick(SimpleOffersAndPromotions model);
+    }
+
 
     public List<OffersAndPromotionsItem> getList() {
         return list;
@@ -34,9 +40,10 @@ public class OffersAndPromotionsAdapter extends RecyclerView.Adapter<RecyclerVie
     private final List<OffersAndPromotionsItem> list;
 
 
-    public OffersAndPromotionsAdapter(Context context){
+    public OffersAndPromotionsAdapter(Context context, OnOfferClickListener offerClickListener){
         Log.i(TAG,"CONSTRUCTING OFFERS AND PROMOTION ADAPTER");
         this.context=context;
+        this.offerClickListener=offerClickListener;
         list=new ArrayList<>();
     }
 
@@ -93,7 +100,7 @@ public class OffersAndPromotionsAdapter extends RecyclerView.Adapter<RecyclerVie
             case OffersAndPromotionsItem.SIMPLE:
                 OffersAndPromotionsItemVH
                         .bind((OffersAndPromotionsItemVH)holder,
-                                (SimpleOffersAndPromotions)list.get(position).object);
+                                (SimpleOffersAndPromotions)list.get(position).object,offerClickListener);
                 break;
         }
 

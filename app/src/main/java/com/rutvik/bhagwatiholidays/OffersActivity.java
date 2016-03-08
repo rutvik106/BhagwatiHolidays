@@ -9,14 +9,15 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.widget.EditText;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,11 +33,9 @@ import jsonobj.PackageList;
 import model.SimpleOffersAndPromotions;
 import webservicehandler.PostHandler;
 
-public class OffersActivity extends AppCompatActivity implements TextWatcher {
+public class OffersActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     private Toolbar mToolbar;
-
-    private EditText etSearchBox;
 
     private RecyclerView mRecyclerView;
 
@@ -48,7 +47,7 @@ public class OffersActivity extends AppCompatActivity implements TextWatcher {
 
     private List<PackageList.Package> packages;
 
-    private final List<SimpleOffersAndPromotions> modelList=new ArrayList<>();
+    private final List<SimpleOffersAndPromotions> modelList = new ArrayList<>();
 
     SharedPreferences sharedPreferences;
 
@@ -69,7 +68,7 @@ public class OffersActivity extends AppCompatActivity implements TextWatcher {
 
         setTitle("Offers & Promotions");
 
-        offerNotificationReceiver =new BroadcastReceiver() {
+        offerNotificationReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 loadOffersAsync();
@@ -77,13 +76,8 @@ public class OffersActivity extends AppCompatActivity implements TextWatcher {
         };
 
 
-
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        etSearchBox = (EditText) findViewById(R.id.et_searchBox);
-
-        etSearchBox.addTextChangedListener(this);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.rcv_offers);
 
@@ -97,11 +91,26 @@ public class OffersActivity extends AppCompatActivity implements TextWatcher {
 
         //set Offers Adapter
         packages = new ArrayList<>();
-        mAdapter = new OffersAndPromotionsAdapter(OffersActivity.this);
+        mAdapter = new OffersAndPromotionsAdapter(OffersActivity.this, new OffersAndPromotionsAdapter.OnOfferClickListener() {
+            @Override
+            public void onOfferClick(SimpleOffersAndPromotions model) {
+
+                Intent i = new Intent(OffersActivity.this, SingleOfferViewActivity.class);
+
+                i.putExtra("offer_image", model.getImageUrl());
+                i.putExtra("offer_title", model.getTitle());
+                i.putExtra("offer_type", model.getOfferType());
+                i.putExtra("offer_validity", model.getValidity());
+                i.putExtra("offer_description", model.getDescription());
+
+                startActivity(i);
+
+            }
+        });
+
         mRecyclerView.setAdapter(mAdapter);
 
         loadOffersAsync();
-
     }
 
 
@@ -115,6 +124,31 @@ public class OffersActivity extends AppCompatActivity implements TextWatcher {
     protected void onPause() {
         super.onPause();
         unregisterReceiver(offerNotificationReceiver);
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.offers_menu, menu);
+
+        // Associate searchable configuration with the SearchView
+        // SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
+        // searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setOnQueryTextListener(this);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     void loadOffersAsync() {
@@ -184,7 +218,17 @@ public class OffersActivity extends AppCompatActivity implements TextWatcher {
                     }
                 }
 
-                progressDialog.dismiss();
+                try {
+                    if ((progressDialog != null) && progressDialog.isShowing()) {
+                        progressDialog.dismiss();
+                    }
+                } catch (final IllegalArgumentException e) {
+                    // Handle or log or ignore
+                } catch (final Exception e) {
+                    // Handle or log or ignore
+                } finally {
+                    progressDialog = null;
+                }
 
             }
         }.execute();
@@ -274,54 +318,25 @@ public class OffersActivity extends AppCompatActivity implements TextWatcher {
 
     }*/
 
-    @Override
-    public void afterTextChanged(Editable s) {
-        // TODO Auto-generated method stub
 
-    }
+    private List<SimpleOffersAndPromotions> filterOffers(List<SimpleOffersAndPromotions> modelList, String query) {
 
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count,
-                                  int after) {
-        // TODO Auto-generated method stub
+        Log.i(TAG, "FILTERING OFFERS");
 
-    }
+        query = query.toLowerCase();
 
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before,
-                              int count) {
+        final List<SimpleOffersAndPromotions> filteredModelList = new ArrayList<>();
 
-        Log.i(TAG,"TEXT CHANGED...");
-
-        Log.i(TAG,"Char Seq: "+s);
-
-        final List<SimpleOffersAndPromotions> filteredModelList = filterOffers(modelList, s.toString());
-
-        ((OffersAndPromotionsAdapter)mAdapter).animateTo(filteredModelList);
-
-        mRecyclerView.scrollToPosition(0);
-
-
-    }
-
-    private List<SimpleOffersAndPromotions> filterOffers(List<SimpleOffersAndPromotions> modelList,String query){
-
-        Log.i(TAG,"FILTERING OFFERS");
-
-        query=query.toLowerCase();
-
-        final List<SimpleOffersAndPromotions> filteredModelList=new ArrayList<>();
-
-        for(SimpleOffersAndPromotions model:modelList){
-            final String text=model.getTitle().toLowerCase();
-            Log.i(TAG,"model.getTitle(): "+text);
-            if(text.contains(query)){
-                Log.i(TAG,"MATCH FOUND ADDING MODEL");
+        for (SimpleOffersAndPromotions model : modelList) {
+            final String text = model.getTitle().toLowerCase();
+            Log.i(TAG, "model.getTitle(): " + text);
+            if (text.contains(query)) {
+                Log.i(TAG, "MATCH FOUND ADDING MODEL");
                 filteredModelList.add(model);
             }
         }
 
-        Log.i(TAG,"MODEL ARRAY SIZE: "+filteredModelList.size());
+        Log.i(TAG, "MODEL ARRAY SIZE: " + filteredModelList.size());
 
         return filteredModelList;
     }
@@ -341,6 +356,25 @@ public class OffersActivity extends AppCompatActivity implements TextWatcher {
     }
 
 
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        Log.i(TAG, "TEXT CHANGED...");
+
+        Log.i(TAG, "Char Seq: " + newText);
+
+        final List<SimpleOffersAndPromotions> filteredModelList = filterOffers(modelList, newText.toString());
+
+        ((OffersAndPromotionsAdapter) mAdapter).animateTo(filteredModelList);
+
+        mRecyclerView.scrollToPosition(0);
+
+        return false;
+    }
 }
 
 

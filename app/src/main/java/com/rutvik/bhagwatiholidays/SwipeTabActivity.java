@@ -64,7 +64,7 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mToolbar.setLogo(R.drawable.bh);
+        mToolbar.setLogo(R.drawable.bh_icon);
 
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         setupViewPager(viewPager);

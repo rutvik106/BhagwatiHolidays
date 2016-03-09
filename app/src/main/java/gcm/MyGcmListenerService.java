@@ -71,7 +71,7 @@ public class MyGcmListenerService extends GcmListenerService {
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ic_launcher)
+                .setSmallIcon(R.drawable.bh_icon)
                 .setContentTitle("Bhagwati Holidays")
                 .setContentText(message)
                 .setAutoCancel(true)
@@ -101,7 +101,7 @@ public class MyGcmListenerService extends GcmListenerService {
 
 
         Notification myNotification = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ic_launcher)
+                .setSmallIcon(R.drawable.bh_icon)
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent)
                 .setSound(defaultSoundUri)

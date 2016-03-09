@@ -24,6 +24,8 @@ import org.json.JSONObject;
 import adapter.OffersAndPromotionsAdapter;
 import model.SimpleOffersAndPromotions;
 
+import adapter.OffersAndPromotionsAdapter.OnOfferClickListener;
+
 /**
  * Created by ACER on 06-Mar-16.
  */
@@ -38,6 +40,8 @@ public class OffersAndPromotionsItemVH extends RecyclerView.ViewHolder {
     public ImageLoader imageLoader;
     public DisplayImageOptions options;
 
+    private OnOfferClickListener offerClickListener;
+
     public OffersAndPromotionsItemVH(View itemView) {
         super(itemView);
         image=(ImageView) itemView.findViewById(R.id.iv_offersImage);
@@ -50,7 +54,14 @@ public class OffersAndPromotionsItemVH extends RecyclerView.ViewHolder {
                 .inflate(R.layout.offers_and_promotion_list_raw, parent, false));
     }
 
-    public static void bind(OffersAndPromotionsItemVH holder, SimpleOffersAndPromotions model){
+    public static void bind(final OffersAndPromotionsItemVH holder, final SimpleOffersAndPromotions model, final OnOfferClickListener offerClickListener){
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                offerClickListener.onOfferClick(model);
+            }
+        });
 
         holder.imageLoader = ImageLoader.getInstance();
 

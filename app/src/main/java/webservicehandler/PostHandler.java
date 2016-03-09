@@ -37,6 +37,14 @@ public class PostHandler {
 
     public void doPostRequest(String serverUrl, Map<String, String> params, ResponseCallback callback) {
 
+        if(serverUrl=="" || serverUrl==null){
+            throw new IllegalArgumentException("Server Url cannot be blank or null");
+        }
+
+        if(params==null){
+            throw new IllegalArgumentException("Cannot pass null map parameter");
+        }
+
         // Once GCM returns a registration id, we need to register on our server
         // As the server might be down, we will retry it a couple
         // times.

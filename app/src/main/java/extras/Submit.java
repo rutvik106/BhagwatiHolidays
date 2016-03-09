@@ -17,7 +17,8 @@ public class Submit {
         if(params==null){
             throw new IllegalArgumentException("cannot pass null paramater");
         }
-        new PostHandler(TAG,1,2000).doPostRequest("",params,responseCallback);
+        params.put("type","holiday");
+        new PostHandler(TAG,1,2000).doPostRequest("http://bhagwatiholidays.com/send-mail/send_mail.php",params,responseCallback);
     }
 
 

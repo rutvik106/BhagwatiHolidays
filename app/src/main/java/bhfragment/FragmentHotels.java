@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,7 @@ import com.rutvik.bhagwatiholidays.App;
 import com.rutvik.bhagwatiholidays.R;
 
 /**
- * Created by Rakshit on 20-11-2015.
+ * Created by Rakshit on 20-11-2015 at 14:23.
  */
 public class FragmentHotels extends Fragment {
 
@@ -26,6 +27,8 @@ public class FragmentHotels extends Fragment {
     Spinner spAdult, spChild, spInfant,spNoOfNights;
     RatingBar rbHotelType;
     FloatingActionButton fabDone;
+
+    String no;
 
     App app;
 
@@ -69,7 +72,7 @@ public class FragmentHotels extends Fragment {
 
         rbIndia = (RadioButton) rootView.findViewById(R.id.rb_india);
 
-        rbWorldWild = (RadioButton) rootView.findViewById(R.id.rb_worldWild);
+        rbWorldWild = (RadioButton) rootView.findViewById(R.id.rb_worldWide);
 
         rbHotelType = (RatingBar) rootView.findViewById(R.id.rb_hotelType);
 
@@ -78,6 +81,15 @@ public class FragmentHotels extends Fragment {
         etBookingDate = (EditText) rootView.findViewById(R.id.et_bookingDate);
 
         etDestination = (EditText) rootView.findViewById(R.id.et_destination);
+
+        no = etMobileNo.getText().toString().trim();
+
+        fabDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("DONE",no);
+            }
+        });
 
         return rootView;
     }

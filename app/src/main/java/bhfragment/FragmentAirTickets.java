@@ -3,7 +3,7 @@ package bhfragment;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.Fragment;;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,24 +13,30 @@ import android.widget.Spinner;
 
 import com.rutvik.bhagwatiholidays.App;
 import com.rutvik.bhagwatiholidays.R;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+
+import java.util.Calendar;
 
 /**
  * Created by Rakshit on 20-11-2015.
  */
-public class FragmentAirTickets extends Fragment {
+public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnDateSetListener {
 
-    EditText etMobileNo, etFrom, etTo, etDepartureDate;
+    EditText etMobileNo, etFrom, etTo, etDepartDate, etReturnDate;
     RadioButton rbIndia, rbWorldWild, rbReturn, rbOneWay, rbEconomy, rbBusiness;
     Spinner spAdult, spChild, spInfant;
     FloatingActionButton fabDone;
 
     App app;
 
+    DatePickerDialog datePickerDialog;
+    android.app.FragmentManager fragmentManager;
+
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        app=(App)activity.getApplication();
+        app = (App) activity.getApplication();
     }
 
     public FragmentAirTickets() {
@@ -54,7 +60,8 @@ public class FragmentAirTickets extends Fragment {
 
         etTo = (EditText) rootView.findViewById(R.id.et_to);
 
-        etDepartureDate = (EditText) rootView.findViewById(R.id.et_departureDate);
+
+        fragmentManager = getActivity().getFragmentManager();
 
         spAdult = (Spinner) rootView.findViewById(R.id.sp_adult);
         spAdult.setAdapter(app.getFlightAdultAdapter());
@@ -72,7 +79,7 @@ public class FragmentAirTickets extends Fragment {
 
         rbIndia = (RadioButton) rootView.findViewById(R.id.rb_india);
 
-        rbWorldWild = (RadioButton) rootView.findViewById(R.id.rb_worldWild);
+        rbWorldWild = (RadioButton) rootView.findViewById(R.id.rb_worldWide);
 
         rbReturn = (RadioButton) rootView.findViewById(R.id.rb_return);
 
@@ -82,8 +89,31 @@ public class FragmentAirTickets extends Fragment {
 
         rbBusiness = (RadioButton) rootView.findViewById(R.id.rb_business);
 
+        etDepartDate = (EditText) rootView.findViewById(R.id.et_departDate);
+        etDepartDate.setTextIsSelectable(true);
+
+        etReturnDate = (EditText) rootView.findViewById(R.id.et_returnDate);
+        etReturnDate.setTextIsSelectable(true);
+
+        etDepartDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                datePickerDialog.show(fragmentManager, "DepartDate");
+            }
+        });
+
+        Calendar calendar = Calendar.getInstance();
+        datePickerDialog = DatePickerDialog.newInstance(this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH));
+
 
         return rootView;
+    }
+
+    @Override
+    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+        String date = dayOfMonth + "-" + (monthOfYear + 1) + "-" + year;
+        etDepartDate.setText(date);
     }
 }
 

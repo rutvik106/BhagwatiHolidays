@@ -60,16 +60,71 @@
                             android:textSize="16sp" />
 
                         <RadioButton
-                            android:id="@+id/rb_worldWild"
+                            android:id="@+id/rb_worldwide"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
-                            android:text="Worldwild"
+                            android:text="Worldwide"
                             android:textSize="16sp" />
                     </RadioGroup>
 
                 </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Trip :"
+                        android:layout_gravity="center"
+                        android:textSize="16sp" />
+
+                    <RadioGroup
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:checked="true"
+                            android:id="@+id/rb_oneWay"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:text="One Way"
+                            android:textSize="16sp" />
+
+                        <RadioButton
+                            android:id="@+id/rb_return"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:text="Return"
+                            android:textSize="16sp" />
+                    </RadioGroup>
+
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/et_departDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+                    android:hint="Depart Date"/>
+
+                <EditText
+                    android:id="@+id/et_returnDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:hint="Return Date"/>
+
 
                 <EditText
                     android:id="@+id/et_from"
@@ -149,53 +204,13 @@
 
                 </LinearLayout>
 
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Trip :"
-                        android:layout_gravity="center"
-                        android:textSize="16sp" />
-
-                    <RadioGroup
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <RadioButton
-                            android:checked="true"
-                            android:id="@+id/rb_return"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:text="Return"
-                            android:textSize="16sp" />
-
-                        <RadioButton
-                            android:id="@+id/rb_oneWay"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="10dp"
-                            android:text="One Way"
-                            android:textSize="16sp" />
-                    </RadioGroup>
-
-                </LinearLayout>
-
-                <EditText
+                <!--<EditText
                     android:id="@+id/et_departureDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:hint="Departure Date"
-                    android:textSize="16sp" />
+                    android:textSize="16sp" />-->
 
                 <LinearLayout
                     android:layout_width="match_parent"

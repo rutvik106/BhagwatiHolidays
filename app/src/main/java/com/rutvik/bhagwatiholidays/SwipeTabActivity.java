@@ -89,10 +89,10 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
                 .displayer(new RoundedBitmapDisplayer(5))
                 .build();
 
-        imageLoader.displayImage (app.getUser().getProfilePic(), (android.widget.ImageView) drawerFragment.getView().findViewById(R.id.iv_userImage), options);
+        //imageLoader.displayImage (app.getUser().getProfilePic(), (android.widget.ImageView) drawerFragment.getView().findViewById(R.id.iv_userImage), options);
 
 
-        ((TextView) drawerFragment.getView().findViewById(R.id.tv_userName)).setText(app.getUser().getName());
+        //((TextView) drawerFragment.getView().findViewById(R.id.tv_userName)).setText(app.getUser().getName());
 
 
     }
@@ -139,6 +139,10 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
 
     @Override
     public void onDrawerItemSelected(View view, int position) {
+
+        if(position == 1){
+            startActivity(new Intent(this,OffersActivity.class));
+        }
 
     }
 

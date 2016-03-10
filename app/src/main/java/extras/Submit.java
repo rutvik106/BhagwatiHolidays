@@ -22,4 +22,24 @@ public class Submit {
     }
 
 
+    public static void submitAirticketForm(Map<String,String> params,PostHandler.ResponseCallback responseCallback){
+        if(params==null){
+            throw new IllegalArgumentException("cannot pass null paramater");
+        }
+        params.put("type","airticket");
+        new PostHandler(TAG,1,2000).doPostRequest("http://bhagwatiholidays.com/send-mail/send_mail.php",params,responseCallback);
+    }
+
+
+    public static void submitVisaForm(Map<String,String> params,PostHandler.ResponseCallback responseCallback){
+        if(params==null){
+            throw new IllegalArgumentException("cannot pass null paramater");
+        }
+        params.put("type","airticket");
+        new PostHandler(TAG,1,2000).doPostRequest("http://bhagwatiholidays.com/send-mail/send_mail.php",params,responseCallback);
+    }
+
+
+
+
 }

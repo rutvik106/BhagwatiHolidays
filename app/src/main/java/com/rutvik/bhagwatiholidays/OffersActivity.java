@@ -45,8 +45,6 @@ public class OffersActivity extends AppCompatActivity implements SearchView.OnQu
 
     private ProgressDialog progressDialog;
 
-    private List<PackageList.Package> packages;
-
     private final List<SimpleOffersAndPromotions> modelList = new ArrayList<>();
 
     SharedPreferences sharedPreferences;
@@ -90,7 +88,7 @@ public class OffersActivity extends AppCompatActivity implements SearchView.OnQu
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         //set Offers Adapter
-        packages = new ArrayList<>();
+
         mAdapter = new OffersAndPromotionsAdapter(OffersActivity.this, new OffersAndPromotionsAdapter.OnOfferClickListener() {
             @Override
             public void onOfferClick(SimpleOffersAndPromotions model) {
@@ -258,65 +256,6 @@ public class OffersActivity extends AppCompatActivity implements SearchView.OnQu
             modelList.add(model);
         }
     }
-
-    /*void loadOffersAsync() {
-
-        new AsyncTask<Void, Void, Void>() {
-
-            @Override
-            protected void onPreExecute() {
-
-                progressDialog = ProgressDialog.show(OffersActivity.this, "Please Wait...", "Getting offers...", true, true);
-
-            }
-
-            @Override
-            protected Void doInBackground(Void... params) {
-
-                HashMap<String, String> postParams = new HashMap<>();
-
-                postParams.put("method", "get_package_list");
-
-                new PostHandler("BWT", 4, 2000).doPostRequest("http://bhagwatiholidays.com/admin/webservice/index.php", postParams, new PostHandler.ResponseCallback() {
-                    @Override
-                    public void response(int status, String response) {
-                        if (status == HttpURLConnection.HTTP_OK) {
-                            try {
-                                PackageList packageList = new PackageList(response, "package_list");
-                                packages.clear();
-                                for (PackageList.Package p : packageList.getPackageList()) {
-                                    packages.add(p);
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                });
-
-
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-
-                progressDialog.dismiss();
-
-                //mAdapter = new LazyAdapter(OffersActivity.this, packages);
-
-                Log.i(TAG,"INSIDE ON POST EXECUTE");
-
-
-
-
-
-               // mAdapter.notifyDataSetChanged();
-
-            }
-        }.execute();
-
-    }*/
 
 
     private List<SimpleOffersAndPromotions> filterOffers(List<SimpleOffersAndPromotions> modelList, String query) {

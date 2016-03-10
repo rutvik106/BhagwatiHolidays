@@ -32,6 +32,7 @@ import java.util.List;
 import bhfragment.FragmentAirTickets;
 import bhfragment.FragmentDrawer;
 import bhfragment.FragmentHolidays;
+import bhfragment.FragmentHotelPackages;
 import bhfragment.FragmentHotels;
 import bhfragment.FragmentVisa;
 
@@ -102,7 +103,7 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new FragmentAirTickets(), "AIR TICKETS");
         adapter.addFragment(new FragmentHotels(), "HOTELS");
-        adapter.addFragment(new FragmentHolidays(), "HOLIDAYS");
+        adapter.addFragment(new FragmentHotelPackages(), "HOLIDAYS");
         adapter.addFragment(new FragmentVisa(), "VISA");
         viewPager.setAdapter(adapter);
     }

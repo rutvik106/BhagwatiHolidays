@@ -24,13 +24,30 @@
                 android:orientation="vertical"
                 android:padding="5dp">
 
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true">
+
                 <EditText
                     android:id="@+id/et_mobileNo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:textSize="16sp"
-                    android:hint="Mobile No." />
+                    android:hint="Contact" />
+
+                </android.support.design.widget.TextInputLayout>
+
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true">
 
                 <EditText
                     android:id="@+id/et_bookingDate"
@@ -40,40 +57,45 @@
                     android:textSize="16sp"
                     android:hint="Booking Date" />
 
+                </android.support.design.widget.TextInputLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="5dp"
+                    android:padding="5dp"
+                    android:layout_height="wrap_content"
+                    android:text="Type"
+                    android:layout_gravity="center"
+                    android:textSize="16sp" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:weightSum="2"
                     android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Type :"
-                        android:layout_gravity="center"
-                        android:textSize="16sp" />
+
 
                     <RadioGroup
                         android:id="@+id/rg_type"
-                        android:layout_width="fill_parent"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
                         <RadioButton
                             android:id="@+id/rb_india"
                             android:checked="true"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
+                            android:layout_weight="1"
                             android:text="India"
                             android:textSize="16sp" />
 
                         <RadioButton
                             android:id="@+id/rb_worldWide"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="10dp"
+                            android:layout_weight="1"
                             android:text="Worldwide"
                             android:textSize="16sp" />
                     </RadioGroup>
@@ -144,6 +166,14 @@
                 </LinearLayout>
 
 
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true">
+
+
                 <EditText
                     android:id="@+id/et_destination"
                     android:layout_width="match_parent"
@@ -152,17 +182,22 @@
                     android:hint="Destination"
                     android:textSize="16sp" />
 
+                </android.support.design.widget.TextInputLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:layout_marginTop="5dp"
+                    android:text="No of Nights"
+                    android:textSize="16sp" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
                     android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="No of Nights :"
-                        android:textSize="16sp" />
+
 
                     <Spinner
                         android:id="@+id/sp_noOfNights"

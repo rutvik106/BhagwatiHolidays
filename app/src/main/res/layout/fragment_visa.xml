@@ -23,13 +23,31 @@
                 android:orientation="vertical"
                 android:padding="5dp">
 
-                <EditText
-                    android:id="@+id/et_mobileNo"
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/input_layout_uid"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:textSize="16sp"
-                    android:hint="Mobile No." />
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true">
+
+                    <EditText
+                        android:id="@+id/et_mobileNo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:textSize="16sp"
+                        android:hint="Contact" />
+
+                </android.support.design.widget.TextInputLayout>
+
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true">
 
                 <EditText
                     android:id="@+id/et_dateOfTravel"
@@ -39,6 +57,16 @@
                     android:textSize="16sp"
                     android:hint="Date Of Travel" />
 
+                </android.support.design.widget.TextInputLayout>
+
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true">
+
                 <EditText
                     android:id="@+id/et_destination"
                     android:layout_width="match_parent"
@@ -47,36 +75,44 @@
                     android:textSize="16sp"
                     android:hint="Destination" />
 
+                </android.support.design.widget.TextInputLayout>
+
+                <TextView
+                    android:layout_gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Visa Type"
+                    android:padding="5dp"
+                    android:layout_marginTop="5dp"
+                    android:textSize="16sp"/>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
+                    android:weightSum="2"
                     android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_gravity="center"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Visa Type: "
-                        android:textSize="16sp"/>
+
 
                     <RadioGroup
                         android:id="@+id/rg_visaType"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
                         <RadioButton
                             android:id="@+id/rb_business"
                             android:checked="true"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:textSize="16sp"
                             android:text="Business" />
 
                         <RadioButton
                             android:id="@+id/rb_student"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:textSize="16sp"
                             android:text="Student" />

@@ -3,6 +3,7 @@ package com.rutvik.bhagwatiholidays;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -21,6 +22,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.*;
@@ -38,7 +40,7 @@ import bhfragment.FragmentHotelPackages;
 import bhfragment.FragmentHotels;
 import bhfragment.FragmentVisa;
 
-public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener{
+public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener {
 
     private Toolbar mToolbar;
     private TabLayout tabLayout;
@@ -60,13 +62,9 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_swipe_tab);
 
-        app=(App) getApplication();
+        app = (App) getApplication();
 
         app.trackScreenView("Swipe Tab Activity");
-
-
-
-
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -212,9 +210,21 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
     @Override
     public void onDrawerItemSelected(View view, int position) {
 
-        if(position == 1){
-            startActivity(new Intent(this,OffersActivity.class));
+        if (position == 1) {
+            startActivity(new Intent(this, OffersActivity.class));
+        } else if (position == 5) {
+            Intent supportIntent = new Intent(Intent.ACTION_DIAL);
+            supportIntent.setData(Uri.parse("tel:07940223333"));
+            startActivity(supportIntent);
+        } else if (position == 6) {
+            Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+            emailIntent.setType("plain/text");
+            emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{"info@bhagwatiholidays.com"});
+            emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Feedback");
+            emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Text");
+            startActivity(Intent.createChooser(emailIntent, "Send mail..."));
         }
+
 
     }
 

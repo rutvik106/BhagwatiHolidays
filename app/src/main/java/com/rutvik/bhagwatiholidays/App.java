@@ -30,27 +30,28 @@ import webservicehandler.PostHandler;
  */
 public class App extends Application {
 
-    public static final String APP_TAG="BWT ";
+    public static final String APP_TAG = "BWT ";
 
     private User user;
 
-    public void setUser(User user){
-        this.user=user;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public User getUser(){
+    public User getUser() {
         return user;
     }
 
 
-    static final String[] hotelAdult = new String[] { "1","2","3","4" };
-    static final String[] hotelChild = new String[] { "0","1","2" };
-    static final String[] hotelInfant = new String[] { "0","1","2" };
+    static final String[] hotelAdult = new String[]{"1", "2", "3", "4"};
+    static final String[] hotelChild = new String[]{"0", "1", "2"};
+    static final String[] hotelInfant = new String[]{"0", "1", "2"};
 
-    static final String[] flightAdult = new String[] { "1","2","3","4","5","6" };
-    static final String[] flightChild = new String[] { "0","1","2","3","4","5","6" };
-    static final String[] flightInfant = new String[] { "0","1","2","3","4","5","6" };
+    static final String[] flightAdult = new String[]{"1", "2", "3", "4", "5", "6"};
+    static final String[] flightChild = new String[]{"0", "1", "2", "3", "4", "5", "6"};
+    static final String[] flightInfant = new String[]{"0", "1", "2", "3", "4", "5", "6"};
 
+    static final String[] noOfNights = new String[]{"1", "2", "3", "4", "5", "6", "7"};
 
 
     ArrayAdapter<String> hotelAdultAdapter;
@@ -60,10 +61,10 @@ public class App extends Application {
     ArrayAdapter<String> flightAdultAdapter;
     ArrayAdapter<String> flightChildAdapter;
     ArrayAdapter<String> flightInfantAdapter;
+    ArrayAdapter<String> noOfNightsAdapter;
 
 
     private ImageLoaderConfiguration imageLoaderConfiguration;
-
 
 
     @Override
@@ -87,55 +88,51 @@ public class App extends Application {
         // END - UNIVERSAL IMAGE LOADER SETUP
 
 
-
         AnalyticsTrackers.initialize(this);
         AnalyticsTrackers.getInstance().get(AnalyticsTrackers.Target.APP);
 
-        hotelAdultAdapter =new ArrayAdapter<String>(getApplicationContext(),R.layout.my_spinner_item, hotelAdult);
-        hotelChildAdapter =new ArrayAdapter<String>(getApplicationContext(),R.layout.my_spinner_item, hotelChild);
-        hotelInfantAdapter =new ArrayAdapter<String>(getApplicationContext(),R.layout.my_spinner_item, hotelInfant);
+        hotelAdultAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.my_spinner_item, hotelAdult);
+        hotelChildAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.my_spinner_item, hotelChild);
+        hotelInfantAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.my_spinner_item, hotelInfant);
 
-        flightAdultAdapter =new ArrayAdapter<String>(getApplicationContext(),R.layout.my_spinner_item, flightAdult);
-        flightChildAdapter =new ArrayAdapter<String>(getApplicationContext(),R.layout.my_spinner_item, flightChild);
-        flightInfantAdapter =new ArrayAdapter<String>(getApplicationContext(),R.layout.my_spinner_item, flightInfant);
+        flightAdultAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.my_spinner_item, flightAdult);
+        flightChildAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.my_spinner_item, flightChild);
+        flightInfantAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.my_spinner_item, flightInfant);
 
+        noOfNightsAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.my_spinner_item, noOfNights);
 
 
         //new test().execute();
     }
 
-    public ArrayAdapter<String> getHotelAdultAdapter()
-    {
+    public ArrayAdapter<String> getHotelAdultAdapter() {
         return hotelAdultAdapter;
     }
 
-    public ArrayAdapter<String> getHotelChildAdapter()
-    {
+    public ArrayAdapter<String> getHotelChildAdapter() {
         return hotelChildAdapter;
     }
 
-    public ArrayAdapter<String> getHotelInfantAdapter()
-    {
+    public ArrayAdapter<String> getHotelInfantAdapter() {
         return hotelInfantAdapter;
     }
 
 
-
-    public ArrayAdapter<String> getFlightAdultAdapter()
-    {
+    public ArrayAdapter<String> getFlightAdultAdapter() {
         return flightAdultAdapter;
     }
 
-    public ArrayAdapter<String> getFlightChildAdapter()
-    {
+    public ArrayAdapter<String> getFlightChildAdapter() {
         return flightChildAdapter;
     }
 
-    public ArrayAdapter<String> getFlightInfantAdapter()
-    {
+    public ArrayAdapter<String> getFlightInfantAdapter() {
         return flightInfantAdapter;
     }
 
+    public ArrayAdapter<String> getNoOfNightsAdapter() {
+        return noOfNightsAdapter;
+    }
 
 
     public synchronized Tracker getGoogleAnalyticsTracker() {

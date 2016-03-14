@@ -35,7 +35,15 @@ public class Submit {
         if(params==null){
             throw new IllegalArgumentException("cannot pass null paramater");
         }
-        params.put("type","airticket");
+        params.put("type","visa");
+        new PostHandler(TAG,1,2000).doPostRequest("http://bhagwatiholidays.com/send-mail/send_mail.php",params,responseCallback);
+    }
+
+    public static void submitHotelForm(Map<String,String> params,PostHandler.ResponseCallback responseCallback){
+        if(params==null){
+            throw new IllegalArgumentException("cannot pass null paramater");
+        }
+        params.put("type","hotel");
         new PostHandler(TAG,1,2000).doPostRequest("http://bhagwatiholidays.com/send-mail/send_mail.php",params,responseCallback);
     }
 

@@ -44,16 +44,17 @@ public class LazyAdapter extends RecyclerView.Adapter<LazyAdapter.ViewHolder> {
     public ImageLoader imageLoader;
     DisplayImageOptions options;
 
-    private List<PackageList.Package> packages;
+    private int range = 20;
 
-    public LazyAdapter(Activity a, List<PackageList.Package> packages) {
+    private final List<PackageList.Package> packages;
+
+    public LazyAdapter(Activity a) {
 
         activity = a;
 
-        this.packages = new ArrayList<>(packages);
+        this.packages = new ArrayList<>();
 
         inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        File cacheDir = StorageUtils.getOwnCacheDirectory(a, "MyFolderCache");
 
 
         // UNIVERSAL IMAGE LOADER SETUP
@@ -130,33 +131,59 @@ public class LazyAdapter extends RecyclerView.Adapter<LazyAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return packages.size();
+        if (packages.size() != 0) {
+            if (packages.size() >= 20) {
+                return range;
+            } else {
+                return packages.size();
+            }
+        } else {
+            return packages.size();
+        }
+
+    }
+
+    public void increaseRange(int max) {
+        range = range + 20;
+        range = range % max;
+        Log.i(TAG, "range increased to: " + range);
+        notifyDataSetChanged();
+    }
+
+    public void addPackage(PackageList.Package p) {
+        Log.i(TAG, "ADDING SIMPLE ITEM TO LIST");
+        packages.add(p);
+        notifyItemInserted(packages.size());
     }
 
 
-
     public void removeItem(int position) {
+        Log.i(TAG, "remove item at: " + position);
         final PackageList.Package model = packages.remove(position);
         notifyItemRemoved(position);
     }
 
     public void addItem(int position, PackageList.Package model) {
+        Log.i(TAG, "add item at: " + position);
         packages.add(position, model);
         notifyItemInserted(position);
     }
 
     public void moveItem(int fromPosition, int toPosition) {
+        Log.i(TAG, "move ite from: " + fromPosition + " to: " + toPosition);
         final PackageList.Package model = packages.remove(fromPosition);
         packages.add(toPosition, model);
         notifyItemMoved(fromPosition, toPosition);
     }
 
 
-
-    public void animateTo(List<PackageList.Package> models) {
+    public void animateTo(List<PackageList.Package> models) throws ArrayIndexOutOfBoundsException {
+        Log.i(TAG, "animate to model list size: " + models.size());
+        Log.i(TAG, "packages size: " + packages.size());
         applyAndAnimateRemovals(models);
         applyAndAnimateAdditions(models);
         applyAndAnimateMovedItems(models);
+        Log.i(TAG, "packages size: " + packages.size());
 
     }
 
@@ -169,7 +196,6 @@ public class LazyAdapter extends RecyclerView.Adapter<LazyAdapter.ViewHolder> {
             }
         }
     }
-
 
 
     private void applyAndAnimateAdditions(List<PackageList.Package> newModels) {
@@ -191,8 +217,6 @@ public class LazyAdapter extends RecyclerView.Adapter<LazyAdapter.ViewHolder> {
             }
         }
     }
-
-
 
 
     public void display(ImageView img, String url, final ProgressBar spinner) {

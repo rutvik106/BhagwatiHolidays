@@ -135,6 +135,11 @@ public abstract class LoginWithGoogle extends AppCompatActivity implements Googl
             // Signed out, show unauthenticated UI.
             loggedOut();
         }
+
+        if(mProgressDialog!=null){
+            mProgressDialog.dismiss();
+        }
+
     }
     // [END handleSignInResult]
 

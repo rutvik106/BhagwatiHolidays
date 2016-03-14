@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import jsonobj.PackageList;
+import model.SimpleOffersAndPromotions;
 import webservicehandler.PostHandler;
 
 /**
@@ -41,17 +42,37 @@ public class FragmentHotelPackages extends Fragment {
 
     private ProgressDialog progressDialog;
 
-    private List<PackageList.Package> packages;
+    private final List<PackageList.Package> packages = new ArrayList<>();
+
+    private final List<PackageList.Package> searchedPackages = new ArrayList<>();
 
     App app;
+
+    //private int range = 20;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        packages = new ArrayList<>();
         app = (App) activity.getApplication();
+
+
     }
 
+    /*public void countRangeAndLoadPackagesInAdapter() {
+
+        Log.i(TAG, "RANGE IS: " + range);
+
+        if (range >= packages.size()) {
+            range = packages.size();
+        }
+
+        for (int i = mAdapter.getItemCount(); i < range; i++) {
+            Log.i(TAG, "ADDING PACKAGE: " + i);
+            ((LazyAdapter) mAdapter).addPackage(packages.get(i));
+        }
+
+    }
+*/
     public FragmentHotelPackages() {
         // Required empty public constructor
     }
@@ -59,6 +80,50 @@ public class FragmentHotelPackages extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    private void filterOffers(List<PackageList.Package> modelList, String query) {
+
+        searchedPackages.clear();
+
+        Log.i(TAG, "FILTERING OFFERS");
+
+        query = query.toLowerCase();
+
+        for (PackageList.Package model : modelList) {
+            final String name = model.getPackage_name().toLowerCase();
+            final String places = model.getPlaces().toLowerCase();
+            final String days = model.getDays().toLowerCase();
+            final String nights = model.getNights().toLowerCase();
+            //Log.i(TAG, "model.getTitle(): " + );
+            if (name.contains(query)) {
+                Log.i(TAG, "MATCH FOUND ADDING MODEL");
+                searchedPackages.add(model);
+            }
+        }
+
+        Log.i(TAG, "MODEL ARRAY SIZE: " + searchedPackages.size());
+
+    }
+
+    public void searchForPackage(String inputText) {
+
+        filterOffers(packages, inputText);
+
+
+        ((LazyAdapter) mAdapter).animateTo(searchedPackages);
+
+
+
+
+  /*      try {
+
+        }
+        catch (ArrayIndexOutOfBoundsException e){
+            Log.i(TAG,"Searched Array Size: "+searchedPackages.size()+" Adapter Array Size: "+mAdapter.getItemCount());
+        }*/
+
+        mRecyclerView.scrollToPosition(0);
     }
 
     @Override
@@ -75,13 +140,24 @@ public class FragmentHotelPackages extends Fragment {
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        loadOffersAsync();
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (isLastItemDisplaying()) {
+
+                    ((LazyAdapter) mAdapter).increaseRange(packages.size());
+
+                }
+            }
+        });
+
+        //loadOffersAsync();
 
         return rootView;
     }
 
 
-    private void loadOffersAsync() {
+    public void loadOffersAsync() {
 
         new AsyncTask<Void, Void, Void>() {
 
@@ -123,13 +199,18 @@ public class FragmentHotelPackages extends Fragment {
             @Override
             protected void onPostExecute(Void aVoid) {
 
-                mAdapter = new LazyAdapter(FragmentHotelPackages.this.getActivity(), packages);
-
-                Log.i(TAG, "INSIDE ON POST EXECUTE");
+                mAdapter = new LazyAdapter(FragmentHotelPackages.this.getActivity());
 
                 mRecyclerView.setAdapter(mAdapter);
 
-                mAdapter.notifyDataSetChanged();
+                //countRangeAndLoadPackagesInAdapter();
+
+                for (PackageList.Package p : packages) {
+                    ((LazyAdapter) mAdapter).addPackage(p);
+                }
+
+                Log.i(TAG, "INSIDE ON POST EXECUTE");
+
 
                 try {
                     if ((progressDialog != null) && progressDialog.isShowing()) {
@@ -146,6 +227,17 @@ public class FragmentHotelPackages extends Fragment {
             }
         }.execute();
 
+    }
+
+
+    public boolean isLastItemDisplaying() {
+        if (mRecyclerView.getAdapter().getItemCount() != 0) {
+            int lastItem = ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();
+            if (lastItem != RecyclerView.NO_POSITION && lastItem == mRecyclerView.getAdapter().getItemCount() - 1) {
+                return true;
+            }
+        }
+        return false;
     }
 
 

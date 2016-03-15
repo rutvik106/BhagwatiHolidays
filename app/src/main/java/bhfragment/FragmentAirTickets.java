@@ -180,12 +180,12 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
         rgTrip.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.rb_india) {
-                    etReturnDate.setVisibility(View.GONE);
-                    trip = rbIndia.getText().toString();
-                } else if (checkedId == R.id.rb_return) {
+                if (checkedId == R.id.rb_return) {
                     etReturnDate.setVisibility(View.VISIBLE);
                     trip = rbReturn.getText().toString();
+                } else {
+                    etReturnDate.setVisibility(View.GONE);
+                    trip = rbIndia.getText().toString();
                 }
             }
         });

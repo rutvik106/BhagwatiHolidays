@@ -94,10 +94,15 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
                 .displayer(new RoundedBitmapDisplayer(5))
                 .build();
 
-        //imageLoader.displayImage (app.getUser().getProfilePic(), (android.widget.ImageView) drawerFragment.getView().findViewById(R.id.iv_userImage), options);
+        try {
+            imageLoader.displayImage(app.getUser().getProfilePic(), (android.widget.ImageView) drawerFragment.getView().findViewById(R.id.iv_userImage), options);
 
 
-        //((TextView) drawerFragment.getView().findViewById(R.id.tv_userName)).setText(app.getUser().getName());
+            ((TextView) drawerFragment.getView().findViewById(R.id.tv_userName)).setText(app.getUser().getName());
+        }
+        catch (NullPointerException e){
+            e.printStackTrace();
+        }
 
 
     }
@@ -212,11 +217,11 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
 
         if (position == 1) {
             startActivity(new Intent(this, OffersActivity.class));
-        } else if (position == 5) {
+        } else if (position == 2) {
             Intent supportIntent = new Intent(Intent.ACTION_DIAL);
             supportIntent.setData(Uri.parse("tel:07940223333"));
             startActivity(supportIntent);
-        } else if (position == 6) {
+        } else if (position == 5) {
             Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
             emailIntent.setType("plain/text");
             emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{"info@bhagwatiholidays.com"});
@@ -224,8 +229,6 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
             emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Text");
             startActivity(Intent.createChooser(emailIntent, "Send mail..."));
         }
-
-
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {

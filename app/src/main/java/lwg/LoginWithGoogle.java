@@ -41,11 +41,20 @@ public abstract class LoginWithGoogle extends AppCompatActivity implements Googl
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        Log.i(TAG,"request code: "+requestCode);
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
+            Log.i(TAG,"Now Handling sign in result");
+            Log.i(TAG,"intent Data: "+data.toString());
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            handleSignInResult(result);
+            if (result.isSuccess()) {
+                GoogleSignInAccount acct = result.getSignInAccount();
+                // Get account information
+                Log.i(TAG,"display name: "+acct.getDisplayName());
+                Log.i(TAG,"email: "+acct.getEmail());
+            }
+            Log.i(TAG,"account: "+result.getSignInAccount().getEmail());
+            //handleSignInResult(result);
         }
 
     }

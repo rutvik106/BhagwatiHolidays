@@ -92,7 +92,7 @@ public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateS
         spInfant.setSelection(0);
 
         spNoOfNights = (Spinner) rootView.findViewById(R.id.sp_noOfNights);
-        spNoOfNights.setAdapter(app.getHotelInfantAdapter());
+        spNoOfNights.setAdapter(app.getNoOfNightsAdapter());
         spNoOfNights.setSelection(0);
 
         mFragmentManager = getActivity().getFragmentManager();

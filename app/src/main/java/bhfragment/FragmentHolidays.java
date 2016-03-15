@@ -77,6 +77,10 @@ public class FragmentHolidays extends Fragment {
         spInfant.setSelection(0);
 
         spNoOfNights = (Spinner) rootView.findViewById(R.id.sp_noOfNights);
+        spNoOfNights.setAdapter(app.getNoOfNightsAdapter());
+        spNoOfNights.setSelection(0);
+
+        spNoOfNights = (Spinner) rootView.findViewById(R.id.sp_noOfNights);
 
         fabDone = (FloatingActionButton) rootView.findViewById(R.id.done);
 

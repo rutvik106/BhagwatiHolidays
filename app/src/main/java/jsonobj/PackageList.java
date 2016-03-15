@@ -88,10 +88,6 @@ public class PackageList {
 	        this.days = days;
 	    }
 
-
-
-
-
 	    public String getPackage_name ()
 	    {
 	        return package_name;

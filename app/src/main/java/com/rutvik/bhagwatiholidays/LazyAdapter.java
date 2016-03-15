@@ -2,6 +2,7 @@ package com.rutvik.bhagwatiholidays;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -88,6 +89,16 @@ public class LazyAdapter extends RecyclerView.Adapter<LazyAdapter.ViewHolder> {
         ImageView packageImage;
         ProgressBar pb;
 
+        PackageList.Package singlePackage;
+
+        public void setSinglePackage(PackageList.Package p){
+            singlePackage=p;
+            packageName.setText(singlePackage.getPackage_name());
+            packageDays.setText(singlePackage.getDays() + " Days");
+            packageNights.setText(singlePackage.getNights() + " Nights");
+            packagePlace.setText(singlePackage.getPlaces());
+        }
+
         public ViewHolder(View itemView) {
             super(itemView);
             packageName = (TextView) itemView.findViewById(R.id.tv_packageTitle);
@@ -96,6 +107,21 @@ public class LazyAdapter extends RecyclerView.Adapter<LazyAdapter.ViewHolder> {
             packagePlace = (TextView) itemView.findViewById(R.id.tv_packagePlace);
             packageImage = (ImageView) itemView.findViewById(R.id.iv_packageImage);
             pb = (ProgressBar) itemView.findViewById(R.id.pb);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i=new Intent(LazyAdapter.this.activity,ItineraryListActivity.class);
+                    i.putExtra("package_name",singlePackage.getPackage_name());
+                    i.putExtra("package_days",singlePackage.getDays());
+                    i.putExtra("package_nights",singlePackage.getNights());
+                    i.putExtra("package_place",singlePackage.getPlaces());
+                    i.putExtra("package_image",singlePackage.getThumb_href());
+                    i.putExtra("inclusions",singlePackage.getInclusions());
+                    i.putExtra("exclusions",singlePackage.getExclusions());
+                    i.putExtra("package_id",singlePackage.getPackage_id());
+                    activity.startActivity(i);
+                }
+            });
         }
     }
 
@@ -105,20 +131,20 @@ public class LazyAdapter extends RecyclerView.Adapter<LazyAdapter.ViewHolder> {
 
         ViewHolder vh = new ViewHolder(vi);
 
+
+
         return vh;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.packageName.setText(packages.get(position).getPackage_name());
-        holder.packageDays.setText(packages.get(position).getDays() + " Days");
-        holder.packageNights.setText(packages.get(position).getNights() + " Nights");
-        holder.packagePlace.setText(packages.get(position).getPlaces());
+
+        holder.setSinglePackage(packages.get(position));
 
         //loadBitmap(viewHolder.packageImage, "http://www.bhagwatiholidays.com/admin/images/package_icons/"+packages.get(position).getThumb_href());
 
         try {
-            display(holder.packageImage, "http://www.bhagwatiholidays.com/admin/images/package_icons/" + packages.get(position).getThumb_href(), holder.pb);
+            display(holder.packageImage,packages.get(position).getThumb_href(), holder.pb);
         } catch (NullPointerException e) {
             e.printStackTrace();
         }

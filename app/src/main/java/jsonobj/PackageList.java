@@ -34,15 +34,28 @@ public class PackageList {
 	
 	public class Package
 	{
-	    private String created_by;
-
-	    private String last_updated_by;
 
 	    private String days;
 
-	    private String date_modified;
+        public String getInclusions() {
+            return inclusions;
+        }
 
-	    private String date_added;
+        public void setInclusions(String inclusions) {
+            this.inclusions = inclusions;
+        }
+
+        public String getExclusions() {
+            return exclusions;
+        }
+
+        public void setExclusions(String exclusions) {
+            this.exclusions = exclusions;
+        }
+
+        private String inclusions;
+
+		private String exclusions;
 
 	    private String package_name;
 
@@ -55,37 +68,15 @@ public class PackageList {
 	    private String places;
 	    
 	    public Package(JSONObject obj) throws JSONException {
-			created_by=obj.getString("created_by");
-			last_updated_by=obj.getString("last_updated_by");
 			days=obj.getString("days");
-			date_modified=obj.getString("date_modified");
-			date_added=obj.getString("date_added");
+			inclusions=obj.getString("inclusions");
+			exclusions=obj.getString("exclusions");
 			package_name=obj.getString("package_name");
 			thumb_href=obj.getString("thumb_href");
 			nights=obj.getString("nights");
 			package_id=obj.getString("package_id");
 			places=obj.getString("places");
 		}
-
-	    public String getCreated_by ()
-	    {
-	        return created_by;
-	    }
-
-	    public void setCreated_by (String created_by)
-	    {
-	        this.created_by = created_by;
-	    }
-
-	    public String getLast_updated_by ()
-	    {
-	        return last_updated_by;
-	    }
-
-	    public void setLast_updated_by (String last_updated_by)
-	    {
-	        this.last_updated_by = last_updated_by;
-	    }
 
 	    public String getDays ()
 	    {
@@ -97,25 +88,9 @@ public class PackageList {
 	        this.days = days;
 	    }
 
-	    public String getDate_modified ()
-	    {
-	        return date_modified;
-	    }
 
-	    public void setDate_modified (String date_modified)
-	    {
-	        this.date_modified = date_modified;
-	    }
 
-	    public String getDate_added ()
-	    {
-	        return date_added;
-	    }
 
-	    public void setDate_added (String date_added)
-	    {
-	        this.date_added = date_added;
-	    }
 
 	    public String getPackage_name ()
 	    {
@@ -129,7 +104,7 @@ public class PackageList {
 
 	    public String getThumb_href ()
 	    {
-	        return thumb_href;
+	        return "http://www.bhagwatiholidays.com/admin/images/package_icons/"+thumb_href;
 	    }
 
 	    public void setThumb_href (String thumb_href)
@@ -170,7 +145,7 @@ public class PackageList {
 	    @Override
 	    public String toString()
 	    {
-	        return "ClassPojo [created_by = "+created_by+", last_updated_by = "+last_updated_by+", days = "+days+", date_modified = "+date_modified+", date_added = "+date_added+", package_name = "+package_name+", thumb_href = "+thumb_href+", nights = "+nights+", package_id = "+package_id+", places = "+places+"]";
+	        return "ClassPojo [days = "+days+", package_name = "+package_name+", thumb_href = "+thumb_href+", nights = "+nights+", package_id = "+package_id+", places = "+places+"]";
 	    }
 	}
 	

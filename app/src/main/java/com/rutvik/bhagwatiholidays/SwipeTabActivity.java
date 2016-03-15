@@ -9,11 +9,13 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -46,7 +48,11 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
     private ProgressDialog mProgressDialog;
     private FragmentDrawer drawerFragment;
 
+    final ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+
     private App app;
+
+    MenuItem search;
 
     public com.nostra13.universalimageloader.core.ImageLoader imageLoader;
     public DisplayImageOptions options;
@@ -98,26 +104,91 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
 
 
     private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+
+
         adapter.addFragment(new FragmentAirTickets(), "AIR TICKETS");
         adapter.addFragment(new FragmentHotels(), "HOTELS");
         adapter.addFragment(new FragmentHotelPackages(), "HOLIDAYS");
         adapter.addFragment(new FragmentVisa(), "VISA");
         viewPager.setAdapter(adapter);
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if(position==2){
+                    search.setVisible(true);
+                    ((FragmentHotelPackages)adapter.getItem(position)).loadOffersAsync();
+                }
+                else{
+                    search.setVisible(false);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.bh_menu, menu);
-        return true;
+        getMenuInflater().inflate(R.menu.bh_menu, menu);
+
+        // Associate searchable configuration with the SearchView
+        // SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
+        search=menu.findItem(R.id.action_search);
+        //searchView.setVisibility(View.GONE);
+        // searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                ((FragmentHotelPackages)SwipeTabActivity.this.adapter.getItem(2)).searchForPackage(newText);
+
+                return false;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
 
-       /* switch (item.getItemId()) {
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+
+/*    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.bh_menu, menu);
+        return true;
+    }*/
+
+/*    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+       *//* switch (item.getItemId()) {
             case R.id.menu_offers:
                 startActivity(new Intent(SwipeTabActivity.this, OffersActivity.class));
                 break;
@@ -132,9 +203,9 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
 
             default:
                 return super.onOptionsItemSelected(item);
-        }*/
+        }*//*
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
     @Override
     public void onDrawerItemSelected(View view, int position) {

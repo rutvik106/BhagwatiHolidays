@@ -27,7 +27,7 @@
                 android:padding="10dp">
 
                 <ImageView
-                    android:id="@+id/iv_offerImage"
+                    android:id="@+id/iv_packageImage"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
                     android:background="@drawable/offer_image_na" />
@@ -42,48 +42,47 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Applicable On"
+                        android:text="Suggested Length"
                         android:textColor="#CCC"
                         android:textSize="18sp" />
 
                     <TextView
-                        android:id="@+id/tv_applicableOn"
+                        android:id="@+id/tv_suggestedLength"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:singleLine="true"
-                        android:text="Hotels + Airticket"
+                        android:text="8 Days"
                         android:textColor="#000000"
                         android:textSize="18sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Offer Validity"
+                        android:text="Price from"
                         android:textColor="#CCC"
                         android:textSize="18sp" />
 
                     <TextView
-                        android:id="@+id/tv_offerValidity"
+                        android:id="@+id/tv_priceFrom"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:singleLine="true"
-                        android:text="Limited"
+                        android:text="3 star : 27900 INR"
                         android:textColor="#000000"
                         android:textSize="18sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Offer Validity"
+                        android:text="Itinerary Highlights"
                         android:textColor="#CCC"
                         android:textSize="18sp" />
 
                     <TextView
-                        android:id="@+id/tv_new"
+                        android:id="@+id/tv_places"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:singleLine="true"
-                        android:text="Limited"
+                        android:text="Port Blair, Viper Island, Havelock Island, Mount Harriet"
                         android:textColor="#000000"
                         android:textSize="18sp" />
 
@@ -101,13 +100,13 @@
                 android:padding="10dp">
 
                 <TextView
-                    android:id="@+id/tv_offerDescription"
+                    android:id="@+id/tv_packageDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:minHeight="200dp"
                     android:text="Description"
                     android:textColor="#000000"
-                    android:textSize="17sp" />
+                   />
 
             </LinearLayout>
 
@@ -130,7 +129,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:background="@drawable/booknow_btn"
-            android:text="Make your own Itinerary"
+            android:text="BOOK NOW"
             android:textColor="#FFFFFF"
             android:textSize="17sp"
             android:textStyle="bold" />

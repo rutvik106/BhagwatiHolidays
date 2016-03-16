@@ -43,7 +43,7 @@ public class PackageItenary {
         for(int i=0; i<singelPackageItenariesList.size(); i++)
         {
         	int day=i+1;
-        	headingList.add("DAY " + day + " - " + singelPackageItenariesList.get(i).getItenary_heading());
+        	headingList.add("<h4><font color='#e2bb3d'> DAY " + day + " - " + singelPackageItenariesList.get(i).getItenary_heading()+"</font></h4><br/>");
         }
     	
     	return headingList;
@@ -54,7 +54,7 @@ public class PackageItenary {
     	ArrayList<String> descriptionList=new ArrayList<String>();
         for(int i=0; i<singelPackageItenariesList.size(); i++)
         {
-        	descriptionList.add(singelPackageItenariesList.get(i).getItenary_description());
+        	descriptionList.add("<p align='justify'>"+singelPackageItenariesList.get(i).getItenary_description()+"</p><br/>");
         }
     	
     	return descriptionList;

@@ -47,14 +47,14 @@ public abstract class LoginWithGoogle extends AppCompatActivity implements Googl
             Log.i(TAG,"Now Handling sign in result");
             Log.i(TAG,"intent Data: "+data.toString());
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            if (result.isSuccess()) {
+            /*if (result.isSuccess()) {
                 GoogleSignInAccount acct = result.getSignInAccount();
                 // Get account information
                 Log.i(TAG,"display name: "+acct.getDisplayName());
                 Log.i(TAG,"email: "+acct.getEmail());
             }
-            Log.i(TAG,"account: "+result.getSignInAccount().getEmail());
-            //handleSignInResult(result);
+            Log.i(TAG,"account: "+result.getSignInAccount().getEmail());*/
+            handleSignInResult(result);
         }
 
     }

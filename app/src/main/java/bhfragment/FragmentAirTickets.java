@@ -1,9 +1,14 @@
 package bhfragment;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,11 +31,16 @@ import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import extras.Submit;
+import extras.Validator;
+import gcm.CommonUtilities;
 import webservicehandler.PostHandler;
 
 /**
@@ -46,6 +56,7 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
 
     App app;
 
+    Handler mHandler;
 
     DatePickerDialog datePickerDialog;
     android.app.FragmentManager fragmentManager;
@@ -74,6 +85,7 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mHandler = new Handler();
     }
 
     @Override
@@ -87,7 +99,7 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
         etFrom = (EditText) rootView.findViewById(R.id.et_from);
 
         etTo = (EditText) rootView.findViewById(R.id.et_to);
-        
+
         fragmentManager = getActivity().getFragmentManager();
 
         spAdult = (Spinner) rootView.findViewById(R.id.sp_adult);
@@ -125,6 +137,25 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
 
         etReturnDate = (EditText) rootView.findViewById(R.id.et_returnDate);
         etReturnDate.setTextIsSelectable(false);
+        etDepartDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    dateFlag = DEPART_DATE;
+                    datePickerDialog.show(fragmentManager, "DepartDate");
+                }
+            }
+        });
+
+        etReturnDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    dateFlag = RETURN_DATE;
+                    datePickerDialog.show(fragmentManager, "ReturnDate");
+                }
+            }
+        });
 
 
         //Take value from Spinner
@@ -211,15 +242,31 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
         dateComponentMap.put(RETURN_DATE, new OnGetDate() {
             @Override
             public void setText(String text) {
-                etReturnDate.setText(text);
+                boolean flag = false;
+                flag = Validator.validateDates(etDepartDate.getText().toString(), text, new Validator.ValidationListener() {
+                    @Override
+                    public void validationFailed(String msg) {
+                        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+                    }
+                });
+                if (flag == true) {
+                    etReturnDate.setText(text);
+                }
+
             }
         });
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////
+
         etDepartDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dateFlag = DEPART_DATE;
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH));
+
+                datePickerDialog.setMinDate(calendar);
                 datePickerDialog.show(fragmentManager, "DepartDate");
             }
         });
@@ -240,6 +287,7 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
         fabDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG, "press btn before....");
                 submitForm();
             }
         });
@@ -288,54 +336,118 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
             departDate = etDepartDate.getText().toString();
             returnDate = etReturnDate.getText().toString();
 
-            Map<String, String> formParams = new HashMap<String, String>();
-            formParams.put("Mobile NO. ", mobileNo);
-            formParams.put("Type ", type);
-            formParams.put("Trip ", trip);
-            formParams.put("Depart Date ", departDate);
-            formParams.put("Return Date ", returnDate);
-            formParams.put("From ", from);
-            formParams.put("To ", to);
-            formParams.put("Adult ", adult);
-            formParams.put("Child ", child);
-            formParams.put("Infant ", infant);
-            formParams.put("Class ", mClass);
+            Map<String, String> formParams = new LinkedHashMap<>();
+            formParams.put("Contact", mobileNo);
+            formParams.put("Type", type);
+            formParams.put("Trip", trip);
+            formParams.put("Depart Date", departDate);
+            formParams.put("Return Date", returnDate);
+            formParams.put("From", from);
+            formParams.put("To", to);
+            formParams.put("Adult", adult);
+            formParams.put("Child", child);
+            formParams.put("Infant", infant);
+            formParams.put("Class", mClass);
 
-            JSONArray array = new JSONArray();
+            Log.d(TAG, "Check check........!!!!");
 
-            Iterator iterator = formParams.entrySet().iterator();
+            if (isFormParamValid(formParams)) {
 
-            while (iterator.hasNext()) {
-                Map.Entry pair = (Map.Entry) iterator.next();
-                array.put(new JSONObject("{\"" + pair.getKey() + "\":" + "\"" + pair.getValue() + "\"}"));
-                iterator.remove();
+
+                JSONArray array = new JSONArray();
+
+                Iterator iterator = formParams.entrySet().iterator();
+
+                while (iterator.hasNext()) {
+                    Map.Entry pair = (Map.Entry) iterator.next();
+                    array.put(new JSONObject("{\"" + pair.getKey() + "\":" + "\"" + pair.getValue() + "\"}"));
+                    iterator.remove();
+                }
+
+                Log.d(TAG, "JSON-DATA: " + array);
+
+                final Map<String, String> postParam = new HashMap<String, String>();
+                postParam.put("data", array.toString());
+                postParam.put("email", "rakshit1993.rs@gmail.com");
+
+                new AsyncTask<Void, Void, Void>() {
+                    final Context c = getActivity();
+
+                    @Override
+                    protected Void doInBackground(Void... params) {
+                        Submit.submitAirticketForm(postParam, new PostHandler.ResponseCallback() {
+                            @Override
+                            public void response(int status, String response) {
+                                if (status == HttpURLConnection.HTTP_OK) {
+                                    try {
+                                        JSONObject mailResponse = new JSONObject(response).getJSONObject("mail_response");
+                                        Log.i(TAG, "mailResponse.getString(\"status\"): " + mailResponse.getString("status"));
+                                        Log.i(TAG, "mailResponse.getString(\"status\").equals(\"1\") " + mailResponse.getString("status").equals("1"));
+                                        if (mailResponse.getString("status").equals("1")) {
+                                            Log.i(TAG, "SHOWING ALERT DIALOG");
+                                            mHandler.post(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    CommonUtilities
+                                                            .showAlertDialog(c, "Air Ticket Booking",
+                                                                    "",
+                                                                    "Air Ticket Booking in Bhagwati Holidays");
+                                                }
+                                            });
+
+                                        }
+                                    } catch (JSONException e) {
+
+                                    }
+                                }
+                            }
+                        });
+                        return null;
+                    }
+
+                }.execute();
+
+
             }
 
-            Log.d(TAG, "JSON-DATA: " + array);
-
-            Map<String, String> postParam = new HashMap<String, String>();
-            postParam.put("data", array.toString());
-            postParam.put("email", FragmentAirTickets.this.app.getUser().getEmail());
-
-            Submit.submitAirticketForm(postParam, new PostHandler.ResponseCallback() {
-                @Override
-                public void response(int status, String response) {
-                    if (status == HttpURLConnection.HTTP_OK) {
-                        try {
-                            JSONObject mailResponse = new JSONObject(response).getJSONObject("mail_response");
-                            if (mailResponse.getString("status").equals(1)) {
-                                //Notify User For successful mail sent
-                            }
-                        } catch (JSONException e) {
-
-                        }
-                    }
-                }
-            });
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
+
+
     }
+
+    boolean isFormValid=true;
+
+    public boolean isFormParamValid(Map<String, String> formParams) {
+        Log.i(TAG, "inside is form param valid");
+
+        Validator.validateContact(formParams.get("Contact"), new Validator.ValidationListener() {
+            @Override
+            public void validationFailed(String msg) {
+                Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+                isFormValid=false;
+            }
+        });
+
+        Validator.validateFrom(formParams.get("From"), new Validator.ValidationListener() {
+            @Override
+            public void validationFailed(String msg) {
+                Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+                isFormValid=false;
+            }
+        });
+
+        Validator.validTo(formParams.get("To"), new Validator.ValidationListener() {
+            @Override
+            public void validationFailed(String msg) {
+                Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+                isFormValid=false;
+            }
+        });
+        return isFormValid;
+    }
+
 }

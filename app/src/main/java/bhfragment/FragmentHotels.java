@@ -29,6 +29,7 @@ import java.net.HttpURLConnection;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import extras.Submit;
@@ -175,6 +176,14 @@ public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateS
         });
 
         etBookingDate.setTextIsSelectable(true);
+        etBookingDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    datePickerDialog.show(mFragmentManager, "DepartDate");
+                }
+            }
+        });
 
         etBookingDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -209,15 +218,15 @@ public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateS
 
             bookingDate = etBookingDate.getText().toString();
 
-            Map<String, String> formParams = new HashMap<String, String>();
-            formParams.put("Mobile NO. ", mobileNo);
-            formParams.put("Booking Date  ", bookingDate);
-            formParams.put("Type ", type);
-            formParams.put("Adult ", adult);
-            formParams.put("Child ", child);
-            formParams.put("Infant ", infant);
-            formParams.put("Destination ", destination);
-            formParams.put("No. of Nights ", noOfNights);
+            Map<String, String> formParams = new LinkedHashMap<>();
+            formParams.put("Contact", mobileNo);
+            formParams.put("Booking Date", bookingDate);
+            formParams.put("Type", type);
+            formParams.put("Adult", adult);
+            formParams.put("Child", child);
+            formParams.put("Infant", infant);
+            formParams.put("Destination", destination);
+            formParams.put("No. of Nights", noOfNights);
 
             JSONArray array = new JSONArray();
 

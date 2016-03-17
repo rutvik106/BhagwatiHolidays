@@ -16,6 +16,7 @@
     <string name="nav_item_share">Share</string>
     <string name="nav_item_sendFeedback">Send Feedback</string>
     <string name="nav_item_disableNotification">Disable Notification</string>
+    <string name="nav_item_locateus">Locate Us</string>
 
     <!--Navigation drawer array-->
     <string-array name="nav_drawer_labels">
@@ -26,6 +27,7 @@
         <item>@string/nav_item_share</item>
         <item>@string/nav_item_sendFeedback</item>
         <item>@string/nav_item_disableNotification</item>
+        <item>@string/nav_item_locateus</item>
     </string-array>
 
     <string name="title_one">One</string>

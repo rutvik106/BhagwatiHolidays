@@ -25,6 +25,7 @@ import java.net.HttpURLConnection;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import extras.Submit;
@@ -78,6 +79,14 @@ public class FragmentVisa extends Fragment implements DatePickerDialog.OnDateSet
 
         etDateOfTravel = (EditText) rootView.findViewById(R.id.et_dateOfTravel);
         etDateOfTravel.setTextIsSelectable(false);
+        etDateOfTravel.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    datePickerDialog.show(fragmentManager, "FragmentVisa");
+                }
+            }
+        });
 
         etDestination = (EditText) rootView.findViewById(R.id.et_destination);
 
@@ -130,11 +139,11 @@ public class FragmentVisa extends Fragment implements DatePickerDialog.OnDateSet
             RadioButton rbType = (RadioButton) radioGroup.findViewById(radioGroup.getCheckedRadioButtonId());
             visaType = rbType.getText().toString();
 
-            Map<String, String> formParams = new HashMap<String, String>();
-            formParams.put("Mobile NO. ", mobileNO);
-            formParams.put("Date Of Travel  ", dateOfTravel);
-            formParams.put("Destination  ", destination);
-            formParams.put("Visa Type ", visaType);
+            Map<String, String> formParams = new LinkedHashMap<>();
+            formParams.put("Contact", mobileNO);
+            formParams.put("Date Of Travel", dateOfTravel);
+            formParams.put("Destination", destination);
+            formParams.put("Visa Type", visaType);
 
             JSONArray array = new JSONArray();
 

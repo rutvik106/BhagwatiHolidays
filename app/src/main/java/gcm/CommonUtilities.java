@@ -1,8 +1,10 @@
 package gcm;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.provider.CalendarContract;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import com.rutvik.bhagwatiholidays.App;
@@ -34,6 +36,33 @@ public final class CommonUtilities {
 
         context.startActivity(intent);
 	}
+
+
+        public static void showAlertDialog(final Context context, final String calendarTitle
+                , final String calendarLocation, final String calendarDescription) {
+                final Calendar calendar = Calendar.getInstance();
+
+                Log.d(TAG, "In AlertDialog.......");
+                new AlertDialog.Builder(context)
+                        .setTitle("Inquiry")
+                        .setMessage("Inquiry successfully submitted! We will contact you shortly!")
+                        .setPositiveButton("Set Reminder", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                        CommonUtilities.createCalendarEntry(context,
+                                                calendarTitle,
+                                                calendarLocation,
+                                                calendarDescription,
+                                                new GregorianCalendar(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                                                        calendar.get(Calendar.DAY_OF_MONTH)));
+                                }
+                        })
+                        .setNegativeButton("Done", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                }
+                        })
+                        .show();
+        }
 
 
 }

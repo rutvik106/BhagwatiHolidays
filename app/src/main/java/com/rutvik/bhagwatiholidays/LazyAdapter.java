@@ -157,7 +157,7 @@ public class LazyAdapter extends RecyclerView.Adapter<LazyAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        if (packages.size() != 0) {
+        /*if (packages.size() != 0) {
             if (packages.size() >= 20) {
                 Log.i(TAG,"RETURNING RANGE= "+range);
                 return range;
@@ -165,9 +165,9 @@ public class LazyAdapter extends RecyclerView.Adapter<LazyAdapter.ViewHolder> {
                 Log.i(TAG,"RETURNING PACKAGE SIZE= "+packages.size());
                 return packages.size();
             }
-        } else {
+        } else {*/
             return packages.size();
-        }
+        //}
 
     }
 

@@ -61,16 +61,15 @@ public class ItineraryListActivity extends AppCompatActivity {
 
         tvSuggestedLength.setText(getIntent().getStringExtra("package_days") + " Days / " + getIntent().getStringExtra("package_nights")+" Nights");
 
-
         tvPlaces=(TextView) findViewById(R.id.tv_places);
 
         tvPlaces.setText(getIntent().getStringExtra("package_place"));
 
+        tvPlaces.setSelected(true);
 
         inclusions=getIntent().getStringExtra("inclusions");
 
         exclusions=getIntent().getStringExtra("exclusions");
-
 
         imageLoader = com.nostra13.universalimageloader.core.ImageLoader.getInstance();
 
@@ -169,7 +168,7 @@ public class ItineraryListActivity extends AppCompatActivity {
                 tvPackageDescription.setText(Html.fromHtml(htmlContent +
                         "<h4><font color='#e2bb3d'>INCLUSIONS</font></h4><br/>" +
                         inclusions +
-                        "<h4>f<font color='#e2bb3d'>EXCLUSIONS</font></h4><br/>" +
+                        "<h4><font color='#e2bb3d'>EXCLUSIONS</font></h4><br/>" +
                         exclusions));
 
                 if(progressDialog!=null){

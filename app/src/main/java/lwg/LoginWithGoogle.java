@@ -24,7 +24,7 @@ import com.rutvik.bhagwatiholidays.App;
  */
 public abstract class LoginWithGoogle extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
-    private static final int RC_SIGN_IN = 9001;
+    public static final int RC_SIGN_IN = 0;
 
     private static final String TAG = App.APP_TAG + LoginWithGoogle.class.getSimpleName();
 
@@ -38,26 +38,7 @@ public abstract class LoginWithGoogle extends AppCompatActivity implements Googl
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.i(TAG,"request code: "+requestCode);
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
-            Log.i(TAG,"Now Handling sign in result");
-            Log.i(TAG,"intent Data: "+data.toString());
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            /*if (result.isSuccess()) {
-                GoogleSignInAccount acct = result.getSignInAccount();
-                // Get account information
-                Log.i(TAG,"display name: "+acct.getDisplayName());
-                Log.i(TAG,"email: "+acct.getEmail());
-            }
-            Log.i(TAG,"account: "+result.getSignInAccount().getEmail());*/
-            handleSignInResult(result);
-        }
 
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +55,8 @@ public abstract class LoginWithGoogle extends AppCompatActivity implements Googl
                 .build();
 
     }
+
+
 
     @Override
     protected void onStart() {
@@ -102,6 +85,27 @@ public abstract class LoginWithGoogle extends AppCompatActivity implements Googl
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.i(TAG, "request code: " + requestCode);
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
+            Log.i(TAG,"Now Handling sign in result");
+            Log.i(TAG, "intent Data: " + data.toString());
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            /*if (result.isSuccess()) {
+                GoogleSignInAccount acct = result.getSignInAccount();
+                // Get account information
+                Log.i(TAG,"display name: "+acct.getDisplayName());
+                Log.i(TAG,"email: "+acct.getEmail());
+            }
+            Log.i(TAG,"account: "+result.getSignInAccount().getEmail());*/
+            handleSignInResult(result);
+        }
+
+    }
+
     public LoginWithGoogle(GoogleApiClient mGoogleApiClient) {
         this.mGoogleApiClient = mGoogleApiClient;
 
@@ -119,7 +123,7 @@ public abstract class LoginWithGoogle extends AppCompatActivity implements Googl
 
 
     // [START handleSignInResult]
-    private void handleSignInResult(GoogleSignInResult result) {
+    public void handleSignInResult(GoogleSignInResult result) {
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
             Log.i(TAG, "LOGIN SUCCESSFUL (GETTING USER INFO)");

@@ -35,7 +35,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
+                    android:layout_marginLeft="10dp"
                     android:orientation="vertical">
 
 
@@ -43,8 +43,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Suggested Length"
-                        android:textColor="#CCC"
-                        android:textSize="18sp" />
+                        android:textColor="#999"
+                        android:textSize="16sp"
+                        android:layout_marginBottom="2dp"/>
 
                     <TextView
                         android:id="@+id/tv_suggestedLength"
@@ -53,14 +54,17 @@
                         android:singleLine="true"
                         android:text="8 Days"
                         android:textColor="#000000"
-                        android:textSize="18sp" />
+                        android:textSize="18sp"
+                        android:layout_marginBottom="5dp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Price from"
-                        android:textColor="#CCC"
-                        android:textSize="18sp" />
+                        android:layout_marginBottom="2dp"
+                        android:textColor="#999"
+                        android:textSize="16sp"
+                        />
 
                     <TextView
                         android:id="@+id/tv_priceFrom"
@@ -69,19 +73,29 @@
                         android:singleLine="true"
                         android:text="3 star : 27900 INR"
                         android:textColor="#000000"
-                        android:textSize="18sp" />
+                        android:textSize="18sp"
+                        android:layout_marginBottom="5dp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Itinerary Highlights"
-                        android:textColor="#CCC"
-                        android:textSize="18sp" />
+                        android:layout_marginBottom="2dp"
+                        android:textColor="#999"
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/tv_places"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:ellipsize="marquee"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:scrollHorizontally="true"
+                        android:focusableInTouchMode="true"
+                        android:focusable="true"
+                        android:freezesText="true"
+
                         android:text="Port Blair, Viper Island, Havelock Island, Mount Harriet"
                         android:textColor="#000000"
                         android:textSize="18sp" />
@@ -94,7 +108,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:background="#FFFFFF"
                 android:orientation="vertical"
                 android:padding="10dp">

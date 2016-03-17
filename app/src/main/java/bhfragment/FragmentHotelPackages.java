@@ -140,17 +140,6 @@ public class FragmentHotelPackages extends Fragment {
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (isLastItemDisplaying()) {
-
-                    ((LazyAdapter) mAdapter).increaseRange(packages.size());
-
-                }
-            }
-        });
-
         //loadOffersAsync();
 
         return rootView;
@@ -230,7 +219,7 @@ public class FragmentHotelPackages extends Fragment {
     }
 
 
-    public boolean isLastItemDisplaying() {
+/*    public boolean isLastItemDisplaying() {
         if (mRecyclerView.getAdapter().getItemCount() != 0) {
             int lastItem = ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();
             if (lastItem != RecyclerView.NO_POSITION && lastItem == mRecyclerView.getAdapter().getItemCount() - 1) {
@@ -238,7 +227,7 @@ public class FragmentHotelPackages extends Fragment {
             }
         }
         return false;
-    }
+    }*/
 
 
 }

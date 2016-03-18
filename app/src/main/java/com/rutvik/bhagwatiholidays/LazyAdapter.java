@@ -127,7 +127,7 @@ public class LazyAdapter extends RecyclerView.Adapter<LazyAdapter.ViewHolder> {
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View vi = inflater.inflate(R.layout.offers_list_item, null);
+        View vi = inflater.inflate(R.layout.offers_list_item, parent,false);
 
         ViewHolder vh = new ViewHolder(vi);
 
@@ -145,7 +145,7 @@ public class LazyAdapter extends RecyclerView.Adapter<LazyAdapter.ViewHolder> {
 
         try {
             display(holder.packageImage,packages.get(position).getThumb_href(), holder.pb);
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -252,19 +252,35 @@ public class LazyAdapter extends RecyclerView.Adapter<LazyAdapter.ViewHolder> {
         imageLoader.displayImage(url, img, options, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
-                spinner.setVisibility(View.VISIBLE);
+                try {
+                    spinner.setVisibility(View.VISIBLE);
+                }
+                catch (Exception e){
+
+                }
             }
 
             @Override
             public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-                spinner.setVisibility(View.GONE);
+
+                try {
+                    spinner.setVisibility(View.GONE);
+                }
+                catch (Exception e){
+
+                }
 
 
             }
 
             @Override
             public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                spinner.setVisibility(View.GONE);
+                try {
+                    spinner.setVisibility(View.GONE);
+                }
+                catch (Exception e){
+
+                }
             }
 
             @Override

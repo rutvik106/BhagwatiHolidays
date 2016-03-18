@@ -191,9 +191,9 @@ public class ItineraryListActivity extends AppCompatActivity {
 
                 tvPackageDescription.setText(Html.fromHtml(htmlContent +
                         "<h4><font color='#e2bb3d'>INCLUSIONS</font></h4><br/>" +
-                        inclusions +
+                        "<pre>"+inclusions+"</pre><br/>" +
                         "<h4><font color='#e2bb3d'>EXCLUSIONS</font></h4><br/>" +
-                        exclusions));
+                        "<pre>"+exclusions+"</pre><br/>"));
 
                 tvPriceFrom.setText(packagePrice);
 

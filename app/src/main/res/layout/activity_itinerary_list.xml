@@ -52,7 +52,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:singleLine="true"
-                        android:text="8 Days"
+                        android:text=""
                         android:textColor="#000000"
                         android:textSize="18sp"
                         android:layout_marginBottom="5dp"/>
@@ -71,7 +71,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:singleLine="true"
-                        android:text="3 star : 27900 INR"
+                        android:text=""
                         android:textColor="#000000"
                         android:textSize="18sp"
                         android:layout_marginBottom="5dp"/>
@@ -96,7 +96,7 @@
                         android:focusable="true"
                         android:freezesText="true"
 
-                        android:text="Port Blair, Viper Island, Havelock Island, Mount Harriet"
+                        android:text=""
                         android:textColor="#000000"
                         android:textSize="18sp" />
 
@@ -120,7 +120,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:minHeight="200dp"
-                    android:text="Description"
+                    android:text=""
                     android:textColor="#000000"
                    />
 

@@ -1,15 +1,21 @@
 package bhfragment;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -38,11 +44,12 @@ import webservicehandler.PostHandler;
 /**
  * Created by Rakshit on 20-11-2015 at 14:23.
  */
-public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateSetListener {
+public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateSetListener,TextWatcher {
 
     private static final String TAG = App.APP_TAG + FragmentHotels.class.getSimpleName();
 
-    EditText etMobileNo, etBookingDate, etDestination;
+    EditText etMobileNo, etBookingDate;
+    AutoCompleteTextView etDestination;
     RadioGroup radioGroupType;
     RadioButton rbIndia, rbWorldWild;
     Spinner spAdult, spChild, spInfant, spNoOfNights;
@@ -57,6 +64,8 @@ public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateS
     android.app.FragmentManager mFragmentManager;
 
     App app;
+
+    final Handler mHandler=new Handler();
 
 
     @Override
@@ -114,7 +123,9 @@ public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateS
 
         etBookingDate = (EditText) rootView.findViewById(R.id.et_bookingDate);
 
-        etDestination = (EditText) rootView.findViewById(R.id.et_destination);
+        etDestination = (AutoCompleteTextView) rootView.findViewById(R.id.et_destination);
+
+        etDestination.addTextChangedListener(this);
 
         radioGroupType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -271,4 +282,69 @@ public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateS
         String date = dayOfMonth + "-" + (monthOfYear + 1) + "-" + year;
         etBookingDate.setText(date);
     }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        Log.i(TAG, "TEXT CHANGED TO: " + s.toString());
+        if(!TextUtils.isEmpty(s.toString())) {
+            getDestinationsAsync(s.toString());
+        }
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+
+    }
+
+    private void getDestinationsAsync(final String term){
+        new AsyncTask<Void,Void,Void>(){
+
+            final String t=term;
+
+            final Map<String,String> postParams=new HashMap<>();
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                Log.i(TAG,"do in background in getDestinationAsync");
+                postParams.put("term",t);
+                new PostHandler(TAG,2,2000).doPostRequest("http://www.bhagwatiholidays.com/admin/webservice/destination_name.php",
+                        postParams,
+                        new PostHandler.ResponseCallback() {
+                            @Override
+                            public void response(int status, String response) {
+                                Log.i(TAG,"GOT RESPONSE SUCCESSFULLY");
+                                try {
+                                    Log.i(TAG,"PARSING JSON");
+                                    JSONArray array = new JSONArray(response);
+                                    Log.i(TAG,"JSON ARRAY SIZE: "+array.length());
+                                    final String[] destinations=new String[array.length()];
+                                    for(int i=0;i<array.length();i++){
+                                        Log.i(TAG,"LABEL: "+array.getJSONObject(i).getString("label"));
+                                        destinations[i]=array.getJSONObject(i).getString("label");
+                                    }
+                                    Log.i(TAG, "SETTING ADAPTER NOW");
+                                    mHandler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            FragmentHotels.this.etDestination.setAdapter(new ArrayAdapter<String>(FragmentHotels.this.getActivity(),
+                                                    android.R.layout.simple_list_item_1, destinations));
+                                        }
+                                    });
+
+                                }
+                                catch (JSONException e){
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                return null;
+            }
+        }.execute();
+    }
+
 }

@@ -140,6 +140,8 @@ public class FragmentHotelPackages extends Fragment {
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
+
+
         //loadOffersAsync();
 
         return rootView;
@@ -147,74 +149,92 @@ public class FragmentHotelPackages extends Fragment {
 
 
     public void loadOffersAsync() {
+        if(packages.size()==0) {
+            Log.i(TAG,"packages not found getting from internet");
+            new AsyncTask<Void, Void, Void>() {
 
-        new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected void onPreExecute() {
 
-            @Override
-            protected void onPreExecute() {
+                    progressDialog = ProgressDialog.show(FragmentHotelPackages.this.getActivity(), "Please Wait...", "Getting packages...", true, true);
 
-                progressDialog = ProgressDialog.show(FragmentHotelPackages.this.getActivity(), "Please Wait...", "Getting packages...", true, true);
+                }
 
-            }
+                @Override
+                protected Void doInBackground(Void... params) {
 
-            @Override
-            protected Void doInBackground(Void... params) {
+                    HashMap<String, String> postParams = new HashMap<>();
 
-                HashMap<String, String> postParams = new HashMap<>();
+                    postParams.put("method", "get_package_list");
 
-                postParams.put("method", "get_package_list");
-
-                new PostHandler("BWT", 4, 2000).doPostRequest("http://bhagwatiholidays.com/admin/webservice/index.php", postParams, new PostHandler.ResponseCallback() {
-                    @Override
-                    public void response(int status, String response) {
-                        if (status == HttpURLConnection.HTTP_OK) {
-                            try {
-                                PackageList packageList = new PackageList(response, "package_list");
-                                packages.clear();
-                                for (PackageList.Package p : packageList.getPackageList()) {
-                                    packages.add(p);
+                    new PostHandler("BWT", 4, 2000).doPostRequest("http://bhagwatiholidays.com/admin/webservice/index.php", postParams, new PostHandler.ResponseCallback() {
+                        @Override
+                        public void response(int status, String response) {
+                            if (status == HttpURLConnection.HTTP_OK) {
+                                try {
+                                    PackageList packageList = new PackageList(response, "package_list");
+                                    packages.clear();
+                                    for (PackageList.Package p : packageList.getPackageList()) {
+                                        packages.add(p);
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
                                 }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
                             }
                         }
+                    });
+
+
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    try {
+                        mAdapter = new LazyAdapter(FragmentHotelPackages.this.getActivity());
+                        mRecyclerView.setAdapter(mAdapter);
+                    } catch (IndexOutOfBoundsException e) {
+                        Log.i(TAG, "VIEW PAGER SCROLLED BEFOR LOADING DATA(EXCEPTION HANDLED)");
+                        e.printStackTrace();
                     }
-                });
+
+                    //countRangeAndLoadPackagesInAdapter();
+
+                    for (PackageList.Package p : packages) {
+                        ((LazyAdapter) mAdapter).addPackage(p);
+                    }
+
+                    Log.i(TAG, "INSIDE ON POST EXECUTE");
 
 
-                return null;
-            }
+                    try {
+                        if ((progressDialog != null) && progressDialog.isShowing()) {
+                            progressDialog.dismiss();
+                        }
+                    } catch (final IllegalArgumentException e) {
+                        // Handle or log or ignore
+                    } catch (final Exception e) {
+                        // Handle or log or ignore
+                    } finally {
+                        progressDialog = null;
+                    }
 
-            @Override
-            protected void onPostExecute(Void aVoid) {
-
-                mAdapter = new LazyAdapter(FragmentHotelPackages.this.getActivity());
-
-                mRecyclerView.setAdapter(mAdapter);
-
-                //countRangeAndLoadPackagesInAdapter();
-
+                }
+            }.execute();
+        }else{
+            Log.i(TAG,"packages are already loaded");
+            if(mAdapter.getItemCount()==0) {
+                Log.i(TAG,"adapter item count is 0");
                 for (PackageList.Package p : packages) {
                     ((LazyAdapter) mAdapter).addPackage(p);
                 }
-
-                Log.i(TAG, "INSIDE ON POST EXECUTE");
-
-
-                try {
-                    if ((progressDialog != null) && progressDialog.isShowing()) {
-                        progressDialog.dismiss();
-                    }
-                } catch (final IllegalArgumentException e) {
-                    // Handle or log or ignore
-                } catch (final Exception e) {
-                    // Handle or log or ignore
-                } finally {
-                    progressDialog = null;
-                }
-
+            }else{
+                Log.i(TAG,"adapter item count is OK");
+                Log.i(TAG,"just setting adapter and notifying data set changed");
+                mRecyclerView.setAdapter(mAdapter);
+                mAdapter.notifyDataSetChanged();
             }
-        }.execute();
+        }
 
     }
 

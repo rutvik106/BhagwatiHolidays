@@ -9,8 +9,10 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_alignParentBottom="true"
-            android:layout_height="500dp">
+            android:layout_height="420dp"
+
+            android:layout_centerInParent="true"
+            >
 
         <LinearLayout
             android:id="@+id/ll_bhWhite"

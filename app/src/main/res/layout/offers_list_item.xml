@@ -7,7 +7,7 @@
     <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/card_view"
         android:layout_width="match_parent"
-        android:layout_height="160dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:padding="5dp"
         android:layout_margin="2dp"
@@ -15,15 +15,13 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="160dp"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <LinearLayout
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="2dp"
+                android:layout_margin="5dp"
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <FrameLayout
@@ -43,22 +41,22 @@
                         android:indeterminate="true"
                         style="?android:attr/progressBarStyleLarge"
                         android:layout_gravity="center"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"/>
 
                     </FrameLayout>
 
 
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/tv_packageTitle"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Package Title"
                         android:fadingEdge="horizontal"
@@ -68,7 +66,7 @@
 
                     <TextView
                         android:id="@+id/tv_packageDays"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:text="6 Days"
@@ -76,7 +74,7 @@
 
                     <TextView
                         android:id="@+id/tv_packageNights"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:text="7 nights"
@@ -84,10 +82,10 @@
 
                     <TextView
                         android:id="@+id/tv_packagePlace"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="Places Places Places Places Places Places"
+                        android:text="Places"
                         android:fadingEdge="horizontal"
                         android:ellipsize="marquee"
                         android:singleLine="true"
@@ -98,7 +96,7 @@
 
             </LinearLayout>
 
-            <View
+            <!--<View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginRight="2dp"
@@ -122,7 +120,7 @@
 
 
 
-            </LinearLayout>
+            </LinearLayout>-->
 
         </LinearLayout>
 

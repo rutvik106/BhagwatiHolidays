@@ -67,4 +67,12 @@ public class Validator {
         }
         return true;
     }
+
+    public static boolean validDestination(String destination, ValidationListener listener) {
+        if (TextUtils.isEmpty(destination)) {
+            listener.validationFailed("Destination Required.");
+            return false;
+        }
+        return true;
+    }
 }

@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:ripple="http://schemas.android.com/tools"
-    android:id="@+id/relativeAirTicket"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -171,7 +169,7 @@
                     android:layout_centerVertical="true">
 
 
-                    <EditText
+                    <AutoCompleteTextView
                         android:id="@+id/et_from"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -189,7 +187,7 @@
                     android:layout_centerVertical="true">
 
 
-                    <EditText
+                    <AutoCompleteTextView
                         android:id="@+id/et_to"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -317,52 +315,20 @@
     </ScrollView>
 
 
-    <!--<com.balysv.materialripple.MaterialRippleLayout
-        android:id="@+id/ripple"
-        android:layout_margin="16dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        app:mrl_rippleColor="#ffffff"
-        app:mrl_rippleAlpha="0.1"
-        android:layout_alignParentRight="true">
-
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/done"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:borderWidth="0dp"
-        android:src="@drawable/done"
-        app:elevation="6dp"
-        app:fabSize="normal"
-        app:pressedTranslationZ="12dp" />
-
-    </com.balysv.materialripple.MaterialRippleLayout>-->
-
-    <com.andexert.library.RippleView
-        android:id="@+id/rect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        ripple:rv_type="circle"
-        ripple:rv_zoom="true">
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/done"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:src="@drawable/done"
-            android:stateListAnimator="@anim/anim"
-            app:borderWidth="0dp"
-            app:elevation="6dp"
-            app:fabSize="normal"
-            app:pressedTranslationZ="12dp" />
-
-    </com.andexert.library.RippleView>
+        android:layout_margin="16dp"
+        android:src="@drawable/done"
+        android:stateListAnimator="@anim/anim"
+        app:borderWidth="0dp"
+        app:elevation="6dp"
+        app:fabSize="normal"
+        app:pressedTranslationZ="12dp" />
 
 
 </RelativeLayout>

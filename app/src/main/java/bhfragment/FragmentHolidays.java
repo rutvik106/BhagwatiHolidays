@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import extras.Submit;
+import extras.Validator;
 import webservicehandler.PostHandler;
 
 /**
@@ -109,7 +110,7 @@ public class FragmentHolidays extends Fragment {
     }
 
 
-    private void submitForm(){
+    private void submitForm() {
         try {
 
             Map<String, String> formParams = new HashMap<String, String>();
@@ -122,26 +123,26 @@ public class FragmentHolidays extends Fragment {
 
             while (iterator.hasNext()) {
                 Map.Entry pair = (Map.Entry) iterator.next();
-                array.put(new JSONObject("{\""+pair.getKey()+"\":" + "\"" + pair.getValue() + "\"}"));
+                array.put(new JSONObject("{\"" + pair.getKey() + "\":" + "\"" + pair.getValue() + "\"}"));
                 iterator.remove();
             }
 
             Log.d(TAG, "JSON-DATA: " + array);
 
-            Map<String,String> postParam=new HashMap<String, String>();
-            postParam.put("data",array.toString());
-            postParam.put("email",FragmentHolidays.this.app.getUser().getEmail());
+            Map<String, String> postParam = new HashMap<String, String>();
+            postParam.put("data", array.toString());
+            postParam.put("email", FragmentHolidays.this.app.getUser().getEmail());
 
             Submit.submitHolidayForm(postParam, new PostHandler.ResponseCallback() {
                 @Override
                 public void response(int status, String response) {
-                    if(status== HttpURLConnection.HTTP_OK){
-                        try{
-                            JSONObject mailResponse=new JSONObject(response).getJSONObject("mail_response");
-                            if(mailResponse.getString("status").equals(1)){
+                    if (status == HttpURLConnection.HTTP_OK) {
+                        try {
+                            JSONObject mailResponse = new JSONObject(response).getJSONObject("mail_response");
+                            if (mailResponse.getString("status").equals(1)) {
                                 //Notify User For successful mail sent
                             }
-                        }catch (JSONException e){
+                        } catch (JSONException e) {
 
                         }
                     }
@@ -151,11 +152,9 @@ public class FragmentHolidays extends Fragment {
 
         } catch (JSONException e) {
             e.printStackTrace();
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
 
     }
-
-
 }

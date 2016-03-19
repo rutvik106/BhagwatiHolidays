@@ -27,6 +27,7 @@ import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import adapter.OffersAndPromotionsAdapter;
 import jsonobj.PackageList;
@@ -262,12 +263,12 @@ public class OffersActivity extends AppCompatActivity implements SearchView.OnQu
 
         Log.i(TAG, "FILTERING OFFERS");
 
-        query = query.toLowerCase();
+        query = query.toLowerCase(Locale.getDefault());
 
         final List<SimpleOffersAndPromotions> filteredModelList = new ArrayList<>();
 
         for (SimpleOffersAndPromotions model : modelList) {
-            final String text = model.getTitle().toLowerCase();
+            final String text = model.getTitle().toLowerCase(Locale.getDefault());
             Log.i(TAG, "model.getTitle(): " + text);
             if (text.contains(query)) {
                 Log.i(TAG, "MATCH FOUND ADDING MODEL");
@@ -281,12 +282,12 @@ public class OffersActivity extends AppCompatActivity implements SearchView.OnQu
     }
 
     private List<PackageList.Package> filter(List<PackageList.Package> models, String query) {
-        query = query.toLowerCase();
+        query = query.toLowerCase(Locale.getDefault());
 
         final List<PackageList.Package> filteredModelList = new ArrayList<>();
 
         for (PackageList.Package model : models) {
-            final String text = model.getPackage_name().toLowerCase();
+            final String text = model.getPackage_name().toLowerCase(Locale.getDefault());
             if (text.contains(query)) {
                 filteredModelList.add(model);
             }

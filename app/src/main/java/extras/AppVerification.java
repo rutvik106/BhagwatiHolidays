@@ -76,7 +76,7 @@ public class AppVerification {
                 if(allow){
                    return;
                 }
-                Toast.makeText(activity,"App verification failed",Toast.LENGTH_SHORT);
+                Toast.makeText(activity,"App verification failed",Toast.LENGTH_SHORT).show();
                 activity.finish();
 
             }

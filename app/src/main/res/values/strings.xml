@@ -1,8 +1,11 @@
 <resources>
-    <string name="app_name">BhagwatiHolidays</string>
+    <string name="app_name">Bhagwati Holidays</string>
 
     <string name="title">Bhagwati Holidays</string>
 
+
+    <!--<string name="appbar_scrolling_view_behavior" translatable="false">android.support.design.widget.AppBarLayout$ScrollingViewBehavior</string>
+-->
 
     <!--Drawer OPEN-CLOSE-->
     <string name="drawer_open">Open</string>
@@ -33,5 +36,6 @@
     <string name="title_one">One</string>
     <string name="title_two">Two</string>
     <string name="title_three">Three</string>
+    <string name="title_activity_maps">Map</string>
 
 </resources>

@@ -253,15 +253,7 @@
         app:pressedTranslationZ="12dp"
         app:rippleColor="@android:color/transparent" />-->
 
-    <com.andexert.library.RippleView
-        android:id="@+id/rect"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        ripple:rv_type="circle"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        ripple:rv_zoom="true">
+
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/done"
@@ -273,8 +265,11 @@
             app:elevation="6dp"
             app:fabSize="normal"
             android:layout_margin="16dp"
-            app:pressedTranslationZ="12dp" />
+            app:pressedTranslationZ="12dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"/>
 
-    </com.andexert.library.RippleView>
+
 
 </RelativeLayout>

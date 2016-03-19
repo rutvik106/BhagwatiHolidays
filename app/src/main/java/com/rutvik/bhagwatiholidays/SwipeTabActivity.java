@@ -100,8 +100,7 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
 
 
             ((TextView) drawerFragment.getView().findViewById(R.id.tv_userName)).setText(app.getUser().getName());
-        }
-        catch (NullPointerException e){
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
 
@@ -126,11 +125,10 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
 
             @Override
             public void onPageSelected(int position) {
-                if(position==2){
+                if (position == 2) {
                     search.setVisible(true);
-                    ((FragmentHotelPackages)adapter.getItem(position)).loadOffersAsync();
-                }
-                else{
+                    ((FragmentHotelPackages) adapter.getItem(position)).loadOffersAsync();
+                } else {
                     search.setVisible(false);
                 }
             }
@@ -150,13 +148,12 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
         // Associate searchable configuration with the SearchView
         // SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
-        search=menu.findItem(R.id.action_search);
+        search = menu.findItem(R.id.action_search);
         //searchView.setVisibility(View.GONE);
         // searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-
 
 
                 return false;
@@ -165,7 +162,7 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
             @Override
             public boolean onQueryTextChange(String newText) {
 
-                ((FragmentHotelPackages)SwipeTabActivity.this.adapter.getItem(2)).searchForPackage(newText);
+                ((FragmentHotelPackages) SwipeTabActivity.this.adapter.getItem(2)).searchForPackage(newText);
 
                 return false;
             }
@@ -229,6 +226,12 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
             emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Feedback");
             emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Text");
             startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+        } else if (position == 7) {
+            Uri gmmIntentUri = Uri.parse("geo:23.025819,72.5096982?q=" + Uri.encode("Bhagwati Holiday"));
+            //Uri gmmIntentUri = Uri.parse("geo:23.025819,72.509698?q=1600 Bhagwati Holidays, Ahmadabad, India");
+            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+            mapIntent.setPackage("com.google.android.apps.maps");
+            startActivity(mapIntent);
         }
     }
 

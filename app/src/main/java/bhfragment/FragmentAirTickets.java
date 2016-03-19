@@ -33,6 +33,7 @@ import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.net.HttpURLConnection;
 import java.util.Calendar;
@@ -43,6 +44,8 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import extras.GetTermsAsync;
+import extras.SendMail;
 import extras.Submit;
 import extras.Validator;
 import gcm.CommonUtilities;
@@ -60,15 +63,15 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
     FloatingActionButton fabDone;
     private AutoCompleteTextView actFrom, actTo;
 
+    private GetTermsAsync getTermsAsync;
+
     App app;
 
-    Handler mHandler;
+    final Handler mHandler = new Handler();
 
     DatePickerDialog datePickerDialog;
     android.app.FragmentManager fragmentManager;
-    private String mobileNo, from, to;
-    private String adult, child, infant, departDate, returnDate;
-    private String type, trip, mClass;
+
     public static final int DEPART_DATE = 0;
     public static final int RETURN_DATE = 1;
     private int dateFlag;
@@ -91,7 +94,6 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mHandler = new Handler();
     }
 
     @Override
@@ -103,9 +105,9 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
         etMobileNo = (EditText) rootView.findViewById(R.id.et_mobileNo);
 
         actFrom = (AutoCompleteTextView) rootView.findViewById(R.id.et_from);
-
+        actFrom.setThreshold(3);
         actTo = (AutoCompleteTextView) rootView.findViewById(R.id.et_to);
-
+        actTo.setThreshold(3);
         fragmentManager = getActivity().getFragmentManager();
 
         spAdult = (Spinner) rootView.findViewById(R.id.sp_adult);
@@ -172,8 +174,13 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 Log.i(TAG, "TEXT CHENGED IN FROM: " + s.toString());
-                if (!TextUtils.isEmpty(s.toString())) {
-                    getFromAsync(s.toString());
+                if (!TextUtils.isEmpty(s.toString()) && s.toString().length() > 3) {
+                    if (getTermsAsync != null) {
+                        getTermsAsync.cancel(true);
+                        getTermsAsync = null;
+                    }
+                    getTermsAsync = new GetTermsAsync(actFrom, getActivity(), CommonUtilities.URL_FROM_TO);
+                    getTermsAsync.execute(s.toString());
                 }
             }
 
@@ -191,9 +198,14 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                Log.i(TAG, "TEXT CHENGED IN TO: " + s.toString());
-                if (!TextUtils.isEmpty(s.toString())) {
-                    getToAsync(s.toString());
+                Log.i(TAG, "TEXT CHENGED IN FROM: " + s.toString());
+                if (!TextUtils.isEmpty(s.toString()) && s.toString().length() > 2) {
+                    if (getTermsAsync != null) {
+                        getTermsAsync.cancel(true);
+                        getTermsAsync = null;
+                    }
+                    getTermsAsync = new GetTermsAsync(actTo, getActivity(), CommonUtilities.URL_FROM_TO);
+                    getTermsAsync.execute(s.toString());
                 }
             }
 
@@ -204,75 +216,18 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
         });
 
 
-        //Take value from Spinner
-        spAdult.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                adult = spAdult.getSelectedItem().toString();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        spChild.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                child = spChild.getSelectedItem().toString();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        spInfant.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                infant = spInfant.getSelectedItem().toString();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
         //Take value from Radio
 
-        rgType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                RadioButton radioButton = (RadioButton) rgType.findViewById(checkedId);
-                if (null != radioButton && checkedId > -1) {
-                    type = radioButton.getText().toString();
-                    Toast.makeText(getActivity(), type, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
 
         rgTrip.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (checkedId == R.id.rb_return) {
                     etReturnDate.setVisibility(View.VISIBLE);
-                    trip = rbReturn.getText().toString();
+
                 } else {
                     etReturnDate.setVisibility(View.GONE);
-                    trip = rbIndia.getText().toString();
-                }
-            }
-        });
 
-        rgClass.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                RadioButton rbClass = (RadioButton) rgClass.findViewById(checkedId);
-                if (null != rbClass && checkedId > -1) {
-                    mClass = rbClass.getText().toString();
                 }
             }
         });
@@ -342,97 +297,6 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
         return rootView;
     }
 
-    private void getToAsync(final String to) {
-
-        new AsyncTask<Void, Void, Void>() {
-
-            final String t = to;
-
-            final Map<String, String> postParams = new HashMap<>();
-
-            @Override
-            protected Void doInBackground(Void... params) {
-                Log.i(TAG, "Do in background in getFromAsync");
-                postParams.put("term", t);
-                new PostHandler(TAG, 2, 2000).doPostRequest("http://www.bhagwatiholidays.com/admin/webservice/airport_name.php",
-                        postParams,
-                        new PostHandler.ResponseCallback() {
-                            @Override
-                            public void response(int status, String response) {
-                                Log.i(TAG, "GOT RESPONSE SUCCESSFULLY");
-                                try {
-                                    Log.i(TAG, "PARSING JSON");
-                                    JSONArray array = new JSONArray(response);
-                                    Log.i(TAG, "JSON ARRAY SIZE IN TO: " + array.length());
-                                    final String[] tos = new String[array.length()];
-                                    for (int i = 0; i < array.length(); i++) {
-                                        Log.i(TAG, "LABEL FOR TO: " + array.getJSONObject(i).getString("label"));
-                                        tos[i] = array.getJSONObject(i).getString("label");
-                                    }
-                                    Log.i(TAG, "SETTING ADAPTER NOW IN TO");
-                                    mHandler.post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            FragmentAirTickets.this.actTo.setAdapter(new ArrayAdapter<String>(FragmentAirTickets.this.getActivity(),
-                                                    android.R.layout.simple_list_item_1, tos));
-                                        }
-                                    });
-
-                                } catch (JSONException ex) {
-                                    ex.printStackTrace();
-                                }
-                            }
-                        });
-                return null;
-            }
-        }.execute();
-    }
-
-    private void getFromAsync(final String from) {
-        new AsyncTask<Void, Void, Void>() {
-
-            final String f = from;
-
-            final Map<String, String> postParams = new HashMap<>();
-
-            @Override
-            protected Void doInBackground(Void... params) {
-                Log.i(TAG, "Do in background in getFromAsync");
-                postParams.put("term", f);
-                new PostHandler(TAG, 2, 2000).doPostRequest("http://www.bhagwatiholidays.com/admin/webservice/airport_name.php",
-                        postParams,
-                        new PostHandler.ResponseCallback() {
-                            @Override
-                            public void response(int status, String response) {
-                                Log.i(TAG, "GOT RESPONSE SUCCESSFULLY");
-                                try {
-                                    Log.i(TAG, "PARSING JSON");
-                                    JSONArray array = new JSONArray(response);
-                                    Log.i(TAG, "JSON ARRAY SIZE IN FROM: " + array.length());
-                                    final String[] froms = new String[array.length()];
-                                    for (int i = 0; i < array.length(); i++) {
-                                        Log.i(TAG, "LABEL IN FROM: " + array.getJSONObject(i).getString("label"));
-                                        froms[i] = array.getJSONObject(i).getString("label");
-                                    }
-                                    Log.i(TAG, "SETTING ADAPTER NOW FOR FROM");
-                                    mHandler.post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            FragmentAirTickets.this.actFrom.setAdapter(new ArrayAdapter<String>(FragmentAirTickets.this.getActivity(),
-                                                    android.R.layout.simple_list_item_1, froms));
-                                        }
-                                    });
-
-                                } catch (JSONException ex) {
-                                    ex.printStackTrace();
-                                }
-                            }
-                        });
-                return null;
-            }
-        }.execute();
-    }
-
 
     public static interface OnGetDate {
         void setText(String text);
@@ -440,118 +304,59 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
 
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
-        String date = dayOfMonth + "-" + (monthOfYear + 1) + "-" + year;
 
+        String date = dayOfMonth + "-" + (monthOfYear + 1) + "-" + year;
         dateComponentMap.get(dateFlag).setText(date);
 
-        /*if(dateFlag == DEPART_DATE){
-            etDepartDate.setText(date);
-        }
-        if()
-        {
-            etReturnDate.setText(date);
-        }*/
     }
 
     private void submitForm() {
-        try {
-
-            //Take Value from EditText
-            mobileNo = etMobileNo.getText().toString().trim();
-            from = actFrom.getText().toString().trim();
-            to = actTo.getText().toString().trim();
-
-            RadioButton rbType = (RadioButton) rgType.findViewById(rgType.getCheckedRadioButtonId());
-            type = rbType.getText().toString();
-
-            RadioButton rbTrip = (RadioButton) rgTrip.findViewById(rgTrip.getCheckedRadioButtonId());
-            trip = rbTrip.getText().toString();
-
-            RadioButton rbClass = (RadioButton) rgClass.findViewById(rgClass.getCheckedRadioButtonId());
-            mClass = rbClass.getText().toString();
-
-            //Take Date from EditText
-            departDate = etDepartDate.getText().toString();
-            returnDate = etReturnDate.getText().toString();
-
-            Map<String, String> formParams = new LinkedHashMap<>();
-            formParams.put("Contact", mobileNo);
-            formParams.put("Type", type);
-            formParams.put("Trip", trip);
-            formParams.put("Depart Date", departDate);
-            formParams.put("Return Date", returnDate);
-            formParams.put("From", from);
-            formParams.put("To", to);
-            formParams.put("Adult", adult);
-            formParams.put("Child", child);
-            formParams.put("Infant", infant);
-            formParams.put("Class", mClass);
-
-            Log.d(TAG, "Check check........!!!!");
-
-            if (isFormParamValid(formParams)) {
 
 
-                JSONArray array = new JSONArray();
+        Map<String, String> formParams = new LinkedHashMap<>();
+        formParams.put("Contact", etMobileNo.getText().toString());
+        formParams.put("Email", app.getUser().getEmail());
+        formParams.put("Type", ((RadioButton) rgType.findViewById(rgType.getCheckedRadioButtonId())).getText().toString());
+        formParams.put("Trip", ((RadioButton) rgTrip.findViewById(rgTrip.getCheckedRadioButtonId())).getText().toString());
+        formParams.put("Depart Date", etDepartDate.getText().toString());
 
-                Iterator iterator = formParams.entrySet().iterator();
+        if (!TextUtils.isEmpty(etReturnDate.getText().toString())) {
+            formParams.put("Return Date", etReturnDate.getText().toString());
+        }
 
-                while (iterator.hasNext()) {
-                    Map.Entry pair = (Map.Entry) iterator.next();
-                    array.put(new JSONObject("{\"" + pair.getKey() + "\":" + "\"" + pair.getValue() + "\"}"));
-                    iterator.remove();
-                }
+        formParams.put("From", actFrom.getText().toString());
+        formParams.put("To", actTo.getText().toString());
+        formParams.put("Adult", spAdult.getSelectedItem().toString());
+        formParams.put("Child", spChild.getSelectedItem().toString());
+        formParams.put("Infant", spInfant.getSelectedItem().toString());
+        formParams.put("Class", ((RadioButton) rgClass.findViewById(rgClass.getCheckedRadioButtonId())).getText().toString());
 
-                Log.d(TAG, "JSON-DATA: " + array);
+        Log.d(TAG, "Check check........!!!!");
 
-                final Map<String, String> postParam = new HashMap<String, String>();
-                postParam.put("data", array.toString());
-                postParam.put("email", "rakshit1993.rs@gmail.com");
+        if (isFormParamValid(formParams)) {
 
-                new AsyncTask<Void, Void, Void>() {
-                    final Context c = getActivity();
+            final SendMail sendMail = new SendMail(app.getUser().getEmail(),
+                    SendMail.Type.AIRTICKET,
+                    getActivity(),
+                    new SendMail.MailCallbackListener() {
+                        @Override
+                        public void mailSentSuccessfully() {
 
-                    @Override
-                    protected Void doInBackground(Void... params) {
-                        Submit.submitAirticketForm(postParam, new PostHandler.ResponseCallback() {
-                            @Override
-                            public void response(int status, String response) {
-                                if (status == HttpURLConnection.HTTP_OK) {
-                                    try {
-                                        JSONObject mailResponse = new JSONObject(response).getJSONObject("mail_response");
-                                        Log.i(TAG, "mailResponse.getString(\"status\"): " + mailResponse.getString("status"));
-                                        Log.i(TAG, "mailResponse.getString(\"status\").equals(\"1\") " + mailResponse.getString("status").equals("1"));
-                                        if (mailResponse.getString("status").equals("1")) {
-                                            Log.i(TAG, "SHOWING ALERT DIALOG");
-                                            mHandler.post(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    CommonUtilities
-                                                            .showAlertDialog(c, "Air Ticket Booking",
-                                                                    "",
-                                                                    "Air Ticket Booking in Bhagwati Holidays");
-                                                }
-                                            });
+                            CommonUtilities.clearForm((ViewGroup) getActivity().findViewById(R.id.ll_formAirTicket));
 
-                                        }
-                                    } catch (JSONException e) {
+                            FragmentAirTickets.this.etMobileNo.requestFocus();
 
-                                    }
-                                }
-                            }
-                        });
-                        return null;
-                    }
-
-                }.execute();
+                            CommonUtilities
+                                    .showAlertDialog(getActivity(), "Air Ticket Booking",
+                                            "",
+                                            "Air Ticket Booking in Bhagwati Holidays");
 
 
-            }
+                        }
+                    });
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
+            sendMail.execute(formParams);
+
         }
 
 
@@ -561,6 +366,8 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
 
     public boolean isFormParamValid(Map<String, String> formParams) {
         Log.i(TAG, "inside is form param valid");
+
+        isFormValid = true;
 
         Validator.validateContact(formParams.get("Contact"), new Validator.ValidationListener() {
             @Override

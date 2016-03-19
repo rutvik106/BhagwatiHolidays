@@ -20,7 +20,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="10dp"
                 android:background="#FFFFFF"
-                android:elevation="8dp"
+
                 android:orientation="vertical"
                 android:padding="5dp">
 
@@ -242,7 +242,7 @@
         android:layout_alignParentRight="true"
         android:layout_margin="16dp"
         android:src="@drawable/done"
-        android:stateListAnimator="@anim/anim"
+
         app:borderWidth="0dp"
         app:elevation="6dp"
         app:fabSize="normal"

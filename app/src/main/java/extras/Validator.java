@@ -8,6 +8,7 @@ import com.rutvik.bhagwatiholidays.App;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by Rakshit on 16-03-2016 at 14:44.
@@ -36,7 +37,7 @@ public class Validator {
     }
 
     public static boolean validateDates(String departDate, String returnDate, ValidationListener listener) {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
         try {
             Date dd = formatter.parse(departDate);
             Date rd = formatter.parse(returnDate);

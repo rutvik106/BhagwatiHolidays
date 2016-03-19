@@ -22,6 +22,7 @@ import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import jsonobj.PackageList;
 import model.SimpleOffersAndPromotions;
@@ -88,13 +89,13 @@ public class FragmentHotelPackages extends Fragment {
 
         Log.i(TAG, "FILTERING OFFERS");
 
-        query = query.toLowerCase();
+        query = query.toLowerCase(Locale.getDefault());
 
         for (PackageList.Package model : modelList) {
-            final String name = model.getPackage_name().toLowerCase();
-            final String places = model.getPlaces().toLowerCase();
-            final String days = model.getDays().toLowerCase();
-            final String nights = model.getNights().toLowerCase();
+            final String name = model.getPackage_name().toLowerCase(Locale.getDefault());
+            final String places = model.getPlaces().toLowerCase(Locale.getDefault());
+            final String days = model.getDays().toLowerCase(Locale.getDefault());
+            final String nights = model.getNights().toLowerCase(Locale.getDefault());
             //Log.i(TAG, "model.getTitle(): " + );
             if (name.contains(query)) {
                 Log.i(TAG, "MATCH FOUND ADDING MODEL");
@@ -156,7 +157,7 @@ public class FragmentHotelPackages extends Fragment {
                 @Override
                 protected void onPreExecute() {
 
-                    progressDialog = ProgressDialog.show(FragmentHotelPackages.this.getActivity(), "Please Wait...", "Getting packages...", true, true);
+                    progressDialog = ProgressDialog.show(FragmentHotelPackages.this.getActivity(), "Please Wait...", "Getting packages...", true, false);
 
                 }
 

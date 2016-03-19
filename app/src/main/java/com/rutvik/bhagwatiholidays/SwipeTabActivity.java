@@ -46,7 +46,6 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
     private Toolbar mToolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private ProgressDialog mProgressDialog;
     private FragmentDrawer drawerFragment;
 
     final ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());

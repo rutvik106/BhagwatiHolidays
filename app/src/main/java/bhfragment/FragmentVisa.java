@@ -36,6 +36,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import extras.SendMail;
 import extras.Submit;
 import extras.Validator;
 import gcm.CommonUtilities;
@@ -51,8 +52,6 @@ public class FragmentVisa extends Fragment implements DatePickerDialog.OnDateSet
     AutoCompleteTextView actDestination;
     RadioButton rbBusiness, rbStudent;
     RadioGroup radioGroup;
-    private String visaType;
-    private String mobileNO, dateOfTravel, destination;
 
     private DatePickerDialog datePickerDialog;
     private FragmentManager fragmentManager;
@@ -120,17 +119,6 @@ public class FragmentVisa extends Fragment implements DatePickerDialog.OnDateSet
             }
         });
 
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                RadioButton radioButton = (RadioButton) radioGroup.findViewById(checkedId);
-                if (null != radioButton && checkedId > -1) {
-                    visaType = radioButton.getText().toString();
-                    //Toast.makeText(getActivity(), type, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
         fabDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,66 +132,29 @@ public class FragmentVisa extends Fragment implements DatePickerDialog.OnDateSet
 
     private void submitForm() {
 
-        try {
-            mobileNO = etMobileNo.getText().toString().trim();
-            dateOfTravel = etDateOfTravel.getText().toString();
-            destination = actDestination.getText().toString().trim();
+        Map<String, String> formParams = new LinkedHashMap<>();
+        formParams.put("Contact", etMobileNo.getText().toString());
+        formParams.put("Date Of Travel", etDateOfTravel.getText().toString());
+        formParams.put("Destination", actDestination.getText().toString());
+        formParams.put("Visa Type", ((RadioButton) radioGroup.findViewById(radioGroup.getCheckedRadioButtonId())).getText().toString());
 
-            RadioButton rbType = (RadioButton) radioGroup.findViewById(radioGroup.getCheckedRadioButtonId());
-            visaType = rbType.getText().toString();
+        if (isFormParamValid(formParams)) {
+            final SendMail sendMail = new SendMail(app.getUser().getEmail(),
+                    SendMail.Type.VISA,
+                    getActivity(),
+                    new SendMail.MailCallbackListener() {
+                        @Override
+                        public void mailSentSuccessfully() {
+                            CommonUtilities.clearForm((ViewGroup) getActivity().findViewById(R.id.ll_formVisa));
 
-            Map<String, String> formParams = new LinkedHashMap<>();
-            formParams.put("Contact", mobileNO);
-            formParams.put("Date Of Travel", dateOfTravel);
-            formParams.put("Destination", destination);
-            formParams.put("Visa Type", visaType);
+                            FragmentVisa.this.etMobileNo.requestFocus();
 
-            if (isFormParamValid(formParams)) {
-                JSONArray array = new JSONArray();
-
-                Iterator iterator = formParams.entrySet().iterator();
-
-                while (iterator.hasNext()) {
-                    Map.Entry pair = (Map.Entry) iterator.next();
-                    array.put(new JSONObject("{\"" + pair.getKey() + "\":" + "\"" + pair.getValue() + "\"}"));
-                    iterator.remove();
-                }
-
-                Log.d(TAG, "JSON-DATA: " + array);
-
-                Map<String, String> postParam = new HashMap<String, String>();
-                postParam.put("data", array.toString());
-                postParam.put("email", FragmentVisa.this.app.getUser().getEmail());
-
-                final Context mContext = getActivity();
-
-                Submit.submitVisaForm(postParam, new PostHandler.ResponseCallback() {
-                            @Override
-                            public void response(int status, String response) {
-                                if (status == HttpURLConnection.HTTP_OK) {
-                                    try {
-                                        JSONObject mailResponse = new JSONObject(response).getJSONObject("mail_response");
-                                        if (mailResponse.getString("status").equals("1")) {
-                                            mHandler.post(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    CommonUtilities.showAlertDialog(mContext,
-                                                            "Visa Booking", "", "Visa booking in Bhagwati Holiday.");
-                                                }
-                                            });
-                                        }
-                                    } catch (JSONException e) {
-
-                                    }
-                                }
-                            }
+                            CommonUtilities
+                                    .showAlertDialog(getActivity(), "Visa Booking",
+                                            "",
+                                            "Visa booking in Bhagwati Holidays");
                         }
-                );
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
+                    });
         }
     }
 
@@ -217,6 +168,8 @@ public class FragmentVisa extends Fragment implements DatePickerDialog.OnDateSet
 
     public boolean isFormParamValid(Map<String, String> formParams) {
 
+        isFormValid = true;
+
         Validator.validateContact(formParams.get("Contact"), new Validator.ValidationListener() {
             @Override
             public void validationFailed(String msg) {
@@ -229,6 +182,7 @@ public class FragmentVisa extends Fragment implements DatePickerDialog.OnDateSet
             @Override
             public void validationFailed(String msg) {
                 Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+                isFormValid = false;
             }
         });
 

@@ -39,6 +39,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import extras.SendMail;
 import extras.Submit;
 import extras.Validator;
 import gcm.CommonUtilities;
@@ -51,23 +52,15 @@ public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateS
 
     private static final String TAG = App.APP_TAG + FragmentHotels.class.getSimpleName();
 
-    EditText etMobileNo, etBookingDate;
-    AutoCompleteTextView etDestination;
-    RadioGroup radioGroupType;
-    RadioButton rbIndia, rbWorldWild;
-    Spinner spAdult, spChild, spInfant, spNoOfNights;
-    RatingBar rbHotelType;
-    FloatingActionButton fabDone;
-
-    String mobileNo, destination, bookingDate;
-    private String adult, child, infant;
-    private String type;
-    private String noOfNights;
-    DatePickerDialog datePickerDialog;
-    android.app.FragmentManager mFragmentManager;
-
+    private EditText etMobileNo, etBookingDate;
+    private AutoCompleteTextView etDestination;
+    private RadioGroup radioGroupType;
+    private RadioButton rbIndia, rbWorldWild;
+    private Spinner spAdult, spChild, spInfant, spNoOfNights;
+    private FloatingActionButton fabDone;
+    private android.app.FragmentManager mFragmentManager;
+    private DatePickerDialog datePickerDialog;
     App app;
-
     final Handler mHandler = new Handler();
 
 
@@ -120,76 +113,13 @@ public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateS
 
         rbWorldWild = (RadioButton) rootView.findViewById(R.id.rb_worldWide);
 
-        //rbHotelType = (RatingBar) rootView.findViewById(R.id.rb_hotelType);
-
         etMobileNo = (EditText) rootView.findViewById(R.id.et_mobileNo);
 
         etBookingDate = (EditText) rootView.findViewById(R.id.et_bookingDate);
 
         etDestination = (AutoCompleteTextView) rootView.findViewById(R.id.et_destination);
-
         etDestination.addTextChangedListener(this);
 
-        radioGroupType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                RadioButton radioButton = (RadioButton) radioGroupType.findViewById(checkedId);
-                if (null != radioButton && checkedId > -1) {
-                    type = radioButton.getText().toString();
-                    //Toast.makeText(getActivity(), type, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        spAdult.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                adult = spAdult.getSelectedItem().toString();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        spChild.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                child = spChild.getSelectedItem().toString();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        spInfant.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                infant = spInfant.getSelectedItem().toString();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        spNoOfNights.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                noOfNights = spNoOfNights.getSelectedItem().toString();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        etBookingDate.setTextIsSelectable(true);
         etBookingDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -221,73 +151,38 @@ public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateS
     }
 
     private void submitForm() {
-        try {
 
-            //Take Value from EditText
-            mobileNo = etMobileNo.getText().toString().trim();
-            destination = etDestination.getText().toString().trim();
+        Map<String, String> formParams = new LinkedHashMap<>();
+        formParams.put("Contact", etMobileNo.getText().toString());
+        formParams.put("Booking Date", etBookingDate.getText().toString());
+        formParams.put("Type", ((RadioButton) radioGroupType.findViewById(radioGroupType.getCheckedRadioButtonId())).getText().toString());
+        formParams.put("Adult", spAdult.getSelectedItem().toString());
+        formParams.put("Child", spChild.getSelectedItem().toString());
+        formParams.put("Infant", spInfant.getSelectedItem().toString());
+        formParams.put("Destination", etDestination.getText().toString());
+        formParams.put("No. of Nights", spNoOfNights.getSelectedItem().toString());
 
-            RadioButton rbType = (RadioButton) radioGroupType.findViewById(radioGroupType.getCheckedRadioButtonId());
-            type = rbType.getText().toString();
+        if (isFormParamValid(formParams)) {
 
-            bookingDate = etBookingDate.getText().toString();
+            final SendMail sendMail = new SendMail(app.getUser().getEmail(),
+                    SendMail.Type.HOTEL,
+                    getActivity(),
+                    new SendMail.MailCallbackListener() {
+                        @Override
+                        public void mailSentSuccessfully() {
+                            CommonUtilities.clearForm((ViewGroup) getActivity().findViewById(R.id.ll_formHotels));
 
-            Map<String, String> formParams = new LinkedHashMap<>();
-            formParams.put("Contact", mobileNo);
-            formParams.put("Booking Date", bookingDate);
-            formParams.put("Type", type);
-            formParams.put("Adult", adult);
-            formParams.put("Child", child);
-            formParams.put("Infant", infant);
-            formParams.put("Destination", destination);
-            formParams.put("No. of Nights", noOfNights);
+                            FragmentHotels.this.etMobileNo.requestFocus();
 
-            if (isFormParamValid(formParams)) {
-                JSONArray array = new JSONArray();
-
-                Iterator iterator = formParams.entrySet().iterator();
-
-                while (iterator.hasNext()) {
-                    Map.Entry pair = (Map.Entry) iterator.next();
-                    array.put(new JSONObject("{\"" + pair.getKey() + "\":" + "\"" + pair.getValue() + "\"}"));
-                    iterator.remove();
-                }
-
-                Log.d(TAG, "JSON-DATA: " + array);
-
-                Map<String, String> postParam = new HashMap<String, String>();
-                postParam.put("data", array.toString());
-                postParam.put("email", FragmentHotels.this.app.getUser().getEmail());
-
-                final Context mContext = getActivity();
-
-                Submit.submitHolidayForm(postParam, new PostHandler.ResponseCallback() {
-                    @Override
-                    public void response(int status, String response) {
-                        if (status == HttpURLConnection.HTTP_OK) {
-                            try {
-                                JSONObject mailResponse = new JSONObject(response).getJSONObject("mail_response");
-                                if (mailResponse.getString("status").equals("1")) {
-                                    mHandler.post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            CommonUtilities.showAlertDialog(mContext,
-                                                    "Hotel Booking", "", "Hotel ticket booking in Bhagwati Holiday.");
-                                        }
-                                    });
-                                }
-                            } catch (JSONException e) {
-
-                            }
+                            CommonUtilities
+                                    .showAlertDialog(getActivity(), "Hotel Booking",
+                                            "",
+                                            "Hotel Booking in Bhagwati Holidays");
                         }
-                    }
-                });
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
+                    });
+            sendMail.execute();
         }
+
     }
 
     @Override
@@ -363,6 +258,8 @@ public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateS
 
     public boolean isFormParamValid(Map<String, String> formParams) {
 
+        isFormValid = true;
+
         Validator.validateContact(formParams.get("Contact"), new Validator.ValidationListener() {
             @Override
             public void validationFailed(String msg) {
@@ -375,11 +272,9 @@ public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateS
             @Override
             public void validationFailed(String msg) {
                 Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+                isFormValid = false;
             }
         });
-
         return isFormValid;
     }
-
-
 }

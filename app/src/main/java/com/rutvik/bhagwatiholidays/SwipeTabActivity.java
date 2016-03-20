@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
+import com.google.android.gms.plus.PlusOneButton;
 import com.nostra13.universalimageloader.core.*;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
@@ -56,11 +57,16 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
 
     public com.nostra13.universalimageloader.core.ImageLoader imageLoader;
     public DisplayImageOptions options;
+    PlusOneButton mPlusOneButton;
+    private static final int PLUS_ONE_REQUEST_CODE = 0;
+    private static final String URL = "https://plus.google.com/u/1/b/102360101178165601088/105330265050301843812";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_swipe_tab);
+
+        mPlusOneButton = (PlusOneButton) findViewById(R.id.plus_one_button);
 
         app = (App) getApplication();
 
@@ -169,6 +175,11 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
         return super.onCreateOptionsMenu(menu);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mPlusOneButton.initialize(URL, PLUS_ONE_REQUEST_CODE);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

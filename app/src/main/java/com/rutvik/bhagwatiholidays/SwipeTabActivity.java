@@ -41,6 +41,7 @@ import bhfragment.FragmentHolidays;
 import bhfragment.FragmentHotelPackages;
 import bhfragment.FragmentHotels;
 import bhfragment.FragmentVisa;
+import gcm.CommonUtilities;
 
 public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener {
 
@@ -59,13 +60,12 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
     public DisplayImageOptions options;
     PlusOneButton mPlusOneButton;
     private static final int PLUS_ONE_REQUEST_CODE = 0;
-    private static final String URL = "https://plus.google.com/u/1/b/102360101178165601088/105330265050301843812";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_swipe_tab);
-
 
 
         mPlusOneButton = (PlusOneButton) findViewById(R.id.plus_one_button);
@@ -180,7 +180,7 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
     @Override
     protected void onResume() {
         super.onResume();
-        mPlusOneButton.initialize(URL, PLUS_ONE_REQUEST_CODE);
+        mPlusOneButton.initialize(CommonUtilities.GPLUS_LINK, PLUS_ONE_REQUEST_CODE);
     }
 
     @Override

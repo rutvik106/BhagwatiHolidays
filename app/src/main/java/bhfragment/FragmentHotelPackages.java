@@ -55,8 +55,7 @@ public class FragmentHotelPackages extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         app = (App) activity.getApplication();
-
-
+        app.trackScreenView(FragmentHotelPackages.class.getSimpleName());
     }
 
     /*public void countRangeAndLoadPackagesInAdapter() {
@@ -97,7 +96,7 @@ public class FragmentHotelPackages extends Fragment {
             final String days = model.getDays().toLowerCase(Locale.getDefault());
             final String nights = model.getNights().toLowerCase(Locale.getDefault());
             //Log.i(TAG, "model.getTitle(): " + );
-            if (name.contains(query)) {
+            if (name.contains(query) || places.contains(query) || days.contains(query) || nights.contains(query)) {
                 Log.i(TAG, "MATCH FOUND ADDING MODEL");
                 searchedPackages.add(model);
             }
@@ -133,7 +132,7 @@ public class FragmentHotelPackages extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_holiday_packages, container, false);
 
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.rcv_hotelPackages);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.rcv_holidayPackages);
 
         mRecyclerView.setHasFixedSize(true);
 
@@ -217,7 +216,7 @@ public class FragmentHotelPackages extends Fragment {
                     } catch (final Exception e) {
                         // Handle or log or ignore
                     } finally {
-                        progressDialog = null;
+                        //progressDialog = null;
                     }
 
                 }

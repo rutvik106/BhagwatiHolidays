@@ -24,7 +24,7 @@ import webservicehandler.PostHandler;
  */
 public class SendMail extends AsyncTask<Map<String, String>, Void, Void> {
 
-    public static enum Type {
+    public enum Type {
 
         AIRTICKET("airticket"),
         VISA("visa"),

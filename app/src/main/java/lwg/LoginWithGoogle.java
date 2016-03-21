@@ -204,7 +204,7 @@ public abstract class LoginWithGoogle extends AppCompatActivity implements Googl
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this);
             mProgressDialog.setTitle("Please Wait");
-            mProgressDialog.setMessage("Loading...");
+            mProgressDialog.setMessage("Getting things ready...");
             mProgressDialog.setIndeterminate(true);
             mProgressDialog.setCanceledOnTouchOutside(false);
             mProgressDialog.setCancelable(false);

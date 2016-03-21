@@ -22,10 +22,9 @@ public final class CommonUtilities {
     // give your server registration url here
     public static final String SERVER_URL = "http://bhagwatiholidays.com/bwt-gcm-server/app/templates/GCM/register.php";
 
-
     public static final String URL_FROM_TO = "http://www.bhagwatiholidays.com/admin/webservice/airport_name.php";
 
-
+    public static final String URL_DESTINATIONS="http://www.bhagwatiholidays.com/admin/webservice/destination_name.php";
 
 
     public static void clearForm(ViewGroup group)

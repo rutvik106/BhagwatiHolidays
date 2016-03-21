@@ -36,6 +36,14 @@ public class Validator {
         return true;
     }
 
+    public static boolean validateDate(String value,ValidationListener listener){
+        if(TextUtils.isEmpty(value)){
+            listener.validationFailed("Date required.");
+            return false;
+        }
+        return true;
+    }
+
     public static boolean validateDates(String departDate, String returnDate, ValidationListener listener) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
         try {

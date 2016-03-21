@@ -1,6 +1,7 @@
 package com.rutvik.bhagwatiholidays;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -132,7 +133,15 @@ public class ItineraryListActivity extends AppCompatActivity {
 
             @Override
             protected void onPreExecute() {
-                progressDialog=ProgressDialog.show(ItineraryListActivity.this,"Please Wait...","Getting package details...",true,false);
+                progressDialog=ProgressDialog.show(ItineraryListActivity.this,"Please Wait...","Getting package details...",true,true);
+                progressDialog.setCanceledOnTouchOutside(false);
+                progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        cancel(true);
+                        ItineraryListActivity.this.finish();
+                    }
+                });
             }
 
             @Override

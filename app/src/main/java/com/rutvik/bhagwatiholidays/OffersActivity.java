@@ -3,6 +3,7 @@ package com.rutvik.bhagwatiholidays;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -54,11 +55,15 @@ public class OffersActivity extends AppCompatActivity implements SearchView.OnQu
 
     BroadcastReceiver offerNotificationReceiver;
 
+    App app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_offers);
+
+        app = (App) getApplication();
+        app.trackScreenView(OffersActivity.class.getSimpleName());
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -158,7 +163,15 @@ public class OffersActivity extends AppCompatActivity implements SearchView.OnQu
 
             @Override
             protected void onPreExecute() {
-                progressDialog = ProgressDialog.show(OffersActivity.this, "Please Wait...", "Getting latest offers...", true, true);
+                progressDialog = ProgressDialog.show(OffersActivity.this, "Please Wait", "Getting latest offers...", true, true);
+                progressDialog.setCanceledOnTouchOutside(false);
+                progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        cancel(true);
+                        OffersActivity.this.finish();
+                    }
+                });
             }
 
             @Override

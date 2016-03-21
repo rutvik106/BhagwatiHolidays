@@ -4,14 +4,17 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RatingBar;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.rutvik.bhagwatiholidays.App;
 import com.rutvik.bhagwatiholidays.R;
@@ -23,10 +26,13 @@ import org.json.JSONObject;
 import java.net.HttpURLConnection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
+import extras.SendMail;
 import extras.Submit;
 import extras.Validator;
+import gcm.CommonUtilities;
 import webservicehandler.PostHandler;
 
 /**
@@ -34,14 +40,17 @@ import webservicehandler.PostHandler;
  */
 public class FragmentHolidays extends Fragment {
 
+    private static final String TAG = App.APP_TAG + FragmentHolidays.class.getSimpleName();
+
     EditText etMobileNo, etBookingDate, etDestination;
-    RadioButton rbIndia, rbWorldWild;
+    RadioGroup rgType;
     Spinner spAdult, spChild, spInfant, spNoOfNights;
     RatingBar rbPackageType;
     FloatingActionButton fabDone;
 
+    boolean isFormValid = true;
+
     App app;
-    private static final String TAG = App.APP_TAG + FragmentHolidays.class.getSimpleName();
 
 
     public FragmentHolidays() {
@@ -52,6 +61,7 @@ public class FragmentHolidays extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         app = (App) activity.getApplication();
+        app.trackScreenView(FragmentHolidays.class.getSimpleName());
     }
 
     @Override
@@ -85,9 +95,7 @@ public class FragmentHolidays extends Fragment {
 
         fabDone = (FloatingActionButton) rootView.findViewById(R.id.done);
 
-        rbIndia = (RadioButton) rootView.findViewById(R.id.rb_india);
-
-        rbWorldWild = (RadioButton) rootView.findViewById(R.id.rb_worldWide);
+        rgType = (RadioGroup) rootView.findViewById(R.id.rg_type);
 
         rbPackageType = (RatingBar) rootView.findViewById(R.id.rb_packageType);
 
@@ -111,50 +119,72 @@ public class FragmentHolidays extends Fragment {
 
 
     private void submitForm() {
-        try {
 
-            Map<String, String> formParams = new HashMap<String, String>();
-            formParams.put("Email-ID", "rakshit106@outlook.com");
-            formParams.put("Name", "Rakshit");
+        Map<String, String> formParams = new LinkedHashMap<>();
+        formParams.put("Contact", etMobileNo.getText().toString());
+        formParams.put("Email", app.getUser().getEmail());
+        formParams.put("Type", ((RadioButton) rgType.findViewById(rgType.getCheckedRadioButtonId())).getText().toString());
+        formParams.put("Depart Date", etBookingDate.getText().toString());
 
-            JSONArray array = new JSONArray();
 
-            Iterator iterator = formParams.entrySet().iterator();
+        formParams.put("Adult", spAdult.getSelectedItem().toString());
+        formParams.put("Child", spChild.getSelectedItem().toString());
+        formParams.put("Infant", spInfant.getSelectedItem().toString());
 
-            while (iterator.hasNext()) {
-                Map.Entry pair = (Map.Entry) iterator.next();
-                array.put(new JSONObject("{\"" + pair.getKey() + "\":" + "\"" + pair.getValue() + "\"}"));
-                iterator.remove();
-            }
+        Log.d(TAG, "Check check........!!!!");
 
-            Log.d(TAG, "JSON-DATA: " + array);
+        if (isFormParamValid(formParams)) {
 
-            Map<String, String> postParam = new HashMap<String, String>();
-            postParam.put("data", array.toString());
-            postParam.put("email", FragmentHolidays.this.app.getUser().getEmail());
+            final SendMail sendMail = new SendMail(app.getUser().getEmail(),
+                    SendMail.Type.HOLIDAY,
+                    getActivity(),
+                    new SendMail.MailCallbackListener() {
+                        @Override
+                        public void mailSentSuccessfully() {
 
-            Submit.submitHolidayForm(postParam, new PostHandler.ResponseCallback() {
-                @Override
-                public void response(int status, String response) {
-                    if (status == HttpURLConnection.HTTP_OK) {
-                        try {
-                            JSONObject mailResponse = new JSONObject(response).getJSONObject("mail_response");
-                            if (mailResponse.getString("status").equals(1)) {
-                                //Notify User For successful mail sent
-                            }
-                        } catch (JSONException e) {
+                            CommonUtilities.clearForm((ViewGroup) getActivity().findViewById(R.id.ll_formHoliday));
+
+                            FragmentHolidays.this.etMobileNo.requestFocus();
+
+                            CommonUtilities
+                                    .showAlertDialog(getActivity(), "Holiday Booking",
+                                            "",
+                                            "Holiday Booking in Bhagwati Holidays");
+
 
                         }
-                    }
-                }
-            });
+                    });
 
+            sendMail.execute(formParams);
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
         }
 
     }
+
+
+    public boolean isFormParamValid(Map<String, String> formParams) {
+        Log.i(TAG, "inside is form param valid");
+
+        isFormValid = true;
+
+        Validator.validateContact(formParams.get("Contact"), new Validator.ValidationListener() {
+            @Override
+            public void validationFailed(String msg) {
+                Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+                isFormValid = false;
+            }
+        });
+
+        Validator.validateDate(formParams.get("Depart Date"), new Validator.ValidationListener() {
+            @Override
+            public void validationFailed(String msg) {
+                Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+                isFormValid = false;
+            }
+        });
+
+        return isFormValid;
+    }
+
+
 }

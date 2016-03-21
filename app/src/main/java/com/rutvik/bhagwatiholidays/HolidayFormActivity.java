@@ -14,11 +14,14 @@ public class HolidayFormActivity extends AppCompatActivity {
 
     private Toolbar mToolbar;
 
+    App app;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_holiday_form);
-
+        app=(App) getApplication();
+        app.trackScreenView(HolidayFormActivity.class.getSimpleName());
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setHomeButtonEnabled(true);

@@ -56,18 +56,20 @@ import webservicehandler.PostHandler;
  */
 public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnDateSetListener {
 
+    private static final String TAG = App.APP_TAG + FragmentAirTickets.class.getSimpleName();
+
     EditText etMobileNo, etDepartDate, etReturnDate;
     RadioButton rbIndia, rbWorldWild, rbReturn, rbOneWay, rbEconomy, rbBusiness;
     RadioGroup rgType, rgTrip, rgClass;
     Spinner spAdult, spChild, spInfant;
     FloatingActionButton fabDone;
-    private AutoCompleteTextView actFrom, actTo;
+    AutoCompleteTextView actFrom, actTo;
 
     private GetTermsAsync getTermsAsync;
 
     App app;
 
-    final Handler mHandler = new Handler();
+    boolean isFormValid = true;
 
     DatePickerDialog datePickerDialog;
     android.app.FragmentManager fragmentManager;
@@ -78,13 +80,12 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
 
     Map<Integer, OnGetDate> dateComponentMap = new HashMap<>();
 
-    private static final String TAG = App.APP_TAG + FragmentAirTickets.class.getSimpleName();
-
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         app = (App) activity.getApplication();
+        app.trackScreenView(FragmentAirTickets.class.getSimpleName());
     }
 
     public FragmentAirTickets() {
@@ -243,17 +244,14 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
         dateComponentMap.put(RETURN_DATE, new OnGetDate() {
             @Override
             public void setText(String text) {
-                boolean flag = false;
-                flag = Validator.validateDates(etDepartDate.getText().toString(), text, new Validator.ValidationListener() {
+                if (Validator.validateDates(etDepartDate.getText().toString(), text, new Validator.ValidationListener() {
                     @Override
                     public void validationFailed(String msg) {
                         Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
                     }
-                });
-                if (flag == true) {
+                })) {
                     etReturnDate.setText(text);
                 }
-
             }
         });
 
@@ -289,6 +287,7 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "press btn before....");
+
                 submitForm();
             }
         });
@@ -362,8 +361,6 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
 
     }
 
-    boolean isFormValid = true;
-
     public boolean isFormParamValid(Map<String, String> formParams) {
         Log.i(TAG, "inside is form param valid");
 
@@ -392,6 +389,25 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
                 isFormValid = false;
             }
         });
+
+        Validator.validateDate(formParams.get("Depart Date"), new Validator.ValidationListener() {
+            @Override
+            public void validationFailed(String msg) {
+                Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+                isFormValid=false;
+            }
+        });
+
+        if(formParams.get("Return Date")!=null) {
+            Validator.validateDate(formParams.get("Return Date"), new Validator.ValidationListener() {
+                @Override
+                public void validationFailed(String msg) {
+                    Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+                    isFormValid = false;
+                }
+            });
+        }
+
         return isFormValid;
     }
 

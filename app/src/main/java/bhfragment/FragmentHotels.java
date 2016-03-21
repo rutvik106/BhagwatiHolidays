@@ -39,6 +39,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import extras.GetTermsAsync;
 import extras.SendMail;
 import extras.Submit;
 import extras.Validator;
@@ -52,22 +53,25 @@ public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateS
 
     private static final String TAG = App.APP_TAG + FragmentHotels.class.getSimpleName();
 
-    private EditText etMobileNo, etBookingDate;
-    private AutoCompleteTextView etDestination;
-    private RadioGroup radioGroupType;
-    private RadioButton rbIndia, rbWorldWild;
-    private Spinner spAdult, spChild, spInfant, spNoOfNights;
-    private FloatingActionButton fabDone;
-    private android.app.FragmentManager mFragmentManager;
-    private DatePickerDialog datePickerDialog;
-    App app;
-    final Handler mHandler = new Handler();
+    EditText etMobileNo, etBookingDate;
+    AutoCompleteTextView etDestination;
+    RadioGroup radioGroupType;
 
+    Spinner spAdult, spChild, spInfant, spNoOfNights;
+    FloatingActionButton fabDone;
+    android.app.FragmentManager mFragmentManager;
+    DatePickerDialog datePickerDialog;
+    App app;
+
+    private GetTermsAsync getTermsAsync;
+
+    boolean isFormValid = true;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         app = (App) activity.getApplication();
+        app.trackScreenView(FragmentHotels.class.getSimpleName());
     }
 
     public FragmentHotels() {
@@ -108,10 +112,6 @@ public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateS
         radioGroupType = (RadioGroup) rootView.findViewById(R.id.rg_type);
 
         fabDone = (FloatingActionButton) rootView.findViewById(R.id.done);
-
-        rbIndia = (RadioButton) rootView.findViewById(R.id.rb_india);
-
-        rbWorldWild = (RadioButton) rootView.findViewById(R.id.rb_worldWide);
 
         etMobileNo = (EditText) rootView.findViewById(R.id.et_mobileNo);
 
@@ -154,6 +154,7 @@ public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateS
 
         Map<String, String> formParams = new LinkedHashMap<>();
         formParams.put("Contact", etMobileNo.getText().toString());
+        formParams.put("Email",app.getUser().getEmail());
         formParams.put("Booking Date", etBookingDate.getText().toString());
         formParams.put("Type", ((RadioButton) radioGroupType.findViewById(radioGroupType.getCheckedRadioButtonId())).getText().toString());
         formParams.put("Adult", spAdult.getSelectedItem().toString());
@@ -200,7 +201,15 @@ public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateS
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         Log.i(TAG, "TEXT CHANGED TO: " + s.toString());
         if (!TextUtils.isEmpty(s.toString())) {
-            getDestinationsAsync(s.toString());
+            Log.i(TAG, "TEXT CHENGED IN FROM: " + s.toString());
+            if (!TextUtils.isEmpty(s.toString()) && s.toString().length() > 2) {
+                if (getTermsAsync != null) {
+                    getTermsAsync.cancel(true);
+                    getTermsAsync = null;
+                }
+                getTermsAsync = new GetTermsAsync(etDestination, getActivity(), CommonUtilities.URL_DESTINATIONS);
+                getTermsAsync.execute(s.toString());
+            }
         }
     }
 
@@ -208,53 +217,6 @@ public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateS
     public void afterTextChanged(Editable s) {
 
     }
-
-    private void getDestinationsAsync(final String term) {
-        new AsyncTask<Void, Void, Void>() {
-
-            final String t = term;
-
-            final Map<String, String> postParams = new HashMap<>();
-
-            @Override
-            protected Void doInBackground(Void... params) {
-                Log.i(TAG, "do in background in getDestinationAsync");
-                postParams.put("term", t);
-                new PostHandler(TAG, 2, 2000).doPostRequest("http://www.bhagwatiholidays.com/admin/webservice/destination_name.php",
-                        postParams,
-                        new PostHandler.ResponseCallback() {
-                            @Override
-                            public void response(int status, String response) {
-                                Log.i(TAG, "GOT RESPONSE SUCCESSFULLY");
-                                try {
-                                    Log.i(TAG, "PARSING JSON");
-                                    JSONArray array = new JSONArray(response);
-                                    Log.i(TAG, "JSON ARRAY SIZE: " + array.length());
-                                    final String[] destinations = new String[array.length()];
-                                    for (int i = 0; i < array.length(); i++) {
-                                        Log.i(TAG, "LABEL: " + array.getJSONObject(i).getString("label"));
-                                        destinations[i] = array.getJSONObject(i).getString("label");
-                                    }
-                                    Log.i(TAG, "SETTING ADAPTER NOW");
-                                    mHandler.post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            FragmentHotels.this.etDestination.setAdapter(new ArrayAdapter<String>(FragmentHotels.this.getActivity(),
-                                                    android.R.layout.simple_list_item_1, destinations));
-                                        }
-                                    });
-
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
-                return null;
-            }
-        }.execute();
-    }
-
-    boolean isFormValid = true;
 
     public boolean isFormParamValid(Map<String, String> formParams) {
 
@@ -275,6 +237,15 @@ public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateS
                 isFormValid = false;
             }
         });
+
+        Validator.validateDate(formParams.get("Booking Date"), new Validator.ValidationListener() {
+            @Override
+            public void validationFailed(String msg) {
+                Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+                isFormValid=false;
+            }
+        });
+
         return isFormValid;
     }
 }

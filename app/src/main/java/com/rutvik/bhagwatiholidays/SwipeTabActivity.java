@@ -66,11 +66,13 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_swipe_tab);
 
+
+
         mPlusOneButton = (PlusOneButton) findViewById(R.id.plus_one_button);
 
         app = (App) getApplication();
 
-        app.trackScreenView("Swipe Tab Activity");
+        app.trackScreenView(SwipeTabActivity.class.getName());
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);

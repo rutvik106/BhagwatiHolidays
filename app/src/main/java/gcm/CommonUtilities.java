@@ -26,6 +26,8 @@ public final class CommonUtilities {
 
     public static final String URL_DESTINATIONS="http://www.bhagwatiholidays.com/admin/webservice/destination_name.php";
 
+    public static final String GPLUS_LINK = "https://plus.google.com/u/0/105330265050301843812";
+
 
     public static void clearForm(ViewGroup group)
     {

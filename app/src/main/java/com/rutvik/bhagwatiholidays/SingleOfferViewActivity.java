@@ -1,6 +1,7 @@
 package com.rutvik.bhagwatiholidays;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.provider.CalendarContract;
@@ -13,7 +14,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.share.Sharer;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
 import com.nostra13.universalimageloader.core.*;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
@@ -21,6 +30,8 @@ import org.w3c.dom.Text;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+
+import gcm.CommonUtilities;
 
 /**
  * Created by Rakshit on 07-03-2016.
@@ -37,6 +48,9 @@ public class SingleOfferViewActivity extends AppCompatActivity {
     private Toolbar mToolbar;
 
     private Button btnBookNow;
+
+    CallbackManager callbackManager;
+    ShareDialog shareDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,13 +76,13 @@ public class SingleOfferViewActivity extends AppCompatActivity {
 
         offerDescription = (TextView) findViewById(R.id.tv_offerDescription);
 
-        btnBookNow=(Button) findViewById(R.id.btn_bookNow);
+        btnBookNow = (Button) findViewById(R.id.btn_bookNow);
 
         btnBookNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                startActivity(new Intent(SingleOfferViewActivity.this,HolidayFormActivity.class));
+                startActivity(new Intent(SingleOfferViewActivity.this, HolidayFormActivity.class));
 
             }
         });
@@ -100,6 +114,29 @@ public class SingleOfferViewActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        callbackManager = CallbackManager.Factory.create();
+        shareDialog = new ShareDialog(this);
+        // this part is optional
+        shareDialog.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
+            @Override
+            public void onSuccess(Sharer.Result result) {
+                Toast.makeText(SingleOfferViewActivity.this,"Content shared Successfully.",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Toast.makeText(SingleOfferViewActivity.this,"Sharing failed.",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
     }
 
 
@@ -117,8 +154,16 @@ public class SingleOfferViewActivity extends AppCompatActivity {
                 finish();
                 return true;
 
+            case R.id.action_share_fb:
+                shareContentOnFacebook();
+                return true;
+
             case R.id.action_share:
-                //shareContent();
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, "Hey, Watch out this new exciting offer from Bhagwati Holidays "+ getIntent().getStringExtra("offer_title")+" https://bnc.lt/m/q1UrTyr8Wr");
+                sendIntent.setType("text/plain");
+                startActivity(sendIntent);
                 return true;
 
             default:
@@ -126,5 +171,21 @@ public class SingleOfferViewActivity extends AppCompatActivity {
         }
     }
 
+    private void shareContentOnFacebook() {
+        if (ShareDialog.canShow(ShareLinkContent.class)) {
+            ShareLinkContent linkContent = new ShareLinkContent.Builder()
+                    .setContentTitle(getIntent().getStringExtra("offer_title"))
+                    .setContentDescription(getIntent().getStringExtra("offer_description")+" see more https://bnc.lt/m/q1UrTyr8Wr")
+                    .setImageUrl(Uri.parse(getIntent().getStringExtra("offer_image")))
+                    .build();
+            shareDialog.show(linkContent);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
 
 }

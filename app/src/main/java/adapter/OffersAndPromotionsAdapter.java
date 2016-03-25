@@ -68,7 +68,6 @@ public class OffersAndPromotionsAdapter extends RecyclerView.Adapter<RecyclerVie
     public void addOffersAndPromotionsItem(int viewType,SimpleOffersAndPromotions model){
         Log.i(TAG,"ADDING SIMPLE ITEM TO LIST");
         list.add(new OffersAndPromotionsItem(viewType,model));
-        notifyItemInserted(list.size());
     }
 
     @Override

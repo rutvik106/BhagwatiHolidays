@@ -45,9 +45,11 @@ public class LazyAdapter extends RecyclerView.Adapter<LazyAdapter.ViewHolder> {
     public ImageLoader imageLoader;
     DisplayImageOptions options;
 
-    private int range = 20;
-
     private final List<PackageList.Package> packages;
+
+    public List<PackageList.Package> getPackages(){
+        return packages;
+    }
 
     public LazyAdapter(Activity a) {
 
@@ -91,8 +93,8 @@ public class LazyAdapter extends RecyclerView.Adapter<LazyAdapter.ViewHolder> {
 
         PackageList.Package singlePackage;
 
-        public void setSinglePackage(PackageList.Package p){
-            singlePackage=p;
+        public void setSinglePackage(PackageList.Package p) {
+            singlePackage = p;
             packageName.setText(singlePackage.getPackage_name());
             packageDays.setText(singlePackage.getDays() + " Days");
             packageNights.setText(singlePackage.getNights() + " Nights");
@@ -110,15 +112,15 @@ public class LazyAdapter extends RecyclerView.Adapter<LazyAdapter.ViewHolder> {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i=new Intent(LazyAdapter.this.activity,ItineraryListActivity.class);
-                    i.putExtra("package_name",singlePackage.getPackage_name());
-                    i.putExtra("package_days",singlePackage.getDays());
-                    i.putExtra("package_nights",singlePackage.getNights());
-                    i.putExtra("package_place",singlePackage.getPlaces());
-                    i.putExtra("package_image",singlePackage.getThumb_href());
-                    i.putExtra("inclusions",singlePackage.getInclusions());
-                    i.putExtra("exclusions",singlePackage.getExclusions());
-                    i.putExtra("package_id",singlePackage.getPackage_id());
+                    Intent i = new Intent(LazyAdapter.this.activity, ItineraryListActivity.class);
+                    i.putExtra("package_name", singlePackage.getPackage_name());
+                    i.putExtra("package_days", singlePackage.getDays());
+                    i.putExtra("package_nights", singlePackage.getNights());
+                    i.putExtra("package_place", singlePackage.getPlaces());
+                    i.putExtra("package_image", singlePackage.getThumb_href());
+                    i.putExtra("inclusions", singlePackage.getInclusions());
+                    i.putExtra("exclusions", singlePackage.getExclusions());
+                    i.putExtra("package_id", singlePackage.getPackage_id());
                     activity.startActivity(i);
                 }
             });
@@ -127,10 +129,9 @@ public class LazyAdapter extends RecyclerView.Adapter<LazyAdapter.ViewHolder> {
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View vi = inflater.inflate(R.layout.offers_list_item, parent,false);
+        View vi = inflater.inflate(R.layout.offers_list_item, parent, false);
 
         ViewHolder vh = new ViewHolder(vi);
-
 
 
         return vh;
@@ -144,7 +145,7 @@ public class LazyAdapter extends RecyclerView.Adapter<LazyAdapter.ViewHolder> {
         //loadBitmap(viewHolder.packageImage, "http://www.bhagwatiholidays.com/admin/images/package_icons/"+packages.get(position).getThumb_href());
 
         try {
-            display(holder.packageImage,packages.get(position).getThumb_href(), holder.pb);
+            display(holder.packageImage, packages.get(position).getThumb_href(), holder.pb);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -157,31 +158,15 @@ public class LazyAdapter extends RecyclerView.Adapter<LazyAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        /*if (packages.size() != 0) {
-            if (packages.size() >= 20) {
-                Log.i(TAG,"RETURNING RANGE= "+range);
-                return range;
-            } else {
-                Log.i(TAG,"RETURNING PACKAGE SIZE= "+packages.size());
-                return packages.size();
-            }
-        } else {*/
-            return packages.size();
-        //}
+
+        return packages.size();
 
     }
 
-    public void increaseRange(int max) {
-        range = range + 20;
-        range = range % max;
-        Log.i(TAG, "range increased to: " + range);
-        notifyDataSetChanged();
-    }
 
     public void addPackage(PackageList.Package p) {
         Log.i(TAG, "ADDING SIMPLE ITEM TO LIST");
         packages.add(p);
-        notifyItemInserted(packages.size());
     }
 
 
@@ -254,8 +239,7 @@ public class LazyAdapter extends RecyclerView.Adapter<LazyAdapter.ViewHolder> {
             public void onLoadingStarted(String imageUri, View view) {
                 try {
                     spinner.setVisibility(View.VISIBLE);
-                }
-                catch (Exception e){
+                } catch (Exception e) {
 
                 }
             }
@@ -265,8 +249,7 @@ public class LazyAdapter extends RecyclerView.Adapter<LazyAdapter.ViewHolder> {
 
                 try {
                     spinner.setVisibility(View.GONE);
-                }
-                catch (Exception e){
+                } catch (Exception e) {
 
                 }
 
@@ -277,8 +260,7 @@ public class LazyAdapter extends RecyclerView.Adapter<LazyAdapter.ViewHolder> {
             public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                 try {
                     spinner.setVisibility(View.GONE);
-                }
-                catch (Exception e){
+                } catch (Exception e) {
 
                 }
             }

@@ -31,6 +31,8 @@ import java.util.List;
 import java.util.Locale;
 
 import adapter.OffersAndPromotionsAdapter;
+import io.branch.referral.Branch;
+import io.branch.referral.BranchError;
 import jsonobj.PackageList;
 import model.SimpleOffersAndPromotions;
 import webservicehandler.PostHandler;
@@ -115,6 +117,29 @@ public class OffersActivity extends AppCompatActivity implements SearchView.OnQu
         mRecyclerView.setAdapter(mAdapter);
 
         loadOffersAsync();
+    }
+
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        Branch branch = Branch.getInstance(this,"key_live_jobYwEC4RDj7qiGLV32VjhfiuuomI8ua");
+        branch.initSession(new Branch.BranchReferralInitListener() {
+            @Override
+            public void onInitFinished(JSONObject referringParams, BranchError error) {
+                if (error == null) {
+                    // params are the deep linked params associated with the link that the user clicked before showing up
+                    Log.i(TAG, "deep link data: " + referringParams.toString());
+                }
+            }
+        }, this.getIntent().getData(), this);
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        this.setIntent(intent);
     }
 
 
@@ -269,6 +294,8 @@ public class OffersActivity extends AppCompatActivity implements SearchView.OnQu
                             model);
             modelList.add(model);
         }
+
+        mAdapter.notifyDataSetChanged();
     }
 
 

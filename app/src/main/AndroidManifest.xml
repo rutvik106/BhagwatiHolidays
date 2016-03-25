@@ -26,6 +26,24 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
+        <meta-data android:name="io.branch.sdk.BranchKey" android:value="key_live_jobYwEC4RDj7qiGLV32VjhfiuuomI8ua" />
+
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+
+        <!-- Facebook -->
+        <activity android:name="com.facebook.FacebookActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name" />
+        <meta-data android:name="com.facebook.sdk.ApplicationName"
+            android:value="@string/app_name" />
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+
+        <provider android:authorities="com.facebook.app.FacebookContentProvider658868440928736"
+            android:name="com.facebook.FacebookContentProvider"
+            android:exported="true"/>
+
+
         <activity android:name=".initial" />
         <activity
             android:name=".SwipeTabActivity"
@@ -33,7 +51,21 @@
             android:windowSoftInputMode="stateHidden"></activity>
         <activity
             android:name=".OffersActivity"
-            android:label="Offers" />
+            android:label="Offers"
+            android:launchMode="singleTask">
+
+            <intent-filter>
+                <data android:scheme="combhagwatiholidays" android:host="open"/>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+            </intent-filter>
+
+        </activity>
+
+
+
         <activity
             android:name=".BusActivity"
             android:label="Bus" />
@@ -61,6 +93,7 @@
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
+
         <service
             android:name="gcm.MyInstanceIDListenerService"
             android:exported="false">
@@ -68,6 +101,7 @@
                 <action android:name="com.google.android.gms.iid.InstanceID" />
             </intent-filter>
         </service>
+
         <service
             android:name="gcm.RegistrationIntentService"
             android:enabled="true" />
@@ -79,10 +113,8 @@
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
 
         <activity android:name=".SingleOfferViewActivity" />

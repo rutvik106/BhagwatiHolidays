@@ -29,12 +29,31 @@
             android:text="User Name"
             android:textColor="#FFFFFF" />
 
+        <TextView
+            android:id="@+id/tv_userEmail"
+            android:textSize="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_userName"
+            android:layout_marginTop="10dp"
+            android:text="User Name"
+            android:textColor="#FFFFFF" />
+
         <com.google.android.gms.plus.PlusOneButton xmlns:plus="http://schemas.android.com/apk/lib/com.google.android.gms.plus"
             android:id="@+id/plus_one_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+
             android:layout_alignParentRight="true"
             plus:size="small" />
+
+        <com.facebook.share.widget.LikeView
+            android:id="@+id/likeView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/plus_one_button"
+            android:layout_alignParentRight="true"/>
 
     </RelativeLayout>
 

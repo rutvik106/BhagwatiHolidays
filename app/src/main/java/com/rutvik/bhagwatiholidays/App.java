@@ -1,10 +1,13 @@
 package com.rutvik.bhagwatiholidays;
 
 import android.app.Application;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 
+import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.StandardExceptionParser;
@@ -18,8 +21,11 @@ import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import org.json.JSONException;
 
 import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import extras.AnalyticsTrackers;
+import io.branch.referral.Branch;
 import jsonobj.PackageItenary;
 import jsonobj.PackageList;
 import model.User;
@@ -71,6 +77,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
+        Branch.getInstance(this, "key_live_jobYwEC4RDj7qiGLV32VjhfiuuomI8ua");
 
         // UNIVERSAL IMAGE LOADER SETUP
         DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
@@ -90,6 +97,10 @@ public class App extends Application {
 
         AnalyticsTrackers.initialize(this);
         AnalyticsTrackers.getInstance().get(AnalyticsTrackers.Target.APP);
+
+
+
+
 
         hotelAdultAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.my_spinner_item, hotelAdult);
         hotelChildAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.my_spinner_item, hotelChild);

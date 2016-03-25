@@ -1,7 +1,9 @@
 package bhfragment;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -18,7 +20,10 @@ import android.view.ViewGroup;
 import com.rutvik.bhagwatiholidays.R;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import adapter.NavigationDrawerAdapter;
 import model.NavDrawerItem;
@@ -35,25 +40,42 @@ public class FragmentDrawer extends Fragment {
     private DrawerLayout mDrawerLayout;
     private NavigationDrawerAdapter adapter;
     private View containerView;
-    private static String[] titles = null;
     private FragmentDrawerListener drawerListener;
 
     public FragmentDrawer() {
 
     }
 
+    public DrawerLayout getDrawerLayout(){
+        return mDrawerLayout;
+    }
+
     public void setDrawerListener(FragmentDrawerListener listener) {
         this.drawerListener = listener;
     }
 
-    public static List<NavDrawerItem> getData() {
+    public List<NavDrawerItem> getData() {
         List<NavDrawerItem> data = new ArrayList<>();
 
+        SharedPreferences sp= PreferenceManager.getDefaultSharedPreferences(getActivity());
+        Set<String> navDrawerTitleSet=new LinkedHashSet<>();
+        navDrawerTitleSet.add("My Bookings");
+        navDrawerTitleSet.add("Offers & Promotions");
+        navDrawerTitleSet.add("Support");
+        navDrawerTitleSet.add("Rate Us");
+        navDrawerTitleSet.add("Share");
+        navDrawerTitleSet.add("Send Feedback");
+        if(sp.getBoolean("IS_NOTIFICATION_DISABLED",false)){
+            navDrawerTitleSet.add("Enable Notifications");
+        }else{
+            navDrawerTitleSet.add("Disable Notifications");
+        }
+        navDrawerTitleSet.add("Locate Us");
 
         // preparing navigation drawer items
-        for (int i = 0; i < titles.length; i++) {
+        for (String t:navDrawerTitleSet) {
             NavDrawerItem navItem = new NavDrawerItem();
-            navItem.setTitle(titles[i]);
+            navItem.setTitle(t);
             data.add(navItem);
         }
         return data;
@@ -63,8 +85,10 @@ public class FragmentDrawer extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // drawer labels
-        titles = getActivity().getResources().getStringArray(R.array.nav_drawer_labels);
+
+
+
+
     }
 
     @Override

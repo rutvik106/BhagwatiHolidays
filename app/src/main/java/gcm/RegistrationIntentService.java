@@ -79,6 +79,8 @@ public class RegistrationIntentService extends IntentService {
                     if (status == HttpURLConnection.HTTP_OK) {
                         Log.i(TAG, "STATUS: " + status + " RESPONSE: " + response);
 
+                        sharedPreferences.edit().putString("GCM_TOKEN", token).apply();
+
                         sharedPreferences.edit().putBoolean("SENT_TOKEN_TO_SERVER", true).apply();
 
                         sharedPreferences.edit().putString("GCM_USER_EMAIL", email).apply();

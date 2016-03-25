@@ -2,13 +2,16 @@ package com.rutvik.bhagwatiholidays;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -17,15 +20,20 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.facebook.FacebookSdk;
+
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
+import com.facebook.appevents.AppEventsLogger;
+import com.facebook.share.widget.LikeView;
 import com.google.android.gms.plus.PlusOneButton;
 import com.nostra13.universalimageloader.core.*;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -50,6 +58,8 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
     private ViewPager viewPager;
     private FragmentDrawer drawerFragment;
 
+    private static final String TAG = App.APP_TAG + SwipeTabActivity.class.getSimpleName();
+
     final ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
     private App app;
@@ -61,12 +71,27 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
     PlusOneButton mPlusOneButton;
     private static final int PLUS_ONE_REQUEST_CODE = 0;
 
+    boolean isOnPackagesPage = false;
+
+    SharedPreferences sp;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_swipe_tab);
 
+        sp = PreferenceManager.getDefaultSharedPreferences(this);
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
+
+        LikeView likeView = (LikeView) findViewById(R.id.likeView);
+        likeView.setLikeViewStyle(LikeView.Style.BOX_COUNT);
+        likeView.setAuxiliaryViewPosition(LikeView.AuxiliaryViewPosition.BOTTOM);
+
+        likeView.setObjectIdAndType(
+                CommonUtilities.URL_FB,
+                LikeView.ObjectType.OPEN_GRAPH);
 
         mPlusOneButton = (PlusOneButton) findViewById(R.id.plus_one_button);
 
@@ -99,14 +124,13 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
                 .showStubImage(R.drawable.loading_image)
                 .cacheInMemory()
                 .cacheOnDisc()
-                .displayer(new RoundedBitmapDisplayer(5))
+                .displayer(new RoundedBitmapDisplayer(7))
                 .build();
 
         try {
             imageLoader.displayImage(app.getUser().getProfilePic(), (android.widget.ImageView) drawerFragment.getView().findViewById(R.id.iv_userImage), options);
-
-
             ((TextView) drawerFragment.getView().findViewById(R.id.tv_userName)).setText(app.getUser().getName());
+            ((TextView) drawerFragment.getView().findViewById(R.id.tv_userEmail)).setText(app.getUser().getEmail());
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
@@ -114,6 +138,14 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
 
     }
 
+    @Override
+    public void onBackPressed() {
+        if (drawerFragment.getDrawerLayout().isDrawerOpen(GravityCompat.START)) {
+            drawerFragment.getDrawerLayout().closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
 
     private void setupViewPager(ViewPager viewPager) {
 
@@ -133,10 +165,12 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
             @Override
             public void onPageSelected(int position) {
                 if (position == 2) {
-                    search.setVisible(true);
+                    isOnPackagesPage = true;
+                    search.setVisible(isOnPackagesPage);
                     ((FragmentHotelPackages) adapter.getItem(position)).loadOffersAsync();
                 } else {
-                    search.setVisible(false);
+                    isOnPackagesPage = false;
+                    search.setVisible(isOnPackagesPage);
                 }
             }
 
@@ -156,6 +190,7 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
         // SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
         search = menu.findItem(R.id.action_search);
+        search.setVisible(isOnPackagesPage);
         //searchView.setVisibility(View.GONE);
         // searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -181,6 +216,13 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
     protected void onResume() {
         super.onResume();
         mPlusOneButton.initialize(CommonUtilities.GPLUS_LINK, PLUS_ONE_REQUEST_CODE);
+        AppEventsLogger.activateApp(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        AppEventsLogger.activateApp(this);
     }
 
     @Override
@@ -240,6 +282,14 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
             startActivity(Intent.createChooser(emailIntent, "Send mail..."));
         } else if (position == 7) {
             startActivity(new Intent(SwipeTabActivity.this, LocateUsActivity.class));
+        } else if (position == 6) {
+            Log.i(TAG, "IS_NOTIFICATION_DISABLED: " + sp.getBoolean("IS_NOTIFICATION_DISABLED", false));
+            if (sp.getBoolean("IS_NOTIFICATION_DISABLED", false)) {
+                CommonUtilities.enableNotification(this, sp);
+            } else {
+                CommonUtilities.disableNotification(this, sp);
+
+            }
         }
     }
 

@@ -5,12 +5,14 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.rutvik.bhagwatiholidays.App;
 import com.rutvik.bhagwatiholidays.LazyAdapter;
@@ -41,13 +43,17 @@ public class FragmentHotelPackages extends Fragment {
 
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private ProgressDialog progressDialog;
-
     private final List<PackageList.Package> packages = new ArrayList<>();
 
     private final List<PackageList.Package> searchedPackages = new ArrayList<>();
 
     App app;
+
+    ProgressBar pb;
+
+    SwipeRefreshLayout srlPackagesList;
+
+    LoadOffersAsync mLoadOffersAsync;
 
     //private int range = 20;
 
@@ -56,23 +62,9 @@ public class FragmentHotelPackages extends Fragment {
         super.onAttach(activity);
         app = (App) activity.getApplication();
         app.trackScreenView(FragmentHotelPackages.class.getSimpleName());
-    }
-
-    /*public void countRangeAndLoadPackagesInAdapter() {
-
-        Log.i(TAG, "RANGE IS: " + range);
-
-        if (range >= packages.size()) {
-            range = packages.size();
-        }
-
-        for (int i = mAdapter.getItemCount(); i < range; i++) {
-            Log.i(TAG, "ADDING PACKAGE: " + i);
-            ((LazyAdapter) mAdapter).addPackage(packages.get(i));
-        }
 
     }
-*/
+
     public FragmentHotelPackages() {
         // Required empty public constructor
     }
@@ -80,6 +72,7 @@ public class FragmentHotelPackages extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mAdapter= new LazyAdapter(getActivity());
     }
 
     private void filterOffers(List<PackageList.Package> modelList, String query) {
@@ -114,15 +107,6 @@ public class FragmentHotelPackages extends Fragment {
         ((LazyAdapter) mAdapter).animateTo(searchedPackages);
 
 
-
-
-  /*      try {
-
-        }
-        catch (ArrayIndexOutOfBoundsException e){
-            Log.i(TAG,"Searched Array Size: "+searchedPackages.size()+" Adapter Array Size: "+mAdapter.getItemCount());
-        }*/
-
         mRecyclerView.scrollToPosition(0);
     }
 
@@ -132,6 +116,22 @@ public class FragmentHotelPackages extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_holiday_packages, container, false);
 
+        pb = (ProgressBar) rootView.findViewById(R.id.pb);
+
+        srlPackagesList = (SwipeRefreshLayout) rootView.findViewById(R.id.srl_packagesList);
+
+        srlPackagesList.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (mLoadOffersAsync != null) {
+                    mLoadOffersAsync.cancel(true);
+                }
+                mLoadOffersAsync = new LoadOffersAsync();
+                mLoadOffersAsync.execute();
+
+            }
+        });
+
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.rcv_holidayPackages);
 
         mRecyclerView.setHasFixedSize(true);
@@ -140,6 +140,7 @@ public class FragmentHotelPackages extends Fragment {
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
+        mRecyclerView.setAdapter(mAdapter);
 
 
         //loadOffersAsync();
@@ -147,90 +148,87 @@ public class FragmentHotelPackages extends Fragment {
         return rootView;
     }
 
+    private class LoadOffersAsync extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            if(!srlPackagesList.isRefreshing()){
+                pb.setVisibility(View.VISIBLE);
+            }
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            HashMap<String, String> postParams = new HashMap<>();
+
+            postParams.put("method", "get_package_list");
+
+            new PostHandler("BWT", 4, 2000).doPostRequest("http://bhagwatiholidays.com/admin/webservice/index.php", postParams, new PostHandler.ResponseCallback() {
+                @Override
+                public void response(int status, String response) {
+                    if (status == HttpURLConnection.HTTP_OK) {
+                        try {
+                            PackageList packageList = new PackageList(response, "package_list");
+                            packages.clear();
+                            for (PackageList.Package p : packageList.getPackageList()) {
+                                packages.add(p);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            });
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+
+            ((LazyAdapter) mAdapter).getPackages().clear();
+
+            for (PackageList.Package p : packages) {
+                ((LazyAdapter) mAdapter).addPackage(p);
+            }
+
+            mAdapter.notifyDataSetChanged();
+
+            Log.i(TAG, "INSIDE ON POST EXECUTE");
+
+
+
+            if(srlPackagesList.isRefreshing()){
+                srlPackagesList.setRefreshing(false);
+            }
+            else{
+                pb.setVisibility(View.GONE);
+            }
+
+        }
+    }
 
     public void loadOffersAsync() {
-        if(packages.size()==0) {
-            Log.i(TAG,"packages not found getting from internet");
-            new AsyncTask<Void, Void, Void>() {
-
-                @Override
-                protected void onPreExecute() {
-
-                    progressDialog = ProgressDialog.show(FragmentHotelPackages.this.getActivity(), "Please Wait...", "Getting packages...", true, false);
-
-                }
-
-                @Override
-                protected Void doInBackground(Void... params) {
-
-                    HashMap<String, String> postParams = new HashMap<>();
-
-                    postParams.put("method", "get_package_list");
-
-                    new PostHandler("BWT", 4, 2000).doPostRequest("http://bhagwatiholidays.com/admin/webservice/index.php", postParams, new PostHandler.ResponseCallback() {
-                        @Override
-                        public void response(int status, String response) {
-                            if (status == HttpURLConnection.HTTP_OK) {
-                                try {
-                                    PackageList packageList = new PackageList(response, "package_list");
-                                    packages.clear();
-                                    for (PackageList.Package p : packageList.getPackageList()) {
-                                        packages.add(p);
-                                    }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                    });
+        if (packages.size() == 0) {
+            Log.i(TAG, "packages not found getting from internet");
 
 
-                    return null;
-                }
-
-                @Override
-                protected void onPostExecute(Void aVoid) {
-                    try {
-                        mAdapter = new LazyAdapter(FragmentHotelPackages.this.getActivity());
-                        mRecyclerView.setAdapter(mAdapter);
-                    } catch (IndexOutOfBoundsException e) {
-                        Log.i(TAG, "VIEW PAGER SCROLLED BEFOR LOADING DATA(EXCEPTION HANDLED)");
-                        e.printStackTrace();
-                    }
-
-                    //countRangeAndLoadPackagesInAdapter();
-
-                    for (PackageList.Package p : packages) {
-                        ((LazyAdapter) mAdapter).addPackage(p);
-                    }
-
-                    Log.i(TAG, "INSIDE ON POST EXECUTE");
+            mLoadOffersAsync = new LoadOffersAsync();
+            mLoadOffersAsync.execute();
 
 
-                    try {
-                        if ((progressDialog != null) && progressDialog.isShowing()) {
-                            progressDialog.dismiss();
-                        }
-                    } catch (final IllegalArgumentException e) {
-                        // Handle or log or ignore
-                    } catch (final Exception e) {
-                        // Handle or log or ignore
-                    } finally {
-                        //progressDialog = null;
-                    }
-
-                }
-            }.execute();
-        }else{
-            Log.i(TAG,"packages are already loaded");
-            if(mAdapter.getItemCount()==0) {
-                Log.i(TAG,"adapter item count is 0");
+        } else {
+            Log.i(TAG, "packages are already loaded");
+            if (mAdapter.getItemCount() == 0) {
+                Log.i(TAG, "adapter item count is 0");
                 for (PackageList.Package p : packages) {
                     ((LazyAdapter) mAdapter).addPackage(p);
                 }
-            }else{
-                Log.i(TAG,"adapter item count is OK");
-                Log.i(TAG,"just setting adapter and notifying data set changed");
+            } else {
+                Log.i(TAG, "adapter item count is OK");
+                Log.i(TAG, "just setting adapter and notifying data set changed");
                 mRecyclerView.setAdapter(mAdapter);
                 mAdapter.notifyDataSetChanged();
             }

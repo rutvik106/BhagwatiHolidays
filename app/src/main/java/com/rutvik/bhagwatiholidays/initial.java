@@ -70,9 +70,9 @@ public class initial extends LoginWithGoogle {
 
         App app = (App) getApplication();
         if (account.getPhotoUrl() == null) {
-            app.setUser(new User(account.getDisplayName(), account.getEmail(), "https://lh3.googleusercontent.com/-Wlkp-_tMv-Y/AAAAAAAAAAI/AAAAAAAAAAA/NbvcGT31kjM/s144-p-k-rw-no/photo.jpg"));
+            app.setUser(new User(this,account.getDisplayName(), account.getEmail(), "https://lh3.googleusercontent.com/-Wlkp-_tMv-Y/AAAAAAAAAAI/AAAAAAAAAAA/NbvcGT31kjM/s144-p-k-rw-no/photo.jpg"));
         } else {
-            app.setUser(new User(account.getDisplayName(), account.getEmail(), account.getPhotoUrl().toString()));
+            app.setUser(new User(this,account.getDisplayName(), account.getEmail(), account.getPhotoUrl().toString()));
         }
 
         Intent intent = new Intent(this, RegistrationIntentService.class);

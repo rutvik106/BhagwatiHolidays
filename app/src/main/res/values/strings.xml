@@ -7,6 +7,8 @@
     <!--<string name="appbar_scrolling_view_behavior" translatable="false">android.support.design.widget.AppBarLayout$ScrollingViewBehavior</string>
 -->
 
+    <string name="facebook_app_id">658868440928736</string>
+
     <!--Drawer OPEN-CLOSE-->
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>

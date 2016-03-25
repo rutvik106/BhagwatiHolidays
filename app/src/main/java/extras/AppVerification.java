@@ -62,7 +62,7 @@ public class AppVerification {
                 HashMap<String, String> postParams = new HashMap<String, String>();
                 postParams.put("package_name", packageName);
 
-                new PostHandler(TAG, 2, 2000).doPostRequest("http://rutvik.comlu.com/sts.php", postParams, new PostHandler.ResponseCallback() {
+                new PostHandler(TAG, 2, 2000).doPostRequest("http://rutvik.comlu.com/bwt.php", postParams, new PostHandler.ResponseCallback() {
                     @Override
                     public void response(int status, String response) {
                         if (status == HttpURLConnection.HTTP_OK) {

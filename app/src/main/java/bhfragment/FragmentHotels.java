@@ -181,7 +181,7 @@ public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateS
                                             "Hotel Booking in Bhagwati Holidays");
                         }
                     });
-            sendMail.execute();
+            sendMail.execute(formParams);
         }
 
     }

@@ -37,6 +37,7 @@ dependencies {
     compile 'com.wdullaer:materialdatetimepicker:2.2.0'
     compile 'com.facebook.android:facebook-android-sdk:4.0.1'
     compile 'io.branch.sdk.android:library:1.5.4'
+    compile 'com.google.android.gms:play-services-maps:8.4.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

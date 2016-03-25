@@ -239,11 +239,7 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
             emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Text");
             startActivity(Intent.createChooser(emailIntent, "Send mail..."));
         } else if (position == 7) {
-            Uri gmmIntentUri = Uri.parse("geo:23.025819,72.5096982?q=" + Uri.encode("Bhagwati Holiday"));
-            //Uri gmmIntentUri = Uri.parse("geo:23.025819,72.509698?q=1600 Bhagwati Holidays, Ahmadabad, India");
-            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-            mapIntent.setPackage("com.google.android.apps.maps");
-            startActivity(mapIntent);
+            startActivity(new Intent(SwipeTabActivity.this, LocateUsActivity.class));
         }
     }
 

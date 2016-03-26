@@ -18,9 +18,9 @@ import gcm.RegistrationIntentService;
 import lwg.LoginWithGoogle;
 import model.User;
 
-public class initial extends LoginWithGoogle {
+public class InitialActivity extends LoginWithGoogle {
 
-    public final static String TAG = App.APP_TAG + initial.class.getSimpleName();
+    public final static String TAG = App.APP_TAG + InitialActivity.class.getSimpleName();
 
     SignInButton btnSignIn;
 
@@ -146,7 +146,7 @@ public class initial extends LoginWithGoogle {
 
         @Override
         public void onDismiss(DialogInterface dialog) {
-            ((initial) getActivity()).onDialogDismissed();
+            ((InitialActivity) getActivity()).onDialogDismissed();
         }
     }
 

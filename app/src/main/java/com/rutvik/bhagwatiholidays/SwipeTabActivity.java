@@ -183,7 +183,7 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.bh_menu, menu);
 
         // Associate searchable configuration with the SearchView
@@ -285,10 +285,9 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
         } else if (position == 6) {
             Log.i(TAG, "IS_NOTIFICATION_DISABLED: " + sp.getBoolean("IS_NOTIFICATION_DISABLED", false));
             if (sp.getBoolean("IS_NOTIFICATION_DISABLED", false)) {
-                CommonUtilities.enableNotification(this, sp);
+                CommonUtilities.enableNotification(this, sp,drawerFragment.getAdapter());
             } else {
-                CommonUtilities.disableNotification(this, sp);
-
+                CommonUtilities.disableNotification(this, sp,drawerFragment.getAdapter());
             }
         }
     }

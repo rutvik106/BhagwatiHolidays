@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
@@ -71,11 +72,12 @@ public class MyGcmListenerService extends GcmListenerService {
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.bh_icon)
+                .setSmallIcon(R.drawable.ic_bh_white)
                 .setContentTitle("Bhagwati Holidays")
                 .setContentText(message)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
+                .setColor(getResources().getColor(R.color.colorAccent))
                 .setContentIntent(pendingIntent);
 
         NotificationManager notificationManager =
@@ -101,11 +103,12 @@ public class MyGcmListenerService extends GcmListenerService {
 
 
         Notification myNotification = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.bh_icon)
+                .setSmallIcon(R.drawable.ic_bh_white)
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent)
                 .setSound(defaultSoundUri)
                 .setContentTitle(title)
+                .setColor(getResources().getColor(R.color.colorAccent))
                 .setContentText(message).build();
 
         // expanded notification icon

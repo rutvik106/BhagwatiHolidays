@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
+import com.rutvik.bhagwatiholidays.App;
 import com.rutvik.bhagwatiholidays.R;
 
 import java.util.ArrayList;
@@ -33,16 +35,24 @@ import model.NavDrawerItem;
  */
 public class FragmentDrawer extends Fragment {
 
-    private static String TAG = FragmentDrawer.class.getSimpleName();
+    private static String TAG = App.APP_TAG + FragmentDrawer.class.getSimpleName();
 
     private RecyclerView recyclerView;
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
+
+    public NavigationDrawerAdapter getAdapter() {
+        Log.i(TAG,"GETTING NAVIGATION DRAWER ADAPTER");
+        return adapter;
+    }
+
     private NavigationDrawerAdapter adapter;
     private View containerView;
     private FragmentDrawerListener drawerListener;
 
     public FragmentDrawer() {
+
+        Log.i(TAG,"INSIDE FRAGMENT DRAWER CONSTRUCTOR");
 
     }
 
@@ -54,39 +64,14 @@ public class FragmentDrawer extends Fragment {
         this.drawerListener = listener;
     }
 
-    public List<NavDrawerItem> getData() {
-        List<NavDrawerItem> data = new ArrayList<>();
 
-        SharedPreferences sp= PreferenceManager.getDefaultSharedPreferences(getActivity());
-        Set<String> navDrawerTitleSet=new LinkedHashSet<>();
-        navDrawerTitleSet.add("My Bookings");
-        navDrawerTitleSet.add("Offers & Promotions");
-        navDrawerTitleSet.add("Support");
-        navDrawerTitleSet.add("Rate Us");
-        navDrawerTitleSet.add("Share");
-        navDrawerTitleSet.add("Send Feedback");
-        if(sp.getBoolean("IS_NOTIFICATION_DISABLED",false)){
-            navDrawerTitleSet.add("Enable Notifications");
-        }else{
-            navDrawerTitleSet.add("Disable Notifications");
-        }
-        navDrawerTitleSet.add("Locate Us");
-
-        // preparing navigation drawer items
-        for (String t:navDrawerTitleSet) {
-            NavDrawerItem navItem = new NavDrawerItem();
-            navItem.setTitle(t);
-            data.add(navItem);
-        }
-        return data;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
 
-
+        Log.i(TAG, "INSIDE ON CREATE NAVIGATION DRAWER");
 
 
     }
@@ -94,11 +79,14 @@ public class FragmentDrawer extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        Log.i(TAG,"INSIDE ON CREATE VIEW OF NAVIGATION DRAWER");
+
         // Inflating view layout
         View layout = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
         recyclerView = (RecyclerView) layout.findViewById(R.id.drawerList);
 
-        adapter = new NavigationDrawerAdapter(getActivity(), getData());
+        adapter = new NavigationDrawerAdapter(getActivity());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), recyclerView, new ClickListener() {

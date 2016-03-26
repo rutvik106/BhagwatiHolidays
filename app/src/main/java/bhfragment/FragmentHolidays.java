@@ -4,11 +4,14 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -29,6 +32,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import extras.GetTermsAsync;
 import extras.SendMail;
 import extras.Submit;
 import extras.Validator;
@@ -38,11 +42,12 @@ import webservicehandler.PostHandler;
 /**
  * Created by Rakshit on 20-11-2015.
  */
-public class FragmentHolidays extends Fragment {
+public class FragmentHolidays extends Fragment implements TextWatcher {
 
     private static final String TAG = App.APP_TAG + FragmentHolidays.class.getSimpleName();
 
-    EditText etMobileNo, etBookingDate, etDestination;
+    EditText etMobileNo, etBookingDate;
+    AutoCompleteTextView actDestination;
     RadioGroup rgType;
     Spinner spAdult, spChild, spInfant, spNoOfNights;
     RatingBar rbPackageType;
@@ -51,6 +56,8 @@ public class FragmentHolidays extends Fragment {
     boolean isFormValid = true;
 
     App app;
+
+    private GetTermsAsync getTermsAsync;
 
 
     public FragmentHolidays() {
@@ -103,7 +110,9 @@ public class FragmentHolidays extends Fragment {
 
         etBookingDate = (EditText) rootView.findViewById(R.id.et_bookingDate);
 
-        etDestination = (EditText) rootView.findViewById(R.id.et_destination);
+        actDestination = (AutoCompleteTextView) rootView.findViewById(R.id.et_destination);
+
+        actDestination.addTextChangedListener(this);
 
         fabDone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -187,4 +196,26 @@ public class FragmentHolidays extends Fragment {
     }
 
 
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        Log.i(TAG, "TEXT CHANGED TO: " + s.toString());
+        if (!TextUtils.isEmpty(s.toString()) && s.toString().length() > 2) {
+            if (getTermsAsync != null) {
+                getTermsAsync.cancel(true);
+                getTermsAsync = null;
+            }
+            getTermsAsync = new GetTermsAsync(actDestination, getActivity(), CommonUtilities.URL_DESTINATIONS);
+            getTermsAsync.execute(s.toString());
+        }
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+
+    }
 }

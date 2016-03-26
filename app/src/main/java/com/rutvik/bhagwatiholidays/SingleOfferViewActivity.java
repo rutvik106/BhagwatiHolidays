@@ -175,8 +175,9 @@ public class SingleOfferViewActivity extends AppCompatActivity {
         if (ShareDialog.canShow(ShareLinkContent.class)) {
             ShareLinkContent linkContent = new ShareLinkContent.Builder()
                     .setContentTitle(getIntent().getStringExtra("offer_title"))
-                    .setContentDescription(getIntent().getStringExtra("offer_description")+" see more https://bnc.lt/m/q1UrTyr8Wr")
+                    .setContentDescription(getIntent().getStringExtra("offer_description") + " see more https://bnc.lt/m/q1UrTyr8Wr")
                     .setImageUrl(Uri.parse(getIntent().getStringExtra("offer_image")))
+                    .setContentUrl(Uri.parse("https://bnc.lt/m/q1UrTyr8Wr"))
                     .build();
             shareDialog.show(linkContent);
         }

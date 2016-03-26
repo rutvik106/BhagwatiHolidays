@@ -109,6 +109,8 @@ public class FragmentVisa extends Fragment implements DatePickerDialog.OnDateSet
 
         actDestination = (AutoCompleteTextView) rootView.findViewById(R.id.et_destination);
 
+        actDestination.addTextChangedListener(this);
+
         rbBusiness = (RadioButton) rootView.findViewById(R.id.rb_business);
 
         rbStudent = (RadioButton) rootView.findViewById(R.id.rb_student);

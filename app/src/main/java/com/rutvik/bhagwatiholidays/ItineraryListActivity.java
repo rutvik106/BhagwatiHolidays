@@ -264,7 +264,9 @@ public class ItineraryListActivity extends AppCompatActivity {
                     .setContentDescription(CommonUtilities.URL_WEBSITE_PACKAGE +
                             getIntent().getStringExtra("package_id"))
                     .setImageUrl(Uri.parse(getIntent().getStringExtra("package_image")))
-                    .build();
+                    .setContentUrl(Uri.parse(CommonUtilities.URL_WEBSITE_PACKAGE +
+                            getIntent().getStringExtra("package_id")))
+                            .build();
             shareDialog.show(linkContent);
         }
     }

@@ -176,7 +176,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:hint="From"
-                        android:inputType="text"
+                        android:inputType="textNoSuggestions"
                         android:textSize="16sp" />
 
                 </android.support.design.widget.TextInputLayout>
@@ -196,7 +196,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:hint="To"
-                        android:inputType="text"
+                        android:inputType="textNoSuggestions"
                         android:textSize="16sp" />
 
                 </android.support.design.widget.TextInputLayout>

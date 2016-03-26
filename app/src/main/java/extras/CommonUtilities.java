@@ -1,11 +1,10 @@
-package gcm;
+package extras;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 import android.provider.CalendarContract;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -14,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.facebook.FacebookSdk;
 import com.rutvik.bhagwatiholidays.App;
 
 import java.net.HttpURLConnection;
@@ -23,6 +21,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import adapter.NavigationDrawerAdapter;
 import webservicehandler.PostHandler;
 
 public final class CommonUtilities {
@@ -47,7 +46,7 @@ public final class CommonUtilities {
     public static final String URL_WEBSITE_PACKAGE = "http://bhagwatiholidays.com/package.php?id=";
 
 
-    public static void disableNotification(final Context context, final SharedPreferences sp) {
+    public static void disableNotification(final Context context, final SharedPreferences sp, final NavigationDrawerAdapter adapter) {
         new AsyncTask<Void, Void, Void>() {
 
             final String gcmToken = sp.getString("GCM_TOKEN", "");
@@ -86,6 +85,7 @@ public final class CommonUtilities {
                     Log.i(TAG,"RESPONSE IS EQUALS TO 1");
                     sp.edit().putBoolean("IS_NOTIFICATION_DISABLED", true).apply();
                     Toast.makeText(context, "Notifications disabled.", Toast.LENGTH_SHORT).show();
+                    adapter.clearAndRefreshNavItems();
                 }
                 if (resp.equals("0")) {
                     Toast.makeText(context, "Something went wrong.", Toast.LENGTH_SHORT).show();
@@ -100,7 +100,7 @@ public final class CommonUtilities {
     }
 
 
-    public static void enableNotification(final Context context, final SharedPreferences sp) {
+    public static void enableNotification(final Context context, final SharedPreferences sp, final NavigationDrawerAdapter adapter) {
 
         new AsyncTask<Void, Void, Void>() {
 
@@ -137,7 +137,8 @@ public final class CommonUtilities {
 
                     if (resp.equals("1")) {
                         sp.edit().putBoolean("IS_NOTIFICATION_DISABLED", false).apply();
-                        Toast.makeText(context, "Notifications disabled.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Notifications enabled.", Toast.LENGTH_SHORT).show();
+                        adapter.clearAndRefreshNavItems();
                     }
                     if (resp.equals("0")) {
                         Toast.makeText(context, "Something went wrong.", Toast.LENGTH_SHORT).show();

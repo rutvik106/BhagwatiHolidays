@@ -163,6 +163,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:hint="Destination"
+                        android:inputType="textNoSuggestions"
                         android:textSize="16sp" />
 
                 </android.support.design.widget.TextInputLayout>

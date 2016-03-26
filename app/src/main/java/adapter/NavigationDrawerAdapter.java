@@ -1,17 +1,24 @@
 package adapter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 
+import com.rutvik.bhagwatiholidays.App;
 import com.rutvik.bhagwatiholidays.R;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import model.NavDrawerItem;
 
@@ -20,15 +27,48 @@ import model.NavDrawerItem;
  */
 public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDrawerAdapter.MyViewHolder> {
 
-    List<NavDrawerItem> data = Collections.emptyList();
+    final List<NavDrawerItem> data=new ArrayList<>();
     private LayoutInflater inflater;
     private Context context;
 
+    private static final String TAG = App.APP_TAG + NavigationDrawerAdapter.class.getSimpleName();
 
-    public NavigationDrawerAdapter(Context context, List<NavDrawerItem> data) {
+
+    public NavigationDrawerAdapter(Context context) {
         this.context = context;
         inflater = LayoutInflater.from(context);
-        this.data = data;
+        getData();
+    }
+
+    public void clearAndRefreshNavItems() {
+        Log.i(TAG, "NOW CLEARING AND REFRESHING NAV DRAWER ADAPTER");
+        data.clear();
+        getData();
+    }
+
+    public void getData() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        Set<String> navDrawerTitleSet = new LinkedHashSet<>();
+        navDrawerTitleSet.add("My Bookings");
+        navDrawerTitleSet.add("Offers & Promotions");
+        navDrawerTitleSet.add("Support");
+        navDrawerTitleSet.add("Rate Us");
+        navDrawerTitleSet.add("Share");
+        navDrawerTitleSet.add("Send Feedback");
+        if (sp.getBoolean("IS_NOTIFICATION_DISABLED", false)) {
+            navDrawerTitleSet.add("Enable Notifications");
+        } else {
+            navDrawerTitleSet.add("Disable Notifications");
+        }
+        navDrawerTitleSet.add("Locate Us");
+
+        // preparing navigation drawer items
+        for (String t : navDrawerTitleSet) {
+            NavDrawerItem navItem = new NavDrawerItem();
+            navItem.setTitle(t);
+            data.add(navItem);
+        }
+        notifyDataSetChanged();
     }
 
     public void delete(int position) {

@@ -3,8 +3,6 @@ package com.rutvik.bhagwatiholidays;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.provider.CalendarContract;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -25,13 +23,6 @@ import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.nostra13.universalimageloader.core.*;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
-
-import org.w3c.dom.Text;
-
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
-import gcm.CommonUtilities;
 
 /**
  * Created by Rakshit on 07-03-2016.
@@ -175,8 +166,9 @@ public class SingleOfferViewActivity extends AppCompatActivity {
         if (ShareDialog.canShow(ShareLinkContent.class)) {
             ShareLinkContent linkContent = new ShareLinkContent.Builder()
                     .setContentTitle(getIntent().getStringExtra("offer_title"))
-                    .setContentDescription(getIntent().getStringExtra("offer_description")+" see more https://bnc.lt/m/q1UrTyr8Wr")
+                    .setContentDescription(getIntent().getStringExtra("offer_description") + " see more https://bnc.lt/m/q1UrTyr8Wr")
                     .setImageUrl(Uri.parse(getIntent().getStringExtra("offer_image")))
+                    .setContentUrl(Uri.parse("https://bnc.lt/m/q1UrTyr8Wr"))
                     .build();
             shareDialog.show(linkContent);
         }

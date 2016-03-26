@@ -5,10 +5,10 @@ import android.util.Log;
 
 import com.rutvik.bhagwatiholidays.App;
 
-import java.net.HttpURLConnection;
 import java.util.HashMap;
 import java.util.Map;
 
+import extras.CommonUtilities;
 import webservicehandler.PostHandler;
 
 

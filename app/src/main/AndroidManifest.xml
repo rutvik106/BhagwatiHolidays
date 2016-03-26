@@ -9,10 +9,10 @@
     <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <permission
-        android:name="com.rutvik.trails.permission.C2D_MESSAGE"
+        android:name="com.rutvik.bhagwatiholidays.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.rutvik.trails.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.rutvik.bhagwatiholidays.permission.C2D_MESSAGE" />
 
 
     <application
@@ -22,56 +22,84 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/MyMaterialTheme">
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <meta-data android:name="io.branch.sdk.BranchKey" android:value="key_live_jobYwEC4RDj7qiGLV32VjhfiuuomI8ua" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDWglbshyYJ62AFJgYXncntdMq30PxL130" />
 
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+        <meta-data
+            android:name="io.branch.sdk.BranchKey"
+            android:value="key_live_jobYwEC4RDj7qiGLV32VjhfiuuomI8ua" />
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
 
         <!-- Facebook -->
-        <activity android:name="com.facebook.FacebookActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+        <activity
+            android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/app_name" />
-        <meta-data android:name="com.facebook.sdk.ApplicationName"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationName"
             android:value="@string/app_name" />
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
 
-        <provider android:authorities="com.facebook.app.FacebookContentProvider658868440928736"
+        <provider
             android:name="com.facebook.FacebookContentProvider"
-            android:exported="true"/>
+            android:authorities="com.facebook.app.FacebookContentProvider658868440928736"
+            android:exported="true" />
 
+        <activity
+            android:name=".SplashScreen"
+            android:screenOrientation="portrait"
+            android:theme="@style/splashScreenTheme">
 
-        <activity android:name=".initial" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+
+        <activity android:name=".InitialActivity" />
+
         <activity
             android:name=".SwipeTabActivity"
             android:label="Bhagwati Holidays"
-            android:windowSoftInputMode="stateHidden"></activity>
+            android:windowSoftInputMode="stateHidden" />
+
+
         <activity
             android:name=".OffersActivity"
             android:label="Offers"
             android:launchMode="singleTask">
 
             <intent-filter>
-                <data android:scheme="combhagwatiholidays" android:host="open"/>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-
+                <data
+                    android:host="open"
+                    android:scheme="combhagwatiholidays" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
 
         </activity>
 
-
-
-        <activity
-            android:name=".BusActivity"
-            android:label="Bus" />
+        <activity android:name=".BusActivity" />
+        <activity android:name=".LocateUsActivity" />
         <activity android:name=".SettingsActivity" />
         <activity android:name=".HolidayFormActivity" />
-        <activity android:name=".ItineraryListActivity" />
+        <activity android:name=".SinglePackageViewActivity" />
+        <activity android:name=".SingleOfferViewActivity" />
 
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
@@ -105,20 +133,6 @@
         <service
             android:name="gcm.RegistrationIntentService"
             android:enabled="true" />
-
-        <activity
-            android:name=".SplashScreen"
-            android:screenOrientation="portrait"
-            android:theme="@style/splashScreenTheme">
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <activity android:name=".SingleOfferViewActivity" />
-
 
     </application>
 

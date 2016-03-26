@@ -22,22 +22,13 @@ import android.widget.Toast;
 import com.rutvik.bhagwatiholidays.App;
 import com.rutvik.bhagwatiholidays.R;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.net.HttpURLConnection;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import extras.GetTermsAsync;
 import extras.SendMail;
-import extras.Submit;
 import extras.Validator;
-import gcm.CommonUtilities;
-import webservicehandler.PostHandler;
+import extras.CommonUtilities;
 
 /**
  * Created by Rakshit on 20-11-2015.

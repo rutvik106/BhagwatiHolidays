@@ -3,8 +3,6 @@ package com.rutvik.bhagwatiholidays;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.provider.CalendarContract;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -25,13 +23,6 @@ import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.nostra13.universalimageloader.core.*;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
-
-import org.w3c.dom.Text;
-
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
-import gcm.CommonUtilities;
 
 /**
  * Created by Rakshit on 07-03-2016.

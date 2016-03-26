@@ -1,4 +1,4 @@
-package com.rutvik.bhagwatiholidays;
+package adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,12 +9,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -24,10 +22,10 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
-import com.nostra13.universalimageloader.utils.StorageUtils;
-import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
+import com.rutvik.bhagwatiholidays.App;
+import com.rutvik.bhagwatiholidays.R;
+import com.rutvik.bhagwatiholidays.SinglePackageViewActivity;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -112,7 +110,7 @@ public class LazyAdapter extends RecyclerView.Adapter<LazyAdapter.ViewHolder> {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(LazyAdapter.this.activity, ItineraryListActivity.class);
+                    Intent i = new Intent(LazyAdapter.this.activity, SinglePackageViewActivity.class);
                     i.putExtra("package_name", singlePackage.getPackage_name());
                     i.putExtra("package_days", singlePackage.getDays());
                     i.putExtra("package_nights", singlePackage.getNights());

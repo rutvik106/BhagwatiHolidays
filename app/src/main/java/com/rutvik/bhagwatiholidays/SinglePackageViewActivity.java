@@ -5,16 +5,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,13 +33,13 @@ import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import gcm.CommonUtilities;
+import extras.CommonUtilities;
 import jsonobj.PackageItenary;
 import webservicehandler.PostHandler;
 
-public class ItineraryListActivity extends AppCompatActivity {
+public class SinglePackageViewActivity extends AppCompatActivity {
 
-    private static final String TAG = App.APP_TAG + ItineraryListActivity.class.getSimpleName();
+    private static final String TAG = App.APP_TAG + SinglePackageViewActivity.class.getSimpleName();
 
     private ProgressDialog progressDialog;
 
@@ -120,7 +117,7 @@ public class ItineraryListActivity extends AppCompatActivity {
         shareDialog.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
             @Override
             public void onSuccess(Sharer.Result result) {
-                Toast.makeText(ItineraryListActivity.this, "Content shared Successfully.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SinglePackageViewActivity.this, "Content shared Successfully.", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -130,7 +127,7 @@ public class ItineraryListActivity extends AppCompatActivity {
 
             @Override
             public void onError(FacebookException error) {
-                Toast.makeText(ItineraryListActivity.this,"Sharing failed.",Toast.LENGTH_SHORT).show();
+                Toast.makeText(SinglePackageViewActivity.this,"Sharing failed.",Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -177,13 +174,13 @@ public class ItineraryListActivity extends AppCompatActivity {
 
             @Override
             protected void onPreExecute() {
-                progressDialog = ProgressDialog.show(ItineraryListActivity.this, "Please Wait...", "Getting package details...", true, true);
+                progressDialog = ProgressDialog.show(SinglePackageViewActivity.this, "Please Wait...", "Getting package details...", true, true);
                 progressDialog.setCanceledOnTouchOutside(false);
                 progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                     @Override
                     public void onCancel(DialogInterface dialog) {
                         cancel(true);
-                        ItineraryListActivity.this.finish();
+                        SinglePackageViewActivity.this.finish();
                     }
                 });
             }

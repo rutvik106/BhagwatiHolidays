@@ -1,7 +1,6 @@
 package bhfragment;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.rutvik.bhagwatiholidays.App;
-import com.rutvik.bhagwatiholidays.LazyAdapter;
+import adapter.LazyAdapter;
 import com.rutvik.bhagwatiholidays.R;
 
 import org.json.JSONException;
@@ -27,15 +26,14 @@ import java.util.List;
 import java.util.Locale;
 
 import jsonobj.PackageList;
-import model.SimpleOffersAndPromotions;
 import webservicehandler.PostHandler;
 
 /**
  * Created by ACER on 10-Mar-16 at 11:03 AM.
  */
-public class FragmentHotelPackages extends Fragment {
+public class FragmentHolidayPackages extends Fragment {
 
-    private static final String TAG = App.APP_TAG + FragmentHotelPackages.class.getSimpleName();
+    private static final String TAG = App.APP_TAG + FragmentHolidayPackages.class.getSimpleName();
 
     private RecyclerView mRecyclerView;
 
@@ -61,11 +59,11 @@ public class FragmentHotelPackages extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         app = (App) activity.getApplication();
-        app.trackScreenView(FragmentHotelPackages.class.getSimpleName());
+        app.trackScreenView(FragmentHolidayPackages.class.getSimpleName());
 
     }
 
-    public FragmentHotelPackages() {
+    public FragmentHolidayPackages() {
         // Required empty public constructor
     }
 

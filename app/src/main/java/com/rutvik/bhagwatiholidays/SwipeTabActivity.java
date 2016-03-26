@@ -1,11 +1,8 @@
 package com.rutvik.bhagwatiholidays;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -15,21 +12,17 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 
 import com.facebook.FacebookSdk;
 
-import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.facebook.appevents.AppEventsLogger;
@@ -45,11 +38,10 @@ import java.util.List;
 
 import bhfragment.FragmentAirTickets;
 import bhfragment.FragmentDrawer;
-import bhfragment.FragmentHolidays;
-import bhfragment.FragmentHotelPackages;
+import bhfragment.FragmentHolidayPackages;
 import bhfragment.FragmentHotels;
 import bhfragment.FragmentVisa;
-import gcm.CommonUtilities;
+import extras.CommonUtilities;
 
 public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener {
 
@@ -152,7 +144,7 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
 
         adapter.addFragment(new FragmentAirTickets(), "AIR TICKETS");
         adapter.addFragment(new FragmentHotels(), "HOTELS");
-        adapter.addFragment(new FragmentHotelPackages(), "HOLIDAYS");
+        adapter.addFragment(new FragmentHolidayPackages(), "HOLIDAYS");
         adapter.addFragment(new FragmentVisa(), "VISA");
         viewPager.setAdapter(adapter);
 
@@ -167,7 +159,7 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
                 if (position == 2) {
                     isOnPackagesPage = true;
                     search.setVisible(isOnPackagesPage);
-                    ((FragmentHotelPackages) adapter.getItem(position)).loadOffersAsync();
+                    ((FragmentHolidayPackages) adapter.getItem(position)).loadOffersAsync();
                 } else {
                     isOnPackagesPage = false;
                     search.setVisible(isOnPackagesPage);
@@ -204,7 +196,7 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
             @Override
             public boolean onQueryTextChange(String newText) {
 
-                ((FragmentHotelPackages) SwipeTabActivity.this.adapter.getItem(2)).searchForPackage(newText);
+                ((FragmentHolidayPackages) SwipeTabActivity.this.adapter.getItem(2)).searchForPackage(newText);
 
                 return false;
             }

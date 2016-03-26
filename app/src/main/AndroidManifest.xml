@@ -98,7 +98,7 @@
         <activity android:name=".LocateUsActivity" />
         <activity android:name=".SettingsActivity" />
         <activity android:name=".HolidayFormActivity" />
-        <activity android:name=".ItineraryListActivity" />
+        <activity android:name=".SinglePackageViewActivity" />
         <activity android:name=".SingleOfferViewActivity" />
 
         <receiver

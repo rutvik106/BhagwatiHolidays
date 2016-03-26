@@ -1,11 +1,10 @@
-package gcm;
+package extras;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 import android.provider.CalendarContract;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -14,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.facebook.FacebookSdk;
 import com.rutvik.bhagwatiholidays.App;
 
 import java.net.HttpURLConnection;

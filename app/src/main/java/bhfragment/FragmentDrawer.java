@@ -18,6 +18,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
+import com.facebook.FacebookSdk;
+import com.facebook.share.widget.LikeView;
 import com.rutvik.bhagwatiholidays.App;
 import com.rutvik.bhagwatiholidays.R;
 
@@ -28,6 +30,7 @@ import java.util.List;
 import java.util.Set;
 
 import adapter.NavigationDrawerAdapter;
+import extras.CommonUtilities;
 import model.NavDrawerItem;
 
 /**
@@ -40,6 +43,8 @@ public class FragmentDrawer extends Fragment {
     private RecyclerView recyclerView;
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
+
+    private LikeView likeView;
 
     public NavigationDrawerAdapter getAdapter() {
         Log.i(TAG,"GETTING NAVIGATION DRAWER ADAPTER");
@@ -70,9 +75,9 @@ public class FragmentDrawer extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        FacebookSdk.sdkInitialize(getActivity());
 
         Log.i(TAG, "INSIDE ON CREATE NAVIGATION DRAWER");
-
 
     }
 
@@ -85,6 +90,14 @@ public class FragmentDrawer extends Fragment {
         // Inflating view layout
         View layout = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
         recyclerView = (RecyclerView) layout.findViewById(R.id.drawerList);
+
+        LikeView likeView = (LikeView) layout.findViewById(R.id.likeView);
+        likeView.setLikeViewStyle(LikeView.Style.STANDARD);
+        likeView.setAuxiliaryViewPosition(LikeView.AuxiliaryViewPosition.INLINE);
+
+        likeView.setObjectIdAndType(
+                "https://www.facebook.com/FacebookDevelopers",
+                LikeView.ObjectType.PAGE);
 
         adapter = new NavigationDrawerAdapter(getActivity());
         recyclerView.setAdapter(adapter);
@@ -191,7 +204,7 @@ public class FragmentDrawer extends Fragment {
     }
 
     public interface FragmentDrawerListener {
-        public void onDrawerItemSelected(View view, int position);
+        void onDrawerItemSelected(View view, int position);
 
     }
 }

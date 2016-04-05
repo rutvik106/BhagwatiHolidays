@@ -14,7 +14,9 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.rutvik.bhagwatiholidays.App;
+
 import adapter.LazyAdapter;
+
 import com.rutvik.bhagwatiholidays.R;
 
 import org.json.JSONException;
@@ -70,7 +72,7 @@ public class FragmentHolidayPackages extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAdapter= new LazyAdapter(getActivity());
+        mAdapter = new LazyAdapter(getActivity());
     }
 
     private void filterOffers(List<PackageList.Package> modelList, String query) {
@@ -150,7 +152,7 @@ public class FragmentHolidayPackages extends Fragment {
 
         @Override
         protected void onPreExecute() {
-            if(!srlPackagesList.isRefreshing()){
+            if (!srlPackagesList.isRefreshing()) {
                 pb.setVisibility(View.VISIBLE);
             }
         }
@@ -197,13 +199,12 @@ public class FragmentHolidayPackages extends Fragment {
             Log.i(TAG, "INSIDE ON POST EXECUTE");
 
 
-
-            if(srlPackagesList.isRefreshing()){
+            if (srlPackagesList.isRefreshing()) {
                 srlPackagesList.setRefreshing(false);
             }
-            else{
-                pb.setVisibility(View.GONE);
-            }
+
+            pb.setVisibility(View.GONE);
+
 
         }
     }

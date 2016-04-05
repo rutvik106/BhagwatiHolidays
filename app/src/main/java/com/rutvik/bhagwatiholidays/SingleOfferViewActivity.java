@@ -29,6 +29,8 @@ import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
  */
 public class SingleOfferViewActivity extends AppCompatActivity {
 
+    private static final String TAG=App.APP_TAG+SingleOfferViewActivity.class.getSimpleName();
+
     ImageView offerImage;
 
     TextView offerType, offerValidity, offerTitle, offerDescription;
@@ -43,12 +45,18 @@ public class SingleOfferViewActivity extends AppCompatActivity {
     CallbackManager callbackManager;
     ShareDialog shareDialog;
 
+    App app;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.itinerary_list);
+        setContentView(R.layout.activity_single_offer_view);
+
+        app=(App) getApplication();
+
+        app.trackScreenView(SingleOfferViewActivity.class.getSimpleName());
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -72,6 +80,8 @@ public class SingleOfferViewActivity extends AppCompatActivity {
         btnBookNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                app.trackEvent(SingleOfferViewActivity.class.getSimpleName(),"BOOK NOW CLICKED","BUTTON");
 
                 startActivity(new Intent(SingleOfferViewActivity.this, HolidayFormActivity.class));
 
@@ -150,6 +160,7 @@ public class SingleOfferViewActivity extends AppCompatActivity {
                 return true;
 
             case R.id.action_share:
+                app.trackEvent(SingleOfferViewActivity.class.getSimpleName(),"SIMPLE SHARING","SHARE");
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
                 sendIntent.putExtra(Intent.EXTRA_TEXT, "Hey, Watch out this new exciting offer from Bhagwati Holidays "+ getIntent().getStringExtra("offer_title")+" https://bnc.lt/m/q1UrTyr8Wr");
@@ -164,6 +175,7 @@ public class SingleOfferViewActivity extends AppCompatActivity {
 
     private void shareContentOnFacebook() {
         if (ShareDialog.canShow(ShareLinkContent.class)) {
+            app.trackEvent(SingleOfferViewActivity.class.getSimpleName(),"FB SHARING","SHARE");
             ShareLinkContent linkContent = new ShareLinkContent.Builder()
                     .setContentTitle(getIntent().getStringExtra("offer_title"))
                     .setContentDescription(getIntent().getStringExtra("offer_description") + " see more https://bnc.lt/m/q1UrTyr8Wr")

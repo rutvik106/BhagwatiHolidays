@@ -51,7 +51,7 @@ public final class CommonUtilities {
 
             final String gcmToken = sp.getString("GCM_TOKEN", "");
 
-            String resp="";
+            String resp = "";
 
             @Override
             protected Void doInBackground(Void... params) {
@@ -66,7 +66,7 @@ public final class CommonUtilities {
                         public void response(int status, String response) {
 
                             if (status == HttpURLConnection.HTTP_OK) {
-                                resp=response;
+                                resp = response;
                             }
 
                         }
@@ -82,7 +82,7 @@ public final class CommonUtilities {
             protected void onPostExecute(Void aVoid) {
 
                 if (resp.equals("1")) {
-                    Log.i(TAG,"RESPONSE IS EQUALS TO 1");
+                    Log.i(TAG, "RESPONSE IS EQUALS TO 1");
                     sp.edit().putBoolean("IS_NOTIFICATION_DISABLED", true).apply();
                     Toast.makeText(context, "Notifications disabled.", Toast.LENGTH_SHORT).show();
                     adapter.clearAndRefreshNavItems();
@@ -104,9 +104,9 @@ public final class CommonUtilities {
 
         new AsyncTask<Void, Void, Void>() {
 
-            final String gcmToken=sp.getString("GCM_TOKEN", "");
+            final String gcmToken = sp.getString("GCM_TOKEN", "");
 
-            String resp="";
+            String resp = "";
 
             @Override
             protected Void doInBackground(Void... params) {
@@ -121,7 +121,7 @@ public final class CommonUtilities {
                         public void response(int status, String response) {
 
                             if (status == HttpURLConnection.HTTP_OK) {
-                                resp=response;
+                                resp = response;
                             }
 
                         }
@@ -135,17 +135,17 @@ public final class CommonUtilities {
             @Override
             protected void onPostExecute(Void aVoid) {
 
-                    if (resp.equals("1")) {
-                        sp.edit().putBoolean("IS_NOTIFICATION_DISABLED", false).apply();
-                        Toast.makeText(context, "Notifications enabled.", Toast.LENGTH_SHORT).show();
-                        adapter.clearAndRefreshNavItems();
-                    }
-                    if (resp.equals("0")) {
-                        Toast.makeText(context, "Something went wrong.", Toast.LENGTH_SHORT).show();
-                    }
-                    if (resp.equals("-1")) {
-                        Toast.makeText(context, "No params.", Toast.LENGTH_SHORT).show();
-                    }
+                if (resp.equals("1")) {
+                    sp.edit().putBoolean("IS_NOTIFICATION_DISABLED", false).apply();
+                    Toast.makeText(context, "Notifications enabled.", Toast.LENGTH_SHORT).show();
+                    adapter.clearAndRefreshNavItems();
+                }
+                if (resp.equals("0")) {
+                    Toast.makeText(context, "Something went wrong.", Toast.LENGTH_SHORT).show();
+                }
+                if (resp.equals("-1")) {
+                    Toast.makeText(context, "No params.", Toast.LENGTH_SHORT).show();
+                }
 
             }
         }.execute();
@@ -205,6 +205,39 @@ public final class CommonUtilities {
                 .setNegativeButton("Done", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+
+    public static class SimpleAlertDialog {
+        public static interface OnClickListener {
+            void positiveButtonClicked(DialogInterface dialog, int which);
+
+            void negativeButtonClicked(DialogInterface dialog, int which);
+        }
+    }
+
+    public static void showSimpleAlertDialog(final Context context,
+                                             final String title,
+                                             final String message,
+                                             final String positiveText,
+                                             final String negativeText,
+                                             final SimpleAlertDialog.OnClickListener listener) {
+
+
+        Log.d(TAG, "In Simple AlertDialog.......");
+        new AlertDialog.Builder(context)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(positiveText, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        listener.positiveButtonClicked(dialog,which);
+                    }
+                })
+                .setNegativeButton(negativeText, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        listener.negativeButtonClicked(dialog,which);
                     }
                 })
                 .show();

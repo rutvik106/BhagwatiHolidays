@@ -32,16 +32,10 @@ public class InitialActivity extends LoginWithGoogle {
     // Bool to track whether the app is already resolving an error
     private boolean mResolvingError = false;
 
-    private App app;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_initial);
-
-        app=(App) getApplication();
-
-        app.trackScreenView("Login Screen");
 
         btnSignIn = (SignInButton) findViewById(R.id.btn_signIn);
 
@@ -150,31 +144,4 @@ public class InitialActivity extends LoginWithGoogle {
         }
     }
 
-/*    @Override
-    public void onConnected(Bundle bundle) {
-
-        //User has logged in successfully (do something)
-
-        App app=(App) getApplication();
-
-        app.setUser(myLoginWithGoogle.getProfileInformation());
-
-        Intent i=new Intent(this,SwipeTabActivity.class);
-
-        startActivity(i);
-
-
-    }
-
-    @Override
-    public void onConnectionSuspended(int status) {
-
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        Log.i(TAG,"request code: ("+requestCode+") result code: ("+resultCode+")");
-
-    }*/
 }

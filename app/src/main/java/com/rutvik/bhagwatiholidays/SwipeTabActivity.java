@@ -1,9 +1,12 @@
 package com.rutvik.bhagwatiholidays;
 
+import android.content.ContentUris;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.provider.CalendarContract;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,7 +19,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import extras.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,6 +37,7 @@ import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import bhfragment.FragmentAirTickets;
@@ -74,16 +78,6 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
         setContentView(R.layout.activity_swipe_tab);
 
         sp = PreferenceManager.getDefaultSharedPreferences(this);
-
-        FacebookSdk.sdkInitialize(getApplicationContext());
-
-        LikeView likeView = (LikeView) findViewById(R.id.likeView);
-        likeView.setLikeViewStyle(LikeView.Style.BOX_COUNT);
-        likeView.setAuxiliaryViewPosition(LikeView.AuxiliaryViewPosition.BOTTOM);
-
-        likeView.setObjectIdAndType(
-                CommonUtilities.URL_FB,
-                LikeView.ObjectType.OPEN_GRAPH);
 
         mPlusOneButton = (PlusOneButton) findViewById(R.id.plus_one_button);
 
@@ -135,7 +129,23 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
         if (drawerFragment.getDrawerLayout().isDrawerOpen(GravityCompat.START)) {
             drawerFragment.getDrawerLayout().closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+
+            CommonUtilities.showSimpleAlertDialog(this,
+                    "Alert",
+                    "Do you want to exit Bhagwati Holidays?",
+                    "Yes", "No", new CommonUtilities.SimpleAlertDialog.OnClickListener() {
+                        @Override
+                        public void positiveButtonClicked(DialogInterface dialog, int which) {
+                            SwipeTabActivity.this.finish();
+                        }
+
+                        @Override
+                        public void negativeButtonClicked(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+
+
         }
     }
 
@@ -259,13 +269,24 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
     @Override
     public void onDrawerItemSelected(View view, int position) {
 
-        if (position == 1) {
+        if(position==0){
+            long startMillis= Calendar.getInstance().getTimeInMillis();
+            Uri.Builder builder = CalendarContract.CONTENT_URI.buildUpon();
+            builder.appendPath("time");
+            ContentUris.appendId(builder, startMillis);
+            Intent intent = new Intent(Intent.ACTION_VIEW)
+                    .setData(builder.build());
+            startActivity(intent);
+        }
+        else if (position == 1) {
             startActivity(new Intent(this, OffersActivity.class));
         } else if (position == 2) {
+            app.trackEvent(SwipeTabActivity.class.getSimpleName(),"SUPPORT CLICKED","NAV ACTION");
             Intent supportIntent = new Intent(Intent.ACTION_DIAL);
             supportIntent.setData(Uri.parse("tel:07940223333"));
             startActivity(supportIntent);
         } else if (position == 5) {
+            app.trackEvent(SwipeTabActivity.class.getSimpleName(),"SEND FEEDBACK CLICKED","NAV ACTION");
             Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
             emailIntent.setType("plain/text");
             emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{"info@bhagwatiholidays.com"});
@@ -275,12 +296,31 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
         } else if (position == 7) {
             startActivity(new Intent(SwipeTabActivity.this, LocateUsActivity.class));
         } else if (position == 6) {
-            Log.i(TAG, "IS_NOTIFICATION_DISABLED: " + sp.getBoolean("IS_NOTIFICATION_DISABLED", false));
-            if (sp.getBoolean("IS_NOTIFICATION_DISABLED", false)) {
-                CommonUtilities.enableNotification(this, sp,drawerFragment.getAdapter());
-            } else {
-                CommonUtilities.disableNotification(this, sp,drawerFragment.getAdapter());
-            }
+
+            CommonUtilities.showSimpleAlertDialog(this,
+                    "Alert",
+                    "Are you sure?, You will stop receiving latest offers updates.",
+                    "Disable",
+                    "Cancel",
+                    new CommonUtilities.SimpleAlertDialog.OnClickListener() {
+                        @Override
+                        public void positiveButtonClicked(DialogInterface dialog, int which) {
+                            app.trackEvent(SwipeTabActivity.class.getSimpleName(), "NOTIFICATION TOGGLED", "NAV ACTION");
+                            Log.i(TAG, "IS_NOTIFICATION_DISABLED: " + sp.getBoolean("IS_NOTIFICATION_DISABLED", false));
+                            if (sp.getBoolean("IS_NOTIFICATION_DISABLED", false)) {
+                                CommonUtilities.enableNotification(SwipeTabActivity.this, sp, drawerFragment.getAdapter());
+                            } else {
+                                CommonUtilities.disableNotification(SwipeTabActivity.this, sp, drawerFragment.getAdapter());
+                            }
+                        }
+
+                        @Override
+                        public void negativeButtonClicked(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+
+
         }
     }
 

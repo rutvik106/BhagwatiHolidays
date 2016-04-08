@@ -1,6 +1,7 @@
 package bhfragment;
 
 import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -119,7 +120,13 @@ public class FragmentVisa extends Fragment implements DatePickerDialog.OnDateSet
         fabDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
+
+                app.trackEvent("FAB", "SUBMIT VISA INQUIRY", "VISA INQUIRY");
+
                 submitForm();
+
 
             }
         });
@@ -129,7 +136,7 @@ public class FragmentVisa extends Fragment implements DatePickerDialog.OnDateSet
 
     private void submitForm() {
 
-        Map<String, String> formParams = new LinkedHashMap<>();
+        final Map<String, String> formParams = new LinkedHashMap<>();
         formParams.put("Contact", etMobileNo.getText().toString());
         formParams.put("Email", app.getUser().getEmail());
         formParams.put("Date Of Travel", etDateOfTravel.getText().toString());
@@ -137,24 +144,44 @@ public class FragmentVisa extends Fragment implements DatePickerDialog.OnDateSet
         formParams.put("Visa Type", ((RadioButton) radioGroup.findViewById(radioGroup.getCheckedRadioButtonId())).getText().toString());
 
         if (isFormParamValid(formParams)) {
-            final SendMail sendMail = new SendMail(app.getUser().getEmail(),
-                    SendMail.Type.VISA,
-                    getActivity(),
-                    new SendMail.MailCallbackListener() {
+
+            CommonUtilities.showSimpleAlertDialog(getActivity(),
+                    "Alert",
+                    "Send inquiry to Bhagwati Holidays?",
+                    "Send",
+                    "Cancel",
+                    new CommonUtilities.SimpleAlertDialog.OnClickListener() {
                         @Override
-                        public void mailSentSuccessfully() {
-                            CommonUtilities.clearForm((ViewGroup) getActivity().findViewById(R.id.ll_formVisa));
+                        public void positiveButtonClicked(DialogInterface dialog, int which) {
 
-                            FragmentVisa.this.etMobileNo.requestFocus();
+                            final SendMail sendMail = new SendMail(app.getUser().getEmail(),
+                                    SendMail.Type.VISA,
+                                    getActivity(),
+                                    new SendMail.MailCallbackListener() {
+                                        @Override
+                                        public void mailSentSuccessfully() {
+                                            CommonUtilities.clearForm((ViewGroup) getActivity().findViewById(R.id.ll_formVisa));
 
-                            CommonUtilities
-                                    .showAlertDialog(getActivity(), "Visa Booking",
-                                            "",
-                                            "Visa booking in Bhagwati Holidays");
+                                            FragmentVisa.this.etMobileNo.requestFocus();
+
+                                            CommonUtilities
+                                                    .showAlertDialog(getActivity(), "Visa Booking",
+                                                            "",
+                                                            "Visa booking in Bhagwati Holidays");
+                                        }
+                                    }, app);
+
+                            sendMail.execute(formParams);
+
+                        }
+
+                        @Override
+                        public void negativeButtonClicked(DialogInterface dialog, int which) {
+                            dialog.dismiss();
                         }
                     });
 
-            sendMail.execute(formParams);
+
         }
     }
 

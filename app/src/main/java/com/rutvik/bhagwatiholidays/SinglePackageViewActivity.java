@@ -12,6 +12,8 @@ import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,6 +47,8 @@ public class SinglePackageViewActivity extends AppCompatActivity {
 
     private TextView tvPackageDescription, tvSuggestedLength, tvPriceFrom, tvPlaces;
 
+    private Button btnBookNow;
+
     private ImageView ivPackageImage;
 
     private Toolbar mToolbar;
@@ -57,11 +61,16 @@ public class SinglePackageViewActivity extends AppCompatActivity {
     CallbackManager callbackManager;
     ShareDialog shareDialog;
 
+    App app;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_itinerary_list);
+        setContentView(R.layout.activity_single_package_view);
 
+        app=(App) getApplication();
+
+        app.trackScreenView(SinglePackageViewActivity.class.getSimpleName());
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -70,6 +79,15 @@ public class SinglePackageViewActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         setTitle(getIntent().getStringExtra("package_name"));
+
+        btnBookNow=(Button) findViewById(R.id.btn_bookNow);
+
+        btnBookNow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                app.trackEvent(SingleOfferViewActivity.class.getSimpleName(),"BOOK NOW CLICKED","BUTTON");
+            }
+        });
 
         ivPackageImage = (ImageView) findViewById(R.id.iv_packageImage);
 
@@ -153,6 +171,7 @@ public class SinglePackageViewActivity extends AppCompatActivity {
                 return true;
 
             case R.id.action_share:
+                app.trackEvent(SinglePackageViewActivity.class.getSimpleName(),"SIMPLE SHARING","SHARE");
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
                 sendIntent.putExtra(Intent.EXTRA_TEXT,
@@ -256,6 +275,7 @@ public class SinglePackageViewActivity extends AppCompatActivity {
 
     private void shareContentOnFacebook() {
         if (ShareDialog.canShow(ShareLinkContent.class)) {
+            app.trackEvent(SinglePackageViewActivity.class.getSimpleName(),"FB SHARING","SHARE");
             ShareLinkContent linkContent = new ShareLinkContent.Builder()
                     .setContentTitle(getIntent().getStringExtra("package_name"))
                     .setContentDescription(CommonUtilities.URL_WEBSITE_PACKAGE +

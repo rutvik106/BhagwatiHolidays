@@ -1,6 +1,7 @@
 package bhfragment;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;;
@@ -267,9 +268,14 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
         fabDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
+                app.trackEvent("FAB", "SUBMIT AIRTICKET INQUIRY", "AIRTICKET INQUIRY");
+
                 Log.d(TAG, "press btn before....");
 
                 submitForm();
+
             }
         });
 
@@ -293,7 +299,7 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
     private void submitForm() {
 
 
-        Map<String, String> formParams = new LinkedHashMap<>();
+        final Map<String, String> formParams = new LinkedHashMap<>();
         formParams.put("Contact", etMobileNo.getText().toString());
         formParams.put("Email", app.getUser().getEmail());
         formParams.put("Type", ((RadioButton) rgType.findViewById(rgType.getCheckedRadioButtonId())).getText().toString());
@@ -315,27 +321,47 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
 
         if (isFormParamValid(formParams)) {
 
-            final SendMail sendMail = new SendMail(app.getUser().getEmail(),
-                    SendMail.Type.AIRTICKET,
-                    getActivity(),
-                    new SendMail.MailCallbackListener() {
+
+            CommonUtilities.showSimpleAlertDialog(getActivity(),
+                    "Alert",
+                    "Send inquiry to Bhagwati Holidays?",
+                    "Send",
+                    "Cancel",
+                    new CommonUtilities.SimpleAlertDialog.OnClickListener() {
                         @Override
-                        public void mailSentSuccessfully() {
+                        public void positiveButtonClicked(DialogInterface dialog, int which) {
 
-                            CommonUtilities.clearForm((ViewGroup) getActivity().findViewById(R.id.ll_formAirTicket));
+                            final SendMail sendMail = new SendMail(app.getUser().getEmail(),
+                                    SendMail.Type.AIRTICKET,
+                                    getActivity(),
+                                    new SendMail.MailCallbackListener() {
+                                        @Override
+                                        public void mailSentSuccessfully() {
 
-                            FragmentAirTickets.this.etMobileNo.requestFocus();
+                                            CommonUtilities.clearForm((ViewGroup) getActivity().findViewById(R.id.ll_formAirTicket));
 
-                            CommonUtilities
-                                    .showAlertDialog(getActivity(), "Air Ticket Booking",
-                                            "",
-                                            "Air Ticket Booking in Bhagwati Holidays");
+                                            FragmentAirTickets.this.etMobileNo.requestFocus();
+
+                                            CommonUtilities
+                                                    .showAlertDialog(getActivity(), "Air Ticket Booking",
+                                                            "",
+                                                            "Air Ticket Booking in Bhagwati Holidays");
 
 
+                                        }
+                                    }, app);
+
+                            sendMail.execute(formParams);
+
+                        }
+
+                        @Override
+                        public void negativeButtonClicked(DialogInterface dialog, int which) {
+                            dialog.dismiss();
                         }
                     });
 
-            sendMail.execute(formParams);
+
 
         }
 
@@ -375,11 +401,11 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
             @Override
             public void validationFailed(String msg) {
                 Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
-                isFormValid=false;
+                isFormValid = false;
             }
         });
 
-        if(formParams.get("Return Date")!=null) {
+        if (formParams.get("Return Date") != null) {
             Validator.validateDate(formParams.get("Return Date"), new Validator.ValidationListener() {
                 @Override
                 public void validationFailed(String msg) {

@@ -3,7 +3,6 @@ package extras;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.rutvik.bhagwatiholidays.App;
 
@@ -61,11 +60,14 @@ public class SendMail extends AsyncTask<Map<String, String>, Void, Void> {
 
     final String emailType;
 
-    public SendMail(String email, Type emailType, Context context, MailCallbackListener listener) {
+    final App app;
+
+    public SendMail(String email, Type emailType, Context context, MailCallbackListener listener,App app) {
         this.email = email;
         this.context = context;
         this.listener = listener;
         this.emailType = emailType.toString();
+        this.app=app;
     }
 
     public interface MailCallbackListener {
@@ -108,6 +110,7 @@ public class SendMail extends AsyncTask<Map<String, String>, Void, Void> {
                                 success = true;
                             }
                         } catch (JSONException e) {
+                            app.trackException(new Exception(TAG+e.toString()));
                             e.printStackTrace();
                         }
                     }
@@ -115,6 +118,7 @@ public class SendMail extends AsyncTask<Map<String, String>, Void, Void> {
             });
 
         } catch (JSONException e) {
+            app.trackException(new Exception(TAG+e.toString()));
             e.printStackTrace();
         }
         return null;

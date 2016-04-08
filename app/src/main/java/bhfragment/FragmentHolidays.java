@@ -1,6 +1,7 @@
 package bhfragment;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -109,7 +110,12 @@ public class FragmentHolidays extends Fragment implements TextWatcher {
             @Override
             public void onClick(View v) {
 
+
+
+                app.trackEvent("FAB", "SUBMIT HOLIDAY INQUIRY", "HOLIDAY INQUIRY");
+
                 submitForm();
+
 
             }
         });
@@ -120,7 +126,7 @@ public class FragmentHolidays extends Fragment implements TextWatcher {
 
     private void submitForm() {
 
-        Map<String, String> formParams = new LinkedHashMap<>();
+        final Map<String, String> formParams = new LinkedHashMap<>();
         formParams.put("Contact", etMobileNo.getText().toString());
         formParams.put("Email", app.getUser().getEmail());
         formParams.put("Type", ((RadioButton) rgType.findViewById(rgType.getCheckedRadioButtonId())).getText().toString());
@@ -135,27 +141,47 @@ public class FragmentHolidays extends Fragment implements TextWatcher {
 
         if (isFormParamValid(formParams)) {
 
-            final SendMail sendMail = new SendMail(app.getUser().getEmail(),
-                    SendMail.Type.HOLIDAY,
-                    getActivity(),
-                    new SendMail.MailCallbackListener() {
+            CommonUtilities.showSimpleAlertDialog(getActivity(),
+                    "Alert",
+                    "Send inquiry to Bhagwati Holidays?",
+                    "Send",
+                    "Cancel",
+                    new CommonUtilities.SimpleAlertDialog.OnClickListener() {
                         @Override
-                        public void mailSentSuccessfully() {
+                        public void positiveButtonClicked(DialogInterface dialog, int which) {
 
-                            CommonUtilities.clearForm((ViewGroup) getActivity().findViewById(R.id.ll_formHoliday));
+                            final SendMail sendMail = new SendMail(app.getUser().getEmail(),
+                                    SendMail.Type.HOLIDAY,
+                                    getActivity(),
+                                    new SendMail.MailCallbackListener() {
+                                        @Override
+                                        public void mailSentSuccessfully() {
 
-                            FragmentHolidays.this.etMobileNo.requestFocus();
+                                            CommonUtilities.clearForm((ViewGroup) getActivity().findViewById(R.id.ll_formHoliday));
 
-                            CommonUtilities
-                                    .showAlertDialog(getActivity(), "Holiday Booking",
-                                            "",
-                                            "Holiday Booking in Bhagwati Holidays");
+                                            FragmentHolidays.this.etMobileNo.requestFocus();
+
+                                            CommonUtilities
+                                                    .showAlertDialog(getActivity(), "Holiday Booking",
+                                                            "",
+                                                            "Holiday Booking in Bhagwati Holidays");
 
 
+                                        }
+                                    }, app);
+
+                            sendMail.execute(formParams);
+
+                        }
+
+                        @Override
+                        public void negativeButtonClicked(DialogInterface dialog, int which) {
+                            dialog.dismiss();
                         }
                     });
 
-            sendMail.execute(formParams);
+
+
 
         }
 

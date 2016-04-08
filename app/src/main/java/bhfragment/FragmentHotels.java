@@ -1,6 +1,7 @@
 package bhfragment;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -128,7 +129,14 @@ public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateS
         fabDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
+
+                app.trackEvent("FAB", "SUBMIT HOTEL INQUIRY", "HOTEL INQUIRY");
+
                 submitForm();
+
+
             }
         });
 
@@ -137,7 +145,7 @@ public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateS
 
     private void submitForm() {
 
-        Map<String, String> formParams = new LinkedHashMap<>();
+        final Map<String, String> formParams = new LinkedHashMap<>();
         formParams.put("Contact", etMobileNo.getText().toString());
         formParams.put("Email",app.getUser().getEmail());
         formParams.put("Booking Date", etBookingDate.getText().toString());
@@ -150,23 +158,40 @@ public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateS
 
         if (isFormParamValid(formParams)) {
 
-            final SendMail sendMail = new SendMail(app.getUser().getEmail(),
-                    SendMail.Type.HOTEL,
-                    getActivity(),
-                    new SendMail.MailCallbackListener() {
+            CommonUtilities.showSimpleAlertDialog(getActivity(),
+                    "Alert",
+                    "Send inquiry to Bhagwati Holidays?",
+                    "Send",
+                    "Cancel",
+                    new CommonUtilities.SimpleAlertDialog.OnClickListener() {
                         @Override
-                        public void mailSentSuccessfully() {
-                            CommonUtilities.clearForm((ViewGroup) getActivity().findViewById(R.id.ll_formHotels));
+                        public void positiveButtonClicked(DialogInterface dialog, int which) {
+                            final SendMail sendMail = new SendMail(app.getUser().getEmail(),
+                                    SendMail.Type.HOTEL,
+                                    getActivity(),
+                                    new SendMail.MailCallbackListener() {
+                                        @Override
+                                        public void mailSentSuccessfully() {
+                                            CommonUtilities.clearForm((ViewGroup) getActivity().findViewById(R.id.ll_formHotels));
 
-                            FragmentHotels.this.etMobileNo.requestFocus();
+                                            FragmentHotels.this.etMobileNo.requestFocus();
 
-                            CommonUtilities
-                                    .showAlertDialog(getActivity(), "Hotel Booking",
-                                            "",
-                                            "Hotel Booking in Bhagwati Holidays");
+                                            CommonUtilities
+                                                    .showAlertDialog(getActivity(), "Hotel Booking",
+                                                            "",
+                                                            "Hotel Booking in Bhagwati Holidays");
+                                        }
+                                    }, app);
+                            sendMail.execute(formParams);
+                        }
+
+                        @Override
+                        public void negativeButtonClicked(DialogInterface dialog, int which) {
+                            dialog.dismiss();
                         }
                     });
-            sendMail.execute(formParams);
+
+
         }
 
     }

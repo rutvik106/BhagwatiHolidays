@@ -39,24 +39,24 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <!-- Facebook -->
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationName"
+            android:value="@string/app_name" />
+
+
+        <provider
+            android:name="com.facebook.FacebookContentProvider"
+            android:authorities="com.facebook.app.FacebookContentProvider658868440928736"
+            android:exported="true" />
+
+
+        <!-- Facebook Activity-->
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationName"
-            android:value="@string/app_name" />
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
-
-        <provider
-            android:name="com.facebook.FacebookContentProvider"
-            android:authorities="com.facebook.app.FacebookContentProvider658868440928736"
-            android:exported="true" />
 
         <activity
             android:name=".SplashScreen"
@@ -70,7 +70,6 @@
 
         </activity>
 
-        <activity android:name=".InitialActivity" />
 
         <activity
             android:name=".SwipeTabActivity"
@@ -88,18 +87,21 @@
                     android:host="open"
                     android:scheme="combhagwatiholidays" />
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
 
         </activity>
 
+        <activity android:name=".InitialActivity" />
         <activity android:name=".BusActivity" />
         <activity android:name=".LocateUsActivity" />
         <activity android:name=".SettingsActivity" />
         <activity android:name=".HolidayFormActivity" />
         <activity android:name=".SinglePackageViewActivity" />
         <activity android:name=".SingleOfferViewActivity" />
+
 
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"

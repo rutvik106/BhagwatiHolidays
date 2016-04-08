@@ -17,10 +17,16 @@ public class LocateUsActivity extends AppCompatActivity implements OnMapReadyCal
 
     private Toolbar mToolbar;
 
+    App app;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_locate_us);
+
+        app=(App) getApplication();
+
+        app.trackScreenView(LocateUsActivity.class.getSimpleName());
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);

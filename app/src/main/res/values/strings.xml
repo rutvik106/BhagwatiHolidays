@@ -39,5 +39,6 @@
     <string name="title_two">Two</string>
     <string name="title_three">Three</string>
     <string name="title_activity_maps">Map</string>
+    <string name="title_activity_payment">PaymentActivity</string>
 
 </resources>

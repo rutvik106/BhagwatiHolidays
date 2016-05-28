@@ -16,9 +16,12 @@ import android.widget.Toast;
 import com.rutvik.bhagwatiholidays.App;
 
 import java.net.HttpURLConnection;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import adapter.NavigationDrawerAdapter;
@@ -185,8 +188,14 @@ public final class CommonUtilities {
 
 
     public static void showAlertDialog(final Context context, final String calendarTitle
-            , final String calendarLocation, final String calendarDescription) {
+            , final String calendarLocation, final String calendarDescription, final String date) {
         final Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat df=new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+        try {
+            calendar.setTime(df.parse(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         Log.d(TAG, "In AlertDialog.......");
         new AlertDialog.Builder(context)

@@ -1,11 +1,14 @@
 package com.rutvik.bhagwatiholidays;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import extras.CommonUtilities;
 import extras.ICICIStringEncryptor;
 import extras.Log;
 
@@ -87,4 +90,25 @@ public class PaymentActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+
+            case android.R.id.home:
+                CommonUtilities.showSimpleAlertDialog(this, "Alert", "This will cancel payment", "GoBack", "Cancel",
+                        new CommonUtilities.SimpleAlertDialog.OnClickListener() {
+                            @Override
+                            public void positiveButtonClicked(DialogInterface dialog, int which) {
+                                PaymentActivity.this.finish();
+                            }
+
+                            @Override
+                            public void negativeButtonClicked(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

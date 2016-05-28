@@ -345,7 +345,7 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
                                             CommonUtilities
                                                     .showAlertDialog(getActivity(), "Air Ticket Booking",
                                                             "",
-                                                            "Air Ticket Booking in Bhagwati Holidays");
+                                                            "Air Ticket Booking in Bhagwati Holidays",etDepartDate.getText().toString());
 
 
                                         }

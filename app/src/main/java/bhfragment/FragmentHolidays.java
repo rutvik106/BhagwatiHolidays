@@ -164,7 +164,7 @@ public class FragmentHolidays extends Fragment implements TextWatcher {
                                             CommonUtilities
                                                     .showAlertDialog(getActivity(), "Holiday Booking",
                                                             "",
-                                                            "Holiday Booking in Bhagwati Holidays");
+                                                            "Holiday Booking in Bhagwati Holidays",etBookingDate.getText().toString());
 
 
                                         }

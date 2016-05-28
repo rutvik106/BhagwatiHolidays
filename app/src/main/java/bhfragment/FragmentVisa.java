@@ -167,7 +167,7 @@ public class FragmentVisa extends Fragment implements DatePickerDialog.OnDateSet
                                             CommonUtilities
                                                     .showAlertDialog(getActivity(), "Visa Booking",
                                                             "",
-                                                            "Visa booking in Bhagwati Holidays");
+                                                            "Visa booking in Bhagwati Holidays",etDateOfTravel.getText().toString());
                                         }
                                     }, app);
 

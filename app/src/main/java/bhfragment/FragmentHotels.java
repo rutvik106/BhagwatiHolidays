@@ -179,7 +179,7 @@ public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateS
                                             CommonUtilities
                                                     .showAlertDialog(getActivity(), "Hotel Booking",
                                                             "",
-                                                            "Hotel Booking in Bhagwati Holidays");
+                                                            "Hotel Booking in Bhagwati Holidays",etBookingDate.getText().toString());
                                         }
                                     }, app);
                             sendMail.execute(formParams);

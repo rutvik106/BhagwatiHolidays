@@ -138,6 +138,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="#FFF"
+        android:elevation="8dp"
         android:orientation="vertical">
 
         <Button

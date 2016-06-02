@@ -8,7 +8,7 @@ import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
+import extras.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +51,11 @@ public class FragmentHolidays extends Fragment implements TextWatcher {
 
     private GetTermsAsync getTermsAsync;
 
+    private String requestingActivity;
+
+    private String packageId;
+
+    private String packageDestination;
 
     public FragmentHolidays() {
         // Required empty public constructor
@@ -66,6 +71,25 @@ public class FragmentHolidays extends Fragment implements TextWatcher {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        try {
+            Log.i(App.APP_TAG,"GETTING EXTRAS.....");
+            requestingActivity=getActivity().getIntent().getStringExtra("requesting_activity");
+            packageId=getActivity().getIntent().getStringExtra("package_id");
+            packageDestination=getActivity().getIntent().getStringExtra("package_destination");
+            if(requestingActivity.equals("single_package_view_activity")) {
+                actDestination.setEnabled(false);
+                actDestination.setText(packageDestination);
+            }
+        }
+        catch (Exception e){
+            Log.i(App.APP_TAG,"cannot get intent extra requesting");
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -127,12 +151,14 @@ public class FragmentHolidays extends Fragment implements TextWatcher {
     private void submitForm() {
 
         final Map<String, String> formParams = new LinkedHashMap<>();
+        if(requestingActivity.equals("single_package_view_activity")) {
+            formParams.put("Package", "http://bhagwatiholidays.com/package.php?id=" + packageId);
+        }
         formParams.put("Contact", etMobileNo.getText().toString());
         formParams.put("Email", app.getUser().getEmail());
         formParams.put("Type", ((RadioButton) rgType.findViewById(rgType.getCheckedRadioButtonId())).getText().toString());
         formParams.put("Depart Date", etBookingDate.getText().toString());
-
-
+        formParams.put("Destination",actDestination.getText().toString());
         formParams.put("Adult", spAdult.getSelectedItem().toString());
         formParams.put("Child", spChild.getSelectedItem().toString());
         formParams.put("Infant", spInfant.getSelectedItem().toString());
@@ -198,7 +224,7 @@ public class FragmentHolidays extends Fragment implements TextWatcher {
             public void validationResult(boolean status,String msg) {
                 //Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
                 etMobileNo.setError(msg);
-                isFormValid = isFormValid&status;;
+                isFormValid = isFormValid&status;
             }
         });
 
@@ -207,6 +233,15 @@ public class FragmentHolidays extends Fragment implements TextWatcher {
             public void validationResult(boolean status,String msg) {
                 //Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
                 etBookingDate.setError(msg);
+                isFormValid = isFormValid&status;
+            }
+        });
+
+        Validator.validDestination(formParams.get("Destination"), new Validator.ValidationListener() {
+            @Override
+            public void validationResult(boolean status,String msg) {
+                //Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+                actDestination.setError(msg);
                 isFormValid = isFormValid&status;
             }
         });

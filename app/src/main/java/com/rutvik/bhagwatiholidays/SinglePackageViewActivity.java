@@ -53,7 +53,7 @@ public class SinglePackageViewActivity extends AppCompatActivity {
 
     private Toolbar mToolbar;
 
-    private String inclusions, exclusions, packagePrice;
+    private String inclusions, exclusions, packagePrice, packageDestination;
 
     private com.nostra13.universalimageloader.core.ImageLoader imageLoader;
     private DisplayImageOptions options;
@@ -86,8 +86,13 @@ public class SinglePackageViewActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 app.trackEvent(SingleOfferViewActivity.class.getSimpleName(),"BOOK NOW CLICKED","BUTTON");
+                Intent i=new Intent(SinglePackageViewActivity.this,HolidayFormActivity.class);
+                i.putExtra("requesting_activity","single_package_view_activity");
 
-                startActivity(new Intent(SinglePackageViewActivity.this,HolidayFormActivity.class));
+                i.putExtra("package_id",getIntent().getStringExtra("package_id"));
+                i.putExtra("package_destination",packageDestination);
+
+                startActivity(i);
 
             }
         });
@@ -226,6 +231,7 @@ public class SinglePackageViewActivity extends AppCompatActivity {
 
                                 packagePrice = new JSONObject(response).getString("package_price");
 
+                                packageDestination=new JSONObject(response).getString("destination");
 
                                 PackageItenary pkg = new PackageItenary(response, "package");
 

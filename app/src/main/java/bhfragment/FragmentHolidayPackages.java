@@ -24,8 +24,10 @@ import org.json.JSONException;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import jsonobj.PackageList;
 import webservicehandler.PostHandler;
@@ -43,7 +45,7 @@ public class FragmentHolidayPackages extends Fragment {
 
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private final List<PackageList.Package> packages = new ArrayList<>();
+    private final Set<PackageList.Package> packages = new HashSet<>();
 
     private final List<PackageList.Package> searchedPackages = new ArrayList<>();
 
@@ -75,7 +77,7 @@ public class FragmentHolidayPackages extends Fragment {
         mAdapter = new LazyAdapter(getActivity());
     }
 
-    private void filterOffers(List<PackageList.Package> modelList, String query) {
+    private void filterOffers(Set<PackageList.Package> modelList, String query) {
 
         searchedPackages.clear();
 

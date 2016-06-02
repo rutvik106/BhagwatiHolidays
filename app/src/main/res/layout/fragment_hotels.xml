@@ -22,6 +22,7 @@
                 android:background="#FFFFFF"
                 android:id="@+id/ll_formHotels"
                 android:orientation="vertical"
+                android:elevation="5dp"
                 android:padding="5dp">
 
                 <android.support.design.widget.TextInputLayout

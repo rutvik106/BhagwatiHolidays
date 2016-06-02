@@ -20,7 +20,7 @@
                 android:layout_margin="10dp"
                 android:background="#FFFFFF"
                 android:id="@+id/ll_formAirTicket"
-                android:elevation="8dp"
+                android:elevation="5dp"
                 android:orientation="vertical"
                 android:padding="5dp">
 

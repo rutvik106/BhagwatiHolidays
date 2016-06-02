@@ -86,10 +86,15 @@ public class SendMail extends AsyncTask<Map<String, String>, Void, Void> {
 
             JSONArray array = new JSONArray();
 
+            String type="";
+
             Iterator iterator = params[0].entrySet().iterator();
 
             while (iterator.hasNext()) {
                 Map.Entry pair = (Map.Entry) iterator.next();
+                if(pair.getKey().equals("Type")){
+                    type=pair.getValue().toString();
+                }
                 array.put(new JSONObject("{\"" + pair.getKey() + "\":" + "\"" + pair.getValue() + "\"}"));
                 iterator.remove();
             }
@@ -100,7 +105,15 @@ public class SendMail extends AsyncTask<Map<String, String>, Void, Void> {
             postParam.put("data", array.toString());
             postParam.put("email", email);
             postParam.put("type", emailType);
-            new PostHandler(TAG, 2, 2000).doPostRequest("http://bhagwatiholidays.com/send-mail/send_mail.php", postParam, new PostHandler.ResponseCallback() {
+            if(emailType.equals(Type.HOTEL.toString())){
+                Log.i(App.APP_TAG,"ITS AN HOTEL INQUIRY MAIL WITH TYPE: "+type);
+                postParam.put("hotel_type",type);
+            }
+            else if(emailType.equals(Type.HOLIDAY.toString())){
+                Log.i(App.APP_TAG,"ITS AN HOLIDAY INQUIRY MAIL WITH TYPE: "+type);
+                postParam.put("holiday_type",type);
+            }
+            /*new PostHandler(TAG, 2, 2000).doPostRequest("http://bhagwatiholidays.com/send-mail/send_mail.php", postParam, new PostHandler.ResponseCallback() {
                 @Override
                 public void response(int status, String response) {
                     if (status == HttpURLConnection.HTTP_OK) {
@@ -115,7 +128,7 @@ public class SendMail extends AsyncTask<Map<String, String>, Void, Void> {
                         }
                     }
                 }
-            });
+            });*/
 
         } catch (JSONException e) {
             app.trackException(new Exception(TAG+e.toString()));

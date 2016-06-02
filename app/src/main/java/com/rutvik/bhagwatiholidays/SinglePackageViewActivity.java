@@ -87,7 +87,7 @@ public class SinglePackageViewActivity extends AppCompatActivity {
             public void onClick(View v) {
                 app.trackEvent(SingleOfferViewActivity.class.getSimpleName(),"BOOK NOW CLICKED","BUTTON");
 
-                startActivity(new Intent(SinglePackageViewActivity.this,PaymentActivity.class));
+                startActivity(new Intent(SinglePackageViewActivity.this,HolidayFormActivity.class));
 
             }
         });

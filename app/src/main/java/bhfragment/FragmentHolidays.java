@@ -195,17 +195,19 @@ public class FragmentHolidays extends Fragment implements TextWatcher {
 
         Validator.validateContact(formParams.get("Contact"), new Validator.ValidationListener() {
             @Override
-            public void validationFailed(String msg) {
-                Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
-                isFormValid = false;
+            public void validationResult(boolean status,String msg) {
+                //Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+                etMobileNo.setError(msg);
+                isFormValid = isFormValid&status;;
             }
         });
 
         Validator.validateDate(formParams.get("Depart Date"), new Validator.ValidationListener() {
             @Override
-            public void validationFailed(String msg) {
-                Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
-                isFormValid = false;
+            public void validationResult(boolean status,String msg) {
+                //Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+                etBookingDate.setError(msg);
+                isFormValid = isFormValid&status;
             }
         });
 

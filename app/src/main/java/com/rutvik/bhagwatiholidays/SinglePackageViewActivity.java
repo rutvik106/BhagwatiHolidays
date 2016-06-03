@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -28,6 +30,7 @@ import com.facebook.share.widget.ShareDialog;
 import com.nostra13.universalimageloader.core.*;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -53,7 +56,11 @@ public class SinglePackageViewActivity extends AppCompatActivity {
 
     private Toolbar mToolbar;
 
-    private String inclusions, exclusions, packagePrice, packageDestination;
+    private ArrayList<String> packagePrices=new ArrayList<String>();
+
+    private String inclusions, exclusions, packageDestination;
+
+    private String packagePrice="";
 
     private com.nostra13.universalimageloader.core.ImageLoader imageLoader;
     private DisplayImageOptions options;
@@ -85,14 +92,49 @@ public class SinglePackageViewActivity extends AppCompatActivity {
         btnBookNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                app.trackEvent(SingleOfferViewActivity.class.getSimpleName(),"BOOK NOW CLICKED","BUTTON");
-                Intent i=new Intent(SinglePackageViewActivity.this,HolidayFormActivity.class);
-                i.putExtra("requesting_activity","single_package_view_activity");
 
-                i.putExtra("package_id",getIntent().getStringExtra("package_id"));
-                i.putExtra("package_destination",packageDestination);
+                if(packagePrices.size()>0) {
+                    // 1. Instantiate an AlertDialog.Builder with its constructor
+                    AlertDialog.Builder builder = new AlertDialog.Builder(SinglePackageViewActivity.this);
 
-                startActivity(i);
+                    final ArrayAdapter<String> adapter = new ArrayAdapter<String>(SinglePackageViewActivity.this,
+                            android.R.layout.simple_list_item_1, packagePrices);
+
+                    // 3. Get the AlertDialog from create()
+                    AlertDialog.Builder dialog = builder.setTitle("Pick a package")
+                            .setAdapter(adapter, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    app.trackEvent(SingleOfferViewActivity.class.getSimpleName(),"BOOK NOW CLICKED","BUTTON");
+                                    Intent i=new Intent(SinglePackageViewActivity.this,HolidayFormActivity.class);
+                                    i.putExtra("requesting_activity","single_package_view_activity");
+
+                                    i.putExtra("package_id",getIntent().getStringExtra("package_id"));
+                                    i.putExtra("package_destination",packageDestination);
+
+                                    i.putExtra("package_price",packagePrices.get(which));
+
+                                    startActivity(i);
+                                }
+                            });
+
+                    dialog.show();
+
+                }else {
+
+
+                    app.trackEvent(SingleOfferViewActivity.class.getSimpleName(), "BOOK NOW CLICKED", "BUTTON");
+                    Intent i = new Intent(SinglePackageViewActivity.this, HolidayFormActivity.class);
+                    i.putExtra("requesting_activity", "single_package_view_activity");
+
+                    i.putExtra("package_id", getIntent().getStringExtra("package_id"));
+                    i.putExtra("package_destination", packageDestination);
+
+                    i.putExtra("package_price", "On Request");
+
+                    startActivity(i);
+
+                }
 
             }
         });
@@ -110,6 +152,7 @@ public class SinglePackageViewActivity extends AppCompatActivity {
         tvPlaces.setSelected(true);
 
         tvPriceFrom = (TextView) findViewById(R.id.tv_priceFrom);
+        tvPriceFrom.setSelected(true);
 
         inclusions = getIntent().getStringExtra("inclusions");
 
@@ -143,7 +186,7 @@ public class SinglePackageViewActivity extends AppCompatActivity {
         shareDialog.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
             @Override
             public void onSuccess(Sharer.Result result) {
-                Toast.makeText(SinglePackageViewActivity.this, "Content shared Successfully.", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(SinglePackageViewActivity.this, "Content shared Successfully.", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -229,7 +272,16 @@ public class SinglePackageViewActivity extends AppCompatActivity {
                         if (status == HttpURLConnection.HTTP_OK) {
                             try {
 
-                                packagePrice = new JSONObject(response).getString("package_price");
+                                JSONArray arr = new JSONObject(response).getJSONArray("package_price");
+
+                                try {
+                                    for (int i = 0; i < arr.length(); i++) {
+                                        packagePrices.add(arr.getString(i));
+                                        packagePrice += arr.getString(i) + " | ";
+                                    }
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
 
                                 packageDestination=new JSONObject(response).getString("destination");
 

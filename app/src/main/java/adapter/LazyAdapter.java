@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -49,9 +50,15 @@ public class LazyAdapter extends RecyclerView.Adapter<LazyAdapter.ViewHolder> {
         return packages;
     }
 
+    Typeface fontCaviarDreamsBold,fontCaviarDreamsItalics;
+
+
     public LazyAdapter(Activity a) {
 
         activity = a;
+
+        fontCaviarDreamsBold=Typeface.createFromAsset(activity.getAssets(),"fonts/Caviar_Dreams_Bold.ttf");
+        fontCaviarDreamsItalics=Typeface.createFromAsset(activity.getAssets(),"fonts/CaviarDreams_Italic.ttf");
 
         this.packages = new ArrayList<>();
 
@@ -102,9 +109,17 @@ public class LazyAdapter extends RecyclerView.Adapter<LazyAdapter.ViewHolder> {
         public ViewHolder(View itemView) {
             super(itemView);
             packageName = (TextView) itemView.findViewById(R.id.tv_packageTitle);
+            packageName.setTypeface(fontCaviarDreamsBold);
+
             packageDays = (TextView) itemView.findViewById(R.id.tv_packageDays);
+            packageDays.setTypeface(fontCaviarDreamsItalics);
+
             packageNights = (TextView) itemView.findViewById(R.id.tv_packageNights);
+            packageNights.setTypeface(fontCaviarDreamsItalics);
+
             packagePlace = (TextView) itemView.findViewById(R.id.tv_packagePlace);
+            packagePlace.setTypeface(fontCaviarDreamsItalics);
+
             packageImage = (ImageView) itemView.findViewById(R.id.iv_packageImage);
             pb = (ProgressBar) itemView.findViewById(R.id.pb);
             itemView.setOnClickListener(new View.OnClickListener() {

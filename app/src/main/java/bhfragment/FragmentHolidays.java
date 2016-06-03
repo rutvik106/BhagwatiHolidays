@@ -22,7 +22,9 @@ import android.widget.Toast;
 
 import com.rutvik.bhagwatiholidays.App;
 import com.rutvik.bhagwatiholidays.R;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
+import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -34,7 +36,7 @@ import extras.CommonUtilities;
 /**
  * Created by Rakshit on 20-11-2015.
  */
-public class FragmentHolidays extends Fragment implements TextWatcher {
+public class FragmentHolidays extends Fragment implements DatePickerDialog.OnDateSetListener,TextWatcher {
 
     private static final String TAG = App.APP_TAG + FragmentHolidays.class.getSimpleName();
 
@@ -44,6 +46,8 @@ public class FragmentHolidays extends Fragment implements TextWatcher {
     Spinner spAdult, spChild, spInfant, spNoOfNights;
     RatingBar rbPackageType;
     FloatingActionButton fabDone;
+
+    DatePickerDialog datePickerDialog;
 
     boolean isFormValid = true;
 
@@ -56,6 +60,12 @@ public class FragmentHolidays extends Fragment implements TextWatcher {
     private String packageId;
 
     private String packageDestination;
+
+    private String packagePrice;
+
+    private String stars;
+
+    android.app.FragmentManager mFragmentManager;
 
     public FragmentHolidays() {
         // Required empty public constructor
@@ -79,11 +89,19 @@ public class FragmentHolidays extends Fragment implements TextWatcher {
         try {
             Log.i(App.APP_TAG,"GETTING EXTRAS.....");
             requestingActivity=getActivity().getIntent().getStringExtra("requesting_activity");
-            packageId=getActivity().getIntent().getStringExtra("package_id");
-            packageDestination=getActivity().getIntent().getStringExtra("package_destination");
+
             if(requestingActivity.equals("single_package_view_activity")) {
+                packageId=getActivity().getIntent().getStringExtra("package_id");
+                packageDestination=getActivity().getIntent().getStringExtra("package_destination");
+                packagePrice=getActivity().getIntent().getStringExtra("package_price");
+                if(packagePrice.contains("star")){
+                    rbPackageType.setRating(Float.parseFloat(String.valueOf(packagePrice.charAt(0))));
+                    rbPackageType.setEnabled(false);
+                }
+
                 actDestination.setEnabled(false);
                 actDestination.setText(packageDestination);
+
             }
         }
         catch (Exception e){
@@ -121,10 +139,33 @@ public class FragmentHolidays extends Fragment implements TextWatcher {
         rgType = (RadioGroup) rootView.findViewById(R.id.rg_type);
 
         rbPackageType = (RatingBar) rootView.findViewById(R.id.rb_packageType);
+        rbPackageType.setStepSize(1);
 
         etMobileNo = (EditText) rootView.findViewById(R.id.et_mobileNo);
 
         etBookingDate = (EditText) rootView.findViewById(R.id.et_bookingDate);
+
+        mFragmentManager = getActivity().getFragmentManager();
+
+        etBookingDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    datePickerDialog.show(mFragmentManager, "DepartDate");
+                }
+            }
+        });
+
+        etBookingDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                datePickerDialog.show(mFragmentManager, "DepartDate");
+            }
+        });
+
+        Calendar calendar = Calendar.getInstance();
+        datePickerDialog = DatePickerDialog.newInstance(this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH));
 
         actDestination = (AutoCompleteTextView) rootView.findViewById(R.id.et_destination);
 
@@ -271,5 +312,11 @@ public class FragmentHolidays extends Fragment implements TextWatcher {
     @Override
     public void afterTextChanged(Editable s) {
 
+    }
+
+    @Override
+    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+        String date = dayOfMonth + "-" + (monthOfYear + 1) + "-" + year;
+        etBookingDate.setText(date);
     }
 }

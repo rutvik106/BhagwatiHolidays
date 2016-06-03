@@ -2,6 +2,8 @@ package com.rutvik.bhagwatiholidays;
 
 import android.app.Application;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -71,6 +73,7 @@ public class App extends Application {
 
 
     private ImageLoaderConfiguration imageLoaderConfiguration;
+
 
 
     @Override

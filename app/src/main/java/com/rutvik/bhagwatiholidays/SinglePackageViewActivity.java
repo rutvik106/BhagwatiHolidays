@@ -56,11 +56,11 @@ public class SinglePackageViewActivity extends AppCompatActivity {
 
     private Toolbar mToolbar;
 
-    private ArrayList<String> packagePrices=new ArrayList<String>();
+    private ArrayList<String> packagePrices = new ArrayList<String>();
 
-    private String inclusions, exclusions, packageDestination;
+    private String inclusions, exclusions, packageDestination, packageLocationType;
 
-    private String packagePrice="";
+    private String packagePrice = "";
 
     private com.nostra13.universalimageloader.core.ImageLoader imageLoader;
     private DisplayImageOptions options;
@@ -75,7 +75,7 @@ public class SinglePackageViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_package_view);
 
-        app=(App) getApplication();
+        app = (App) getApplication();
 
         app.trackScreenView(SinglePackageViewActivity.class.getSimpleName());
 
@@ -87,13 +87,22 @@ public class SinglePackageViewActivity extends AppCompatActivity {
 
         setTitle(getIntent().getStringExtra("package_name"));
 
-        btnBookNow=(Button) findViewById(R.id.btn_bookNow);
+        btnBookNow = (Button) findViewById(R.id.btn_bookNow);
 
         btnBookNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(packagePrices.size()>0) {
+                app.trackEvent(SingleOfferViewActivity.class.getSimpleName(), "BOOK NOW CLICKED", "BUTTON");
+                final Intent i = new Intent(SinglePackageViewActivity.this, HolidayFormActivity.class);
+                i.putExtra("requesting_activity", "single_package_view_activity");
+
+                i.putExtra("package_id", getIntent().getStringExtra("package_id"));
+                i.putExtra("package_destination", packageDestination);
+
+                i.putExtra("package_location_type",packageLocationType);
+
+                if (packagePrices.size() > 0) {
                     // 1. Instantiate an AlertDialog.Builder with its constructor
                     AlertDialog.Builder builder = new AlertDialog.Builder(SinglePackageViewActivity.this);
 
@@ -105,14 +114,8 @@ public class SinglePackageViewActivity extends AppCompatActivity {
                             .setAdapter(adapter, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    app.trackEvent(SingleOfferViewActivity.class.getSimpleName(),"BOOK NOW CLICKED","BUTTON");
-                                    Intent i=new Intent(SinglePackageViewActivity.this,HolidayFormActivity.class);
-                                    i.putExtra("requesting_activity","single_package_view_activity");
 
-                                    i.putExtra("package_id",getIntent().getStringExtra("package_id"));
-                                    i.putExtra("package_destination",packageDestination);
-
-                                    i.putExtra("package_price",packagePrices.get(which));
+                                    i.putExtra("package_price", packagePrices.get(which));
 
                                     startActivity(i);
                                 }
@@ -120,15 +123,7 @@ public class SinglePackageViewActivity extends AppCompatActivity {
 
                     dialog.show();
 
-                }else {
-
-
-                    app.trackEvent(SingleOfferViewActivity.class.getSimpleName(), "BOOK NOW CLICKED", "BUTTON");
-                    Intent i = new Intent(SinglePackageViewActivity.this, HolidayFormActivity.class);
-                    i.putExtra("requesting_activity", "single_package_view_activity");
-
-                    i.putExtra("package_id", getIntent().getStringExtra("package_id"));
-                    i.putExtra("package_destination", packageDestination);
+                } else {
 
                     i.putExtra("package_price", "On Request");
 
@@ -196,7 +191,7 @@ public class SinglePackageViewActivity extends AppCompatActivity {
 
             @Override
             public void onError(FacebookException error) {
-                Toast.makeText(SinglePackageViewActivity.this,"Sharing failed.",Toast.LENGTH_SHORT).show();
+                Toast.makeText(SinglePackageViewActivity.this, "Sharing failed.", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -222,12 +217,12 @@ public class SinglePackageViewActivity extends AppCompatActivity {
                 return true;
 
             case R.id.action_share:
-                app.trackEvent(SinglePackageViewActivity.class.getSimpleName(),"SIMPLE SHARING","SHARE");
+                app.trackEvent(SinglePackageViewActivity.class.getSimpleName(), "SIMPLE SHARING", "SHARE");
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
                 sendIntent.putExtra(Intent.EXTRA_TEXT,
-                        "Hey, Watch out this new exciting holiday package from Bhagwati Holidays "+
-                        CommonUtilities.URL_WEBSITE_PACKAGE+getIntent().getStringExtra("package_id"));
+                        "Hey, Watch out this new exciting holiday package from Bhagwati Holidays " +
+                                CommonUtilities.URL_WEBSITE_PACKAGE + getIntent().getStringExtra("package_id"));
                 sendIntent.setType("text/plain");
                 startActivity(sendIntent);
                 return true;
@@ -267,49 +262,54 @@ public class SinglePackageViewActivity extends AppCompatActivity {
                 new PostHandler("BWT", 4, 2000).doPostRequest("http://bhagwatiholidays.com/admin/webservice/index.php",
                         postParams,
                         new PostHandler.ResponseCallback() {
-                    @Override
-                    public void response(int status, String response) {
-                        if (status == HttpURLConnection.HTTP_OK) {
-                            try {
+                            @Override
+                            public void response(int status, String response) {
+                                if (status == HttpURLConnection.HTTP_OK) {
+                                    try {
 
-                                JSONArray arr = new JSONObject(response).getJSONArray("package_price");
+                                        JSONObject responseObj=new JSONObject(response);
 
-                                try {
-                                    for (int i = 0; i < arr.length(); i++) {
-                                        packagePrices.add(arr.getString(i));
-                                        packagePrice += arr.getString(i) + " | ";
+                                        try {
+                                            JSONArray arr = responseObj.getJSONArray("package_price");
+                                            for (int i = 0; i < arr.length(); i++) {
+                                                packagePrices.add(arr.getString(i));
+                                                packagePrice += arr.getString(i) + " | ";
+                                            }
+                                        } catch (JSONException j) {
+                                            packagePrice = responseObj.getString("package_price");
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+
+                                        packageLocationType=responseObj.getString("location_type");
+
+                                        packageDestination = responseObj.getString("destination");
+
+                                        PackageItenary pkg = new PackageItenary(response, "package");
+
+                                        ArrayList<String> headings = new ArrayList<String>();
+                                        ArrayList<String> descriptions = new ArrayList<String>();
+
+
+                                        for (String heading : pkg.getItenaryHeading()) {
+                                            headings.add(heading);
+                                        }
+
+                                        for (String desc : pkg.getItenaryDescription()) {
+                                            descriptions.add(desc);
+                                        }
+
+                                        for (int i = 0; i < headings.size(); i++) {
+                                            htmlContent = htmlContent + headings.get(i) + descriptions.get(i);
+                                        }
+
+
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
                                     }
-                                }catch (Exception e){
-                                    e.printStackTrace();
                                 }
-
-                                packageDestination=new JSONObject(response).getString("destination");
-
-                                PackageItenary pkg = new PackageItenary(response, "package");
-
-                                ArrayList<String> headings = new ArrayList<String>();
-                                ArrayList<String> descriptions = new ArrayList<String>();
-
-
-                                for (String heading : pkg.getItenaryHeading()) {
-                                    headings.add(heading);
-                                }
-
-                                for (String desc : pkg.getItenaryDescription()) {
-                                    descriptions.add(desc);
-                                }
-
-                                for (int i = 0; i < headings.size(); i++) {
-                                    htmlContent = htmlContent + headings.get(i) + descriptions.get(i);
-                                }
-
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
                             }
-                        }
-                    }
-                });
+                        });
 
                 return null;
             }
@@ -336,7 +336,7 @@ public class SinglePackageViewActivity extends AppCompatActivity {
 
     private void shareContentOnFacebook() {
         if (ShareDialog.canShow(ShareLinkContent.class)) {
-            app.trackEvent(SinglePackageViewActivity.class.getSimpleName(),"FB SHARING","SHARE");
+            app.trackEvent(SinglePackageViewActivity.class.getSimpleName(), "FB SHARING", "SHARE");
             ShareLinkContent linkContent = new ShareLinkContent.Builder()
                     .setContentTitle(getIntent().getStringExtra("package_name"))
                     .setContentDescription(CommonUtilities.URL_WEBSITE_PACKAGE +
@@ -344,7 +344,7 @@ public class SinglePackageViewActivity extends AppCompatActivity {
                     .setImageUrl(Uri.parse(getIntent().getStringExtra("package_image")))
                     .setContentUrl(Uri.parse(CommonUtilities.URL_WEBSITE_PACKAGE +
                             getIntent().getStringExtra("package_id")))
-                            .build();
+                    .build();
             shareDialog.show(linkContent);
         }
     }

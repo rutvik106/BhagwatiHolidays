@@ -27,6 +27,8 @@ import com.rutvik.bhagwatiholidays.App;
 import com.rutvik.bhagwatiholidays.R;
 import com.rutvik.bhagwatiholidays.SinglePackageViewActivity;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -108,8 +110,11 @@ public class LazyAdapter extends RecyclerView.Adapter<LazyAdapter.ViewHolder> {
 
         public ViewHolder(View itemView) {
             super(itemView);
+
             packageName = (TextView) itemView.findViewById(R.id.tv_packageTitle);
             packageName.setTypeface(fontCaviarDreamsBold);
+
+            ((TextView) itemView.findViewById(R.id.tv_dayNightDivider)).setTypeface(fontCaviarDreamsItalics);
 
             packageDays = (TextView) itemView.findViewById(R.id.tv_packageDays);
             packageDays.setTypeface(fontCaviarDreamsItalics);

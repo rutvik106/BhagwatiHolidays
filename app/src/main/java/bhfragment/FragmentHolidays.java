@@ -96,7 +96,19 @@ public class FragmentHolidays extends Fragment implements DatePickerDialog.OnDat
                 packagePrice=getActivity().getIntent().getStringExtra("package_price");
                 if(packagePrice.contains("star")){
                     rbPackageType.setRating(Float.parseFloat(String.valueOf(packagePrice.charAt(0))));
-                    rbPackageType.setEnabled(false);
+                }
+                rbPackageType.setEnabled(false);
+                Log.i(TAG,"package location type: "+getActivity().getIntent().getStringExtra("package_location_type"));
+                if(getActivity().getIntent().getStringExtra("package_location_type").equals("2")){
+                    Log.i(TAG,"setting location to india");
+                    ((RadioButton)rgType.findViewById(R.id.rb_india)).setChecked(true);
+                }
+                else{
+                    Log.i(TAG,"setting location to worldwide");
+                    ((RadioButton)rgType.findViewById(R.id.rb_worldWide)).setChecked(true);
+                }
+                for (int i = 0; i < rgType.getChildCount(); i++) {
+                    rgType.getChildAt(i).setEnabled(false);
                 }
 
                 actDestination.setEnabled(false);
@@ -203,6 +215,7 @@ public class FragmentHolidays extends Fragment implements DatePickerDialog.OnDat
         formParams.put("Adult", spAdult.getSelectedItem().toString());
         formParams.put("Child", spChild.getSelectedItem().toString());
         formParams.put("Infant", spInfant.getSelectedItem().toString());
+        formParams.put("Package Type",String.valueOf(rbPackageType.getRating()));
 
         Log.d(TAG, "Check check........!!!!");
 

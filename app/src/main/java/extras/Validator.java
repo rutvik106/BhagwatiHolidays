@@ -18,70 +18,72 @@ public class Validator {
     private static final String TAG = App.APP_TAG + Validator.class.getSimpleName();
 
     public static interface ValidationListener {
-        public void validationFailed(String msg);
+        public void validationResult(boolean status,String msg);
     }
 
-    public static boolean validateContact(String value, ValidationListener listener) {
+    public static void validateContact(String value, ValidationListener listener) {
 
         Log.i(TAG, "validating contact VALUE: " + value);
 
         if (TextUtils.isEmpty(value)) {
-            listener.validationFailed("Contact Required.");
-            return false;
+            listener.validationResult(false,"Contact Required.");
         }
-        if (value.length() > 10) {
-            listener.validationFailed("Invalid contact.");
-            return false;
+        else if (value.length() > 10) {
+            listener.validationResult(false,"Must be 10 Digits");
         }
-        return true;
+        else{
+            listener.validationResult(true,null);
+        }
+
     }
 
-    public static boolean validateDate(String value,ValidationListener listener){
+    public static void validateDate(String value,ValidationListener listener){
         if(TextUtils.isEmpty(value)){
-            listener.validationFailed("Date required.");
-            return false;
+            listener.validationResult(false,"Date required.");
         }
-        return true;
+        else{
+            listener.validationResult(true,null);
+        }
     }
 
-    public static boolean validateDates(String departDate, String returnDate, ValidationListener listener) {
+    public static void validateDates(String departDate, String returnDate, ValidationListener listener) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
         try {
             Date dd = formatter.parse(departDate);
             Date rd = formatter.parse(returnDate);
             int result = rd.compareTo(dd);
             if (result < 0) {
-                listener.validationFailed("invalid date.");
-                return false;
+                listener.validationResult(false,"invalid date.");
+            }
+            else{
+                listener.validationResult(true,null);
             }
         } catch (ParseException p) {
-            listener.validationFailed("error parsing date");
-            return false;
+            listener.validationResult(false,"error parsing date");
         }
-        return true;
     }
 
-    public static boolean validateFrom(String from, ValidationListener listener) {
+    public static void validateFrom(String from, ValidationListener listener) {
         if (TextUtils.isEmpty(from)) {
-            listener.validationFailed("From Required.");
-            return false;
+            listener.validationResult(false,"From Required.");
+        }else {
+            listener.validationResult(true,null);
         }
-        return true;
     }
 
-    public static boolean validTo(String to, ValidationListener listener) {
+    public static void validTo(String to, ValidationListener listener) {
         if (TextUtils.isEmpty(to)) {
-            listener.validationFailed("To Required.");
-            return false;
+            listener.validationResult(false,"To Required.");
+        }else{
+            listener.validationResult(true,null);
         }
-        return true;
     }
 
-    public static boolean validDestination(String destination, ValidationListener listener) {
+    public static void validDestination(String destination, ValidationListener listener) {
         if (TextUtils.isEmpty(destination)) {
-            listener.validationFailed("Destination Required.");
-            return false;
+            listener.validationResult(false,"Destination Required.");
+        }else{
+            listener.validationResult(true,null);
         }
-        return true;
     }
 }

@@ -8,7 +8,7 @@ import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
+import extras.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +22,9 @@ import android.widget.Toast;
 
 import com.rutvik.bhagwatiholidays.App;
 import com.rutvik.bhagwatiholidays.R;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
+import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -34,7 +36,7 @@ import extras.CommonUtilities;
 /**
  * Created by Rakshit on 20-11-2015.
  */
-public class FragmentHolidays extends Fragment implements TextWatcher {
+public class FragmentHolidays extends Fragment implements DatePickerDialog.OnDateSetListener,TextWatcher {
 
     private static final String TAG = App.APP_TAG + FragmentHolidays.class.getSimpleName();
 
@@ -45,12 +47,25 @@ public class FragmentHolidays extends Fragment implements TextWatcher {
     RatingBar rbPackageType;
     FloatingActionButton fabDone;
 
+    DatePickerDialog datePickerDialog;
+
     boolean isFormValid = true;
 
     App app;
 
     private GetTermsAsync getTermsAsync;
 
+    private String requestingActivity;
+
+    private String packageId;
+
+    private String packageDestination;
+
+    private String packagePrice;
+
+    private String stars;
+
+    android.app.FragmentManager mFragmentManager;
 
     public FragmentHolidays() {
         // Required empty public constructor
@@ -66,6 +81,45 @@ public class FragmentHolidays extends Fragment implements TextWatcher {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        try {
+            Log.i(App.APP_TAG,"GETTING EXTRAS.....");
+            requestingActivity=getActivity().getIntent().getStringExtra("requesting_activity");
+
+            if(requestingActivity.equals("single_package_view_activity")) {
+                packageId=getActivity().getIntent().getStringExtra("package_id");
+                packageDestination=getActivity().getIntent().getStringExtra("package_destination");
+                packagePrice=getActivity().getIntent().getStringExtra("package_price");
+                if(packagePrice.contains("star")){
+                    rbPackageType.setRating(Float.parseFloat(String.valueOf(packagePrice.charAt(0))));
+                }
+                rbPackageType.setEnabled(false);
+                Log.i(TAG,"package location type: "+getActivity().getIntent().getStringExtra("package_location_type"));
+                if(getActivity().getIntent().getStringExtra("package_location_type").equals("2")){
+                    Log.i(TAG,"setting location to india");
+                    ((RadioButton)rgType.findViewById(R.id.rb_india)).setChecked(true);
+                }
+                else{
+                    Log.i(TAG,"setting location to worldwide");
+                    ((RadioButton)rgType.findViewById(R.id.rb_worldWide)).setChecked(true);
+                }
+                for (int i = 0; i < rgType.getChildCount(); i++) {
+                    rgType.getChildAt(i).setEnabled(false);
+                }
+
+                actDestination.setEnabled(false);
+                actDestination.setText(packageDestination);
+
+            }
+        }
+        catch (Exception e){
+            Log.i(App.APP_TAG,"cannot get intent extra requesting");
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -97,10 +151,33 @@ public class FragmentHolidays extends Fragment implements TextWatcher {
         rgType = (RadioGroup) rootView.findViewById(R.id.rg_type);
 
         rbPackageType = (RatingBar) rootView.findViewById(R.id.rb_packageType);
+        rbPackageType.setStepSize(1);
 
         etMobileNo = (EditText) rootView.findViewById(R.id.et_mobileNo);
 
         etBookingDate = (EditText) rootView.findViewById(R.id.et_bookingDate);
+
+        mFragmentManager = getActivity().getFragmentManager();
+
+        etBookingDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    datePickerDialog.show(mFragmentManager, "DepartDate");
+                }
+            }
+        });
+
+        etBookingDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                datePickerDialog.show(mFragmentManager, "DepartDate");
+            }
+        });
+
+        Calendar calendar = Calendar.getInstance();
+        datePickerDialog = DatePickerDialog.newInstance(this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH));
 
         actDestination = (AutoCompleteTextView) rootView.findViewById(R.id.et_destination);
 
@@ -127,15 +204,18 @@ public class FragmentHolidays extends Fragment implements TextWatcher {
     private void submitForm() {
 
         final Map<String, String> formParams = new LinkedHashMap<>();
+        if(requestingActivity.equals("single_package_view_activity")) {
+            formParams.put("Package", "http://bhagwatiholidays.com/package.php?id=" + packageId);
+        }
         formParams.put("Contact", etMobileNo.getText().toString());
         formParams.put("Email", app.getUser().getEmail());
         formParams.put("Type", ((RadioButton) rgType.findViewById(rgType.getCheckedRadioButtonId())).getText().toString());
         formParams.put("Depart Date", etBookingDate.getText().toString());
-
-
+        formParams.put("Destination",actDestination.getText().toString());
         formParams.put("Adult", spAdult.getSelectedItem().toString());
         formParams.put("Child", spChild.getSelectedItem().toString());
         formParams.put("Infant", spInfant.getSelectedItem().toString());
+        formParams.put("Package Type",String.valueOf(rbPackageType.getRating()));
 
         Log.d(TAG, "Check check........!!!!");
 
@@ -164,7 +244,7 @@ public class FragmentHolidays extends Fragment implements TextWatcher {
                                             CommonUtilities
                                                     .showAlertDialog(getActivity(), "Holiday Booking",
                                                             "",
-                                                            "Holiday Booking in Bhagwati Holidays");
+                                                            "Holiday Booking in Bhagwati Holidays",etBookingDate.getText().toString());
 
 
                                         }
@@ -195,17 +275,28 @@ public class FragmentHolidays extends Fragment implements TextWatcher {
 
         Validator.validateContact(formParams.get("Contact"), new Validator.ValidationListener() {
             @Override
-            public void validationFailed(String msg) {
-                Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
-                isFormValid = false;
+            public void validationResult(boolean status,String msg) {
+                //Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+                etMobileNo.setError(msg);
+                isFormValid = isFormValid&status;
             }
         });
 
         Validator.validateDate(formParams.get("Depart Date"), new Validator.ValidationListener() {
             @Override
-            public void validationFailed(String msg) {
-                Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
-                isFormValid = false;
+            public void validationResult(boolean status,String msg) {
+                //Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+                etBookingDate.setError(msg);
+                isFormValid = isFormValid&status;
+            }
+        });
+
+        Validator.validDestination(formParams.get("Destination"), new Validator.ValidationListener() {
+            @Override
+            public void validationResult(boolean status,String msg) {
+                //Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+                actDestination.setError(msg);
+                isFormValid = isFormValid&status;
             }
         });
 
@@ -234,5 +325,11 @@ public class FragmentHolidays extends Fragment implements TextWatcher {
     @Override
     public void afterTextChanged(Editable s) {
 
+    }
+
+    @Override
+    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+        String date = dayOfMonth + "-" + (monthOfYear + 1) + "-" + year;
+        etBookingDate.setText(date);
     }
 }

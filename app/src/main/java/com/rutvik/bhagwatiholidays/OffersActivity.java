@@ -282,17 +282,19 @@ public class OffersActivity extends AppCompatActivity implements SearchView.OnQu
 
         for (int i = 0; i < array.length(); i++) {
             JSONObject obj = array.getJSONObject(i);
-            SimpleOffersAndPromotions model = new SimpleOffersAndPromotions();
-            model.setImageUrl(obj.getString("image_url"));
-            model.setTitle(obj.getString("title"));
-            model.setDescription(obj.getString("description"));
-            model.setOfferType(obj.getString("offer_type"));
-            model.setValidity(obj.getString("validity"));
-            ((OffersAndPromotionsAdapter) mAdapter)
-                    .addOffersAndPromotionsItem(OffersAndPromotionsAdapter
-                                    .OffersAndPromotionsItem.SIMPLE,
-                            model);
-            modelList.add(model);
+            if(obj.getString("visible").equals("1")) {
+                SimpleOffersAndPromotions model = new SimpleOffersAndPromotions();
+                model.setImageUrl(obj.getString("image_url"));
+                model.setTitle(obj.getString("title"));
+                model.setDescription(obj.getString("description"));
+                model.setOfferType(obj.getString("offer_type"));
+                model.setValidity(obj.getString("validity"));
+                ((OffersAndPromotionsAdapter) mAdapter)
+                        .addOffersAndPromotionsItem(OffersAndPromotionsAdapter
+                                        .OffersAndPromotionsItem.SIMPLE,
+                                model);
+                modelList.add(model);
+            }
         }
 
         mAdapter.notifyDataSetChanged();

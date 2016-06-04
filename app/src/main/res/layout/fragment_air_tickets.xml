@@ -4,6 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!--<ImageView
+        android:id="@+id/iv_swipeTabBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/airticket"
+        android:scaleType="centerCrop"/>-->
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -15,12 +22,13 @@
 
 
             <LinearLayout
+                android:alpha=".9"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="10dp"
                 android:background="#FFFFFF"
                 android:id="@+id/ll_formAirTicket"
-                android:elevation="8dp"
+                android:elevation="5dp"
                 android:orientation="vertical"
                 android:padding="5dp">
 

@@ -36,6 +36,7 @@ import extras.CommonUtilities;
 /**
  * Created by Rakshit on 20-11-2015.
  */
+
 public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnDateSetListener {
 
     private static final String TAG = App.APP_TAG + FragmentAirTickets.class.getSimpleName();
@@ -226,14 +227,17 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
         dateComponentMap.put(RETURN_DATE, new OnGetDate() {
             @Override
             public void setText(String text) {
-                if (Validator.validateDates(etDepartDate.getText().toString(), text, new Validator.ValidationListener() {
+                final String t=text;
+                Validator.validateDates(etDepartDate.getText().toString(), text, new Validator.ValidationListener() {
                     @Override
-                    public void validationFailed(String msg) {
-                        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+                    public void validationResult(boolean status,String msg) {
+                        //Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+                        etReturnDate.setError(msg);
+                        if(status==true){
+                            etReturnDate.setText(t);
+                        }
                     }
-                })) {
-                    etReturnDate.setText(text);
-                }
+                });
             }
         });
 
@@ -345,7 +349,7 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
                                             CommonUtilities
                                                     .showAlertDialog(getActivity(), "Air Ticket Booking",
                                                             "",
-                                                            "Air Ticket Booking in Bhagwati Holidays");
+                                                            "Air Ticket Booking in Bhagwati Holidays",etDepartDate.getText().toString());
 
 
                                         }
@@ -375,42 +379,47 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
 
         Validator.validateContact(formParams.get("Contact"), new Validator.ValidationListener() {
             @Override
-            public void validationFailed(String msg) {
-                Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
-                isFormValid = false;
+            public void validationResult(boolean status,String msg) {
+                //Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+                etMobileNo.setError(msg);
+                isFormValid = isFormValid&status;
             }
         });
 
         Validator.validateFrom(formParams.get("From"), new Validator.ValidationListener() {
             @Override
-            public void validationFailed(String msg) {
-                Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
-                isFormValid = false;
+            public void validationResult(boolean status,String msg) {
+                //Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+                actFrom.setError(msg);
+                isFormValid = isFormValid&status;
             }
         });
 
         Validator.validTo(formParams.get("To"), new Validator.ValidationListener() {
             @Override
-            public void validationFailed(String msg) {
-                Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
-                isFormValid = false;
+            public void validationResult(boolean status,String msg) {
+                //Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+                actTo.setError(msg);
+                isFormValid = isFormValid&status;
             }
         });
 
         Validator.validateDate(formParams.get("Depart Date"), new Validator.ValidationListener() {
             @Override
-            public void validationFailed(String msg) {
-                Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
-                isFormValid = false;
+            public void validationResult(boolean status,String msg) {
+                //Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+                etDepartDate.setError(msg);
+                isFormValid = isFormValid&status;
             }
         });
 
         if (formParams.get("Return Date") != null) {
             Validator.validateDate(formParams.get("Return Date"), new Validator.ValidationListener() {
                 @Override
-                public void validationFailed(String msg) {
-                    Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
-                    isFormValid = false;
+                public void validationResult(boolean status,String msg) {
+                    //Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+                    etReturnDate.setError(msg);
+                    isFormValid = isFormValid&status;
                 }
             });
         }

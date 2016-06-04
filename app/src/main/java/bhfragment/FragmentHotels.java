@@ -179,7 +179,7 @@ public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateS
                                             CommonUtilities
                                                     .showAlertDialog(getActivity(), "Hotel Booking",
                                                             "",
-                                                            "Hotel Booking in Bhagwati Holidays");
+                                                            "Hotel Booking in Bhagwati Holidays",etBookingDate.getText().toString());
                                         }
                                     }, app);
                             sendMail.execute(formParams);
@@ -234,25 +234,28 @@ public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateS
 
         Validator.validateContact(formParams.get("Contact"), new Validator.ValidationListener() {
             @Override
-            public void validationFailed(String msg) {
-                Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
-                isFormValid = false;
+            public void validationResult(boolean status,String msg) {
+                //Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+                etMobileNo.setError(msg);
+                isFormValid = isFormValid&status;
             }
         });
 
         Validator.validDestination(formParams.get("Destination"), new Validator.ValidationListener() {
             @Override
-            public void validationFailed(String msg) {
-                Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
-                isFormValid = false;
+            public void validationResult(boolean status,String msg) {
+                //Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+                etDestination.setError(msg);
+                isFormValid = isFormValid&status;
             }
         });
 
         Validator.validateDate(formParams.get("Booking Date"), new Validator.ValidationListener() {
             @Override
-            public void validationFailed(String msg) {
-                Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
-                isFormValid=false;
+            public void validationResult(boolean status,String msg) {
+                //Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+                etBookingDate.setError(msg);
+                isFormValid=isFormValid&status;
             }
         });
 

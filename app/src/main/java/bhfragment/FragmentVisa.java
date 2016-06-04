@@ -167,7 +167,7 @@ public class FragmentVisa extends Fragment implements DatePickerDialog.OnDateSet
                                             CommonUtilities
                                                     .showAlertDialog(getActivity(), "Visa Booking",
                                                             "",
-                                                            "Visa booking in Bhagwati Holidays");
+                                                            "Visa booking in Bhagwati Holidays",etDateOfTravel.getText().toString());
                                         }
                                     }, app);
 
@@ -197,25 +197,28 @@ public class FragmentVisa extends Fragment implements DatePickerDialog.OnDateSet
 
         Validator.validateContact(formParams.get("Contact"), new Validator.ValidationListener() {
             @Override
-            public void validationFailed(String msg) {
-                Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
-                isFormValid = false;
+            public void validationResult(boolean status,String msg) {
+                //Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+                etMobileNo.setError(msg);
+                isFormValid = isFormValid&status;
             }
         });
 
         Validator.validDestination(formParams.get("Destination"), new Validator.ValidationListener() {
             @Override
-            public void validationFailed(String msg) {
-                Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
-                isFormValid = false;
+            public void validationResult(boolean status,String msg) {
+                //Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+                actDestination.setError(msg);
+                isFormValid = isFormValid&status;
             }
         });
 
         Validator.validateDate(formParams.get("Date Of Travel"), new Validator.ValidationListener() {
             @Override
-            public void validationFailed(String msg) {
-                Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
-                isFormValid = false;
+            public void validationResult(boolean status,String msg) {
+                //Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+                etDateOfTravel.setError(msg);
+                isFormValid = isFormValid&status;
             }
         });
 

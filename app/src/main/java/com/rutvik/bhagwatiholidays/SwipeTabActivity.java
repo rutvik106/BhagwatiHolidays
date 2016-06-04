@@ -11,6 +11,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
@@ -52,6 +53,7 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
     private Toolbar mToolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    FragmentStatePagerAdapter mAdapter;
     private FragmentDrawer drawerFragment;
 
     private static final String TAG = App.APP_TAG + SwipeTabActivity.class.getSimpleName();

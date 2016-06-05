@@ -23,6 +23,9 @@ import com.rutvik.bhagwatiholidays.App;
 import com.rutvik.bhagwatiholidays.R;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
+import org.honorato.multistatetogglebutton.MultiStateToggleButton;
+import org.honorato.multistatetogglebutton.ToggleButton;
+
 import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -42,8 +45,10 @@ public class FragmentVisa extends Fragment implements DatePickerDialog.OnDateSet
     FloatingActionButton fabDone;
     EditText etMobileNo, etDateOfTravel;
     AutoCompleteTextView actDestination;
-    RadioButton rbBusiness, rbStudent;
-    RadioGroup radioGroup;
+    //RadioButton rbBusiness, rbStudent;
+    //RadioGroup radioGroup;
+
+    MultiStateToggleButton mstbVisaType;
 
     DatePickerDialog datePickerDialog;
     FragmentManager fragmentManager;
@@ -56,9 +61,14 @@ public class FragmentVisa extends Fragment implements DatePickerDialog.OnDateSet
 
     private GetTermsAsync getTermsAsync;
 
+    String[] visaType;
+
+    int selectedVisaType=1;
+
     @Override
     public void onStart() {
         super.onStart();
+        visaType = getResources().getStringArray(R.array.visa_type);
         app = (App) getActivity().getApplication();
         app.trackScreenView(FragmentVisa.class.getSimpleName());
     }
@@ -100,11 +110,22 @@ public class FragmentVisa extends Fragment implements DatePickerDialog.OnDateSet
 
         actDestination.addTextChangedListener(this);
 
-        rbBusiness = (RadioButton) rootView.findViewById(R.id.rb_business);
+        /*rbBusiness = (RadioButton) rootView.findViewById(R.id.rb_business);
 
         rbStudent = (RadioButton) rootView.findViewById(R.id.rb_student);
 
-        radioGroup = (RadioGroup) rootView.findViewById(R.id.rg_visaType);
+        radioGroup = (RadioGroup) rootView.findViewById(R.id.rg_visaType);*/
+
+        mstbVisaType=(MultiStateToggleButton) rootView.findViewById(R.id.mstb_visaType);
+
+        mstbVisaType.setElements(R.array.visa_type, 1);
+
+        mstbVisaType.setOnValueChangedListener(new ToggleButton.OnValueChangedListener() {
+            @Override
+            public void onValueChanged(int position) {
+                selectedVisaType=position;
+            }
+        });
 
         Calendar calendar = Calendar.getInstance();
         datePickerDialog = DatePickerDialog.newInstance(this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
@@ -141,7 +162,7 @@ public class FragmentVisa extends Fragment implements DatePickerDialog.OnDateSet
         formParams.put("Email", app.getUser().getEmail());
         formParams.put("Date Of Travel", etDateOfTravel.getText().toString());
         formParams.put("Destination", actDestination.getText().toString());
-        formParams.put("Visa Type", ((RadioButton) radioGroup.findViewById(radioGroup.getCheckedRadioButtonId())).getText().toString());
+        formParams.put("Visa Type", visaType[selectedVisaType]);
 
         if (isFormParamValid(formParams)) {
 

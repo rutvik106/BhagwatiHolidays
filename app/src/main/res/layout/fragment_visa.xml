@@ -96,7 +96,18 @@
                     android:text="Visa Type"
                     android:textSize="16sp" />
 
-                <LinearLayout
+                <org.honorato.multistatetogglebutton.MultiStateToggleButton
+                    android:id="@+id/mstb_visaType"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    app:values="@array/visa_type"
+                    app:mstbPrimaryColor="@color/colorAccent"
+                    app:mstbSecondaryColor="@color/grey"/>
+
+
+                <!--<LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -127,7 +138,7 @@
                             android:textSize="16sp" />
                     </RadioGroup>
 
-                </LinearLayout>
+                </LinearLayout>-->
 
             </LinearLayout>
 

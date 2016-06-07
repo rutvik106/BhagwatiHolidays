@@ -23,6 +23,9 @@ import com.rutvik.bhagwatiholidays.App;
 import com.rutvik.bhagwatiholidays.R;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
+import org.honorato.multistatetogglebutton.MultiStateToggleButton;
+import org.honorato.multistatetogglebutton.ToggleButton;
+
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -42,11 +45,22 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
     private static final String TAG = App.APP_TAG + FragmentAirTickets.class.getSimpleName();
 
     EditText etMobileNo, etDepartDate, etReturnDate;
-    RadioButton rbIndia, rbWorldWild, rbReturn, rbOneWay, rbEconomy, rbBusiness;
-    RadioGroup rgType, rgTrip, rgClass;
+    //RadioButton rbIndia, rbWorldWild, rbReturn, rbOneWay, rbEconomy, rbBusiness;
+    //RadioGroup rgType, rgTrip, rgClass;
     Spinner spAdult, spChild, spInfant;
     FloatingActionButton fabDone;
     AutoCompleteTextView actFrom, actTo;
+
+    MultiStateToggleButton mstbClassType,mstbLocationType,mstbTripType;
+
+    String[] classType;
+    int selectedClassType=0;
+
+    String[] locationType;
+    int selectedLocationType=0;
+
+    String[] tripType;
+    int selectedTripType=0;
 
     private GetTermsAsync getTermsAsync;
 
@@ -67,6 +81,11 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+
+        classType=getResources().getStringArray(R.array.class_type);
+        tripType=getResources().getStringArray(R.array.trip_type);
+        locationType=getResources().getStringArray(R.array.location_type);
+
         app = (App) activity.getApplication();
         app.trackScreenView(FragmentAirTickets.class.getSimpleName());
     }
@@ -108,7 +127,7 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
 
         fabDone = (FloatingActionButton) rootView.findViewById(R.id.done);
 
-        rgType = (RadioGroup) rootView.findViewById(R.id.rgType);
+/*        rgType = (RadioGroup) rootView.findViewById(R.id.rgType);
         rgTrip = (RadioGroup) rootView.findViewById(R.id.rgTrip);
         rgClass = (RadioGroup) rootView.findViewById(R.id.rgClass);
 
@@ -122,7 +141,41 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
 
         rbEconomy = (RadioButton) rootView.findViewById(R.id.rb_economy);
 
-        rbBusiness = (RadioButton) rootView.findViewById(R.id.rb_business);
+        rbBusiness = (RadioButton) rootView.findViewById(R.id.rb_business);*/
+
+        mstbClassType=(MultiStateToggleButton) rootView.findViewById(R.id.mstb_classType);
+        mstbClassType.setElements(R.array.class_type, 0);
+        mstbClassType.setOnValueChangedListener(new ToggleButton.OnValueChangedListener() {
+            @Override
+            public void onValueChanged(int position) {
+                selectedClassType=position;
+            }
+        });
+
+        mstbLocationType=(MultiStateToggleButton) rootView.findViewById(R.id.mstb_locationType);
+        mstbLocationType.setElements(R.array.location_type, 0);
+        mstbLocationType.setOnValueChangedListener(new ToggleButton.OnValueChangedListener() {
+            @Override
+            public void onValueChanged(int position) {
+                selectedLocationType=position;
+            }
+        });
+
+        mstbTripType=(MultiStateToggleButton) rootView.findViewById(R.id.mstb_tripType);
+        mstbTripType.setElements(R.array.trip_type, 0);
+        mstbTripType.setOnValueChangedListener(new ToggleButton.OnValueChangedListener() {
+            @Override
+            public void onValueChanged(int position) {
+                if (position==1) {
+                    etReturnDate.setVisibility(View.VISIBLE);
+
+                } else {
+                    etReturnDate.setVisibility(View.GONE);
+
+                }
+                selectedTripType=position;
+            }
+        });
 
         etDepartDate = (EditText) rootView.findViewById(R.id.et_departDate);
         etDepartDate.setTextIsSelectable(true);
@@ -203,7 +256,7 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
         //Take value from Radio
 
 
-        rgTrip.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+/*        rgTrip.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (checkedId == R.id.rb_return) {
@@ -214,7 +267,7 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
 
                 }
             }
-        });
+        });*/
 
 
         dateComponentMap.put(DEPART_DATE, new OnGetDate() {
@@ -306,8 +359,8 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
         final Map<String, String> formParams = new LinkedHashMap<>();
         formParams.put("Contact", etMobileNo.getText().toString());
         formParams.put("Email", app.getUser().getEmail());
-        formParams.put("Type", ((RadioButton) rgType.findViewById(rgType.getCheckedRadioButtonId())).getText().toString());
-        formParams.put("Trip", ((RadioButton) rgTrip.findViewById(rgTrip.getCheckedRadioButtonId())).getText().toString());
+        formParams.put("Type", locationType[selectedLocationType]);
+        formParams.put("Trip", tripType[selectedTripType]);
         formParams.put("Depart Date", etDepartDate.getText().toString());
 
         if (!TextUtils.isEmpty(etReturnDate.getText().toString())) {
@@ -319,7 +372,7 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
         formParams.put("Adult", spAdult.getSelectedItem().toString());
         formParams.put("Child", spChild.getSelectedItem().toString());
         formParams.put("Infant", spInfant.getSelectedItem().toString());
-        formParams.put("Class", ((RadioButton) rgClass.findViewById(rgClass.getCheckedRadioButtonId())).getText().toString());
+        formParams.put("Class", classType[selectedClassType]);
 
         Log.d(TAG, "Check check........!!!!");
 

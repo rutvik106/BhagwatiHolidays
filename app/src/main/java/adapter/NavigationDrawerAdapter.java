@@ -47,6 +47,7 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
     }
 
     public void getData() {
+        Log.i(TAG,"setting navigation drawer data....");
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         Set<String> navDrawerTitleSet = new LinkedHashSet<>();
         navDrawerTitleSet.add("My Bookings");

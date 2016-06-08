@@ -23,6 +23,9 @@ import com.rutvik.bhagwatiholidays.App;
 import com.rutvik.bhagwatiholidays.R;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
+import org.honorato.multistatetogglebutton.MultiStateToggleButton;
+import org.honorato.multistatetogglebutton.ToggleButton;
+
 import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -41,7 +44,12 @@ public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateS
 
     EditText etMobileNo, etBookingDate;
     AutoCompleteTextView etDestination;
-    RadioGroup radioGroupType;
+    //RadioGroup radioGroupType;
+
+    MultiStateToggleButton mstbLocationType;
+
+    String[] locationType;
+    int selectedLocationType=0;
 
     Spinner spAdult, spChild, spInfant, spNoOfNights;
     FloatingActionButton fabDone;
@@ -56,6 +64,7 @@ public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateS
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        locationType=getResources().getStringArray(R.array.location_type);
         app = (App) activity.getApplication();
         app.trackScreenView(FragmentHotels.class.getSimpleName());
     }
@@ -95,7 +104,16 @@ public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateS
 
         spNoOfNights = (Spinner) rootView.findViewById(R.id.sp_noOfNights);
 
-        radioGroupType = (RadioGroup) rootView.findViewById(R.id.rg_type);
+        //radioGroupType = (RadioGroup) rootView.findViewById(R.id.rg_type);
+
+        mstbLocationType=(MultiStateToggleButton) rootView.findViewById(R.id.mstb_locationType);
+        mstbLocationType.setElements(R.array.location_type, 0);
+        mstbLocationType.setOnValueChangedListener(new ToggleButton.OnValueChangedListener() {
+            @Override
+            public void onValueChanged(int position) {
+                selectedLocationType=position;
+            }
+        });
 
         fabDone = (FloatingActionButton) rootView.findViewById(R.id.done);
 
@@ -149,7 +167,7 @@ public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateS
         formParams.put("Contact", etMobileNo.getText().toString());
         formParams.put("Email",app.getUser().getEmail());
         formParams.put("Booking Date", etBookingDate.getText().toString());
-        formParams.put("Type", ((RadioButton) radioGroupType.findViewById(radioGroupType.getCheckedRadioButtonId())).getText().toString());
+        formParams.put("Type", locationType[selectedLocationType]);
         formParams.put("Adult", spAdult.getSelectedItem().toString());
         formParams.put("Child", spChild.getSelectedItem().toString());
         formParams.put("Infant", spInfant.getSelectedItem().toString());

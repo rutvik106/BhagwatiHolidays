@@ -3,8 +3,11 @@ package com.rutvik.bhagwatiholidays;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -48,7 +51,7 @@ public class SinglePackageViewActivity extends AppCompatActivity {
 
     private ProgressDialog progressDialog;
 
-    private TextView tvPackageDescription, tvSuggestedLength, tvPriceFrom, tvPlaces;
+    private TextView tvPackageDescription, tvSuggestedLength, tvPlaces; //tvPriceFrom;//, tvPlaces;
 
     private Button btnBookNow;
 
@@ -73,7 +76,7 @@ public class SinglePackageViewActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_single_package_view);
+        setContentView(R.layout.activity_single_package_view_new);
 
         app = (App) getApplication();
 
@@ -81,6 +84,10 @@ public class SinglePackageViewActivity extends AppCompatActivity {
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
+
+        final Drawable upArrow = getResources().getDrawable(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+        upArrow.setColorFilter(getResources().getColor(android.R.color.darker_gray), PorterDuff.Mode.SRC_ATOP);
+        getSupportActionBar().setHomeAsUpIndicator(upArrow);
 
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -100,7 +107,7 @@ public class SinglePackageViewActivity extends AppCompatActivity {
                 i.putExtra("package_id", getIntent().getStringExtra("package_id"));
                 i.putExtra("package_destination", packageDestination);
 
-                i.putExtra("package_location_type",packageLocationType);
+                i.putExtra("package_location_type", packageLocationType);
 
                 if (packagePrices.size() > 0) {
                     // 1. Instantiate an AlertDialog.Builder with its constructor
@@ -143,11 +150,10 @@ public class SinglePackageViewActivity extends AppCompatActivity {
         tvPlaces = (TextView) findViewById(R.id.tv_places);
 
         tvPlaces.setText(getIntent().getStringExtra("package_place"));
-
         tvPlaces.setSelected(true);
 
-        tvPriceFrom = (TextView) findViewById(R.id.tv_priceFrom);
-        tvPriceFrom.setSelected(true);
+        //tvPriceFrom = (TextView) findViewById(R.id.tv_priceFrom2);
+        //tvPriceFrom.setSelected(true);
 
         inclusions = getIntent().getStringExtra("inclusions");
 
@@ -267,7 +273,7 @@ public class SinglePackageViewActivity extends AppCompatActivity {
                                 if (status == HttpURLConnection.HTTP_OK) {
                                     try {
 
-                                        JSONObject responseObj=new JSONObject(response);
+                                        JSONObject responseObj = new JSONObject(response);
 
                                         try {
                                             JSONArray arr = responseObj.getJSONArray("package_price");
@@ -281,7 +287,7 @@ public class SinglePackageViewActivity extends AppCompatActivity {
                                             e.printStackTrace();
                                         }
 
-                                        packageLocationType=responseObj.getString("location_type");
+                                        packageLocationType = responseObj.getString("location_type");
 
                                         packageDestination = responseObj.getString("destination");
 
@@ -324,7 +330,7 @@ public class SinglePackageViewActivity extends AppCompatActivity {
                         "<h4><font color='#e2bb3d'>EXCLUSIONS</font></h4><br/>" +
                         "<pre>" + exclusions + "</pre><br/>"));
 
-                tvPriceFrom.setText(packagePrice);
+                //tvPriceFrom.setText(packagePrice);
 
                 if (progressDialog != null) {
                     progressDialog.dismiss();

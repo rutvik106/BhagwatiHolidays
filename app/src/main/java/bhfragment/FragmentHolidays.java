@@ -24,6 +24,9 @@ import com.rutvik.bhagwatiholidays.App;
 import com.rutvik.bhagwatiholidays.R;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
+import org.honorato.multistatetogglebutton.MultiStateToggleButton;
+import org.honorato.multistatetogglebutton.ToggleButton;
+
 import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -42,7 +45,7 @@ public class FragmentHolidays extends Fragment implements DatePickerDialog.OnDat
 
     EditText etMobileNo, etBookingDate;
     AutoCompleteTextView actDestination;
-    RadioGroup rgType;
+//  RadioGroup rgType;
     Spinner spAdult, spChild, spInfant, spNoOfNights;
     RatingBar rbPackageType;
     FloatingActionButton fabDone;
@@ -67,6 +70,11 @@ public class FragmentHolidays extends Fragment implements DatePickerDialog.OnDat
 
     android.app.FragmentManager mFragmentManager;
 
+    MultiStateToggleButton mstbLocationType;
+
+    String[] locationType;
+    int selectedLocationType=0;
+
     public FragmentHolidays() {
         // Required empty public constructor
     }
@@ -74,6 +82,7 @@ public class FragmentHolidays extends Fragment implements DatePickerDialog.OnDat
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        locationType=getResources().getStringArray(R.array.location_type);
         app = (App) activity.getApplication();
         app.trackScreenView(FragmentHolidays.class.getSimpleName());
     }
@@ -101,16 +110,18 @@ public class FragmentHolidays extends Fragment implements DatePickerDialog.OnDat
                 Log.i(TAG,"package location type: "+getActivity().getIntent().getStringExtra("package_location_type"));
                 if(getActivity().getIntent().getStringExtra("package_location_type").equals("2")){
                     Log.i(TAG,"setting location to india");
-                    ((RadioButton)rgType.findViewById(R.id.rb_india)).setChecked(true);
+                    //((RadioButton)rgType.findViewById(R.id.rb_india)).setChecked(true);
+                    mstbLocationType.setValue(0);
                 }
                 else{
                     Log.i(TAG,"setting location to worldwide");
-                    ((RadioButton)rgType.findViewById(R.id.rb_worldWide)).setChecked(true);
+                    //((RadioButton)rgType.findViewById(R.id.rb_worldWide)).setChecked(true);
+                    mstbLocationType.setValue(1);
                 }
-                for (int i = 0; i < rgType.getChildCount(); i++) {
+                /*for (int i = 0; i < rgType.getChildCount(); i++) {
                     rgType.getChildAt(i).setEnabled(false);
-                }
-
+                }*/
+                mstbLocationType.setEnabled(false);
                 actDestination.setEnabled(false);
                 actDestination.setText(packageDestination);
 
@@ -148,7 +159,17 @@ public class FragmentHolidays extends Fragment implements DatePickerDialog.OnDat
 
         fabDone = (FloatingActionButton) rootView.findViewById(R.id.done);
 
-        rgType = (RadioGroup) rootView.findViewById(R.id.rg_type);
+        //rgType = (RadioGroup) rootView.findViewById(R.id.rg_type);
+
+        mstbLocationType=(MultiStateToggleButton) rootView.findViewById(R.id.mstb_locationType);
+        mstbLocationType.setElements(R.array.location_type, 0);
+        mstbLocationType.setOnValueChangedListener(new ToggleButton.OnValueChangedListener() {
+            @Override
+            public void onValueChanged(int position) {
+                selectedLocationType=position;
+            }
+        });
+
 
         rbPackageType = (RatingBar) rootView.findViewById(R.id.rb_packageType);
         rbPackageType.setStepSize(1);
@@ -209,7 +230,7 @@ public class FragmentHolidays extends Fragment implements DatePickerDialog.OnDat
         }
         formParams.put("Contact", etMobileNo.getText().toString());
         formParams.put("Email", app.getUser().getEmail());
-        formParams.put("Type", ((RadioButton) rgType.findViewById(rgType.getCheckedRadioButtonId())).getText().toString());
+        formParams.put("Type", locationType[selectedLocationType]);
         formParams.put("Depart Date", etBookingDate.getText().toString());
         formParams.put("Destination",actDestination.getText().toString());
         formParams.put("Adult", spAdult.getSelectedItem().toString());
@@ -259,9 +280,6 @@ public class FragmentHolidays extends Fragment implements DatePickerDialog.OnDat
                             dialog.dismiss();
                         }
                     });
-
-
-
 
         }
 

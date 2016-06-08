@@ -21,6 +21,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import extras.Log;
+
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -90,15 +92,18 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mToolbar.setLogo(R.drawable.bh_icon);
+        mToolbar.setLogo(R.drawable.bh_action_icon);
 
         viewPager = (ViewPager) findViewById(R.id.viewPager);
+        viewPager.setOffscreenPageLimit(3);
         setupViewPager(viewPager);
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         //tabLayout.setBackgroundColor(Color.parseColor("#2973bd"));
         //tabLayout.setTabTextColors(Color.parseColor("#a9c7e5"), Color.BLACK);
         tabLayout.setupWithViewPager(viewPager);
+
+        setupTabIcons();
 
         drawerFragment = (FragmentDrawer)
                 getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
@@ -124,6 +129,29 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
         }
 
 
+    }
+
+    private void setupTabIcons() {
+
+        TextView tabOne = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        tabOne.setText("FLIGHTS");
+        tabOne.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_airticket, 0, 0);
+        tabLayout.getTabAt(0).setCustomView(tabOne);
+
+        TextView tabTwo = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        tabTwo.setText("HOTELS");
+        tabTwo.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_hotel_new, 0, 0);
+        tabLayout.getTabAt(1).setCustomView(tabTwo);
+
+        TextView tabThree = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        tabThree.setText("HOLIDAYS");
+        tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_holiday_new, 0, 0);
+        tabLayout.getTabAt(2).setCustomView(tabThree);
+
+        TextView tabFour = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        tabFour.setText("VISA");
+        tabFour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_visa_new, 0, 0);
+        tabLayout.getTabAt(3).setCustomView(tabFour);
     }
 
     @Override
@@ -154,7 +182,7 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
     private void setupViewPager(ViewPager viewPager) {
 
 
-        adapter.addFragment(new FragmentAirTickets(), "AIR TICKETS");
+        adapter.addFragment(new FragmentAirTickets(), "FLIGHTS");
         adapter.addFragment(new FragmentHotels(), "HOTELS");
         adapter.addFragment(new FragmentHolidayPackages(), "HOLIDAYS");
         adapter.addFragment(new FragmentVisa(), "VISA");

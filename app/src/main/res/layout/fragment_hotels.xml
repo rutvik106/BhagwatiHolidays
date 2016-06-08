@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:ripple="http://schemas.android.com/tools"
+    android:background="@drawable/hotel"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -77,7 +78,17 @@
                     android:text="Type"
                     android:textSize="16sp" />
 
-                <LinearLayout
+                <org.honorato.multistatetogglebutton.MultiStateToggleButton
+                    android:id="@+id/mstb_locationType"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    app:values="@array/location_type"
+                    app:mstbPrimaryColor="@color/colorAccent"
+                    app:mstbSecondaryColor="@color/grey"/>
+
+                <!--<LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -108,7 +119,7 @@
                             android:textSize="16sp" />
                     </RadioGroup>
 
-                </LinearLayout>
+                </LinearLayout>-->
 
 
                 <LinearLayout

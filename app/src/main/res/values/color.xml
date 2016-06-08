@@ -14,6 +14,8 @@
     <color name="btnNormal">#F44336</color>
     <color name="btnPressed">#D73B2F</color>
 
+    <color name="grey">#eeeeee</color>
+
     <!--<color name="colorPrimary">#303F9F</color>
     <color name="colorPrimaryDark">#3F51B5</color>
     <color name="colorAccent">#303F9F</color>-->

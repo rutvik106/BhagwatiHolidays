@@ -35,6 +35,39 @@
         <item>@string/nav_item_locateus</item>
     </string-array>
 
+
+    <string name="visa_business">Business</string>
+    <string name="visa_visitors">Visitors</string>
+
+    <string-array name="visa_type">
+        <item>@string/visa_business</item>
+        <item>@string/visa_visitors</item>
+    </string-array>
+
+    <string name="location_india">India</string>
+    <string name="location_worldwide">Worldwide</string>
+
+    <string-array name="location_type">
+        <item>@string/location_india</item>
+        <item>@string/location_worldwide</item>
+    </string-array>
+
+    <string name="trip_oneWay">One Way</string>
+    <string name="trip_return">Return</string>
+
+    <string-array name="trip_type">
+        <item>@string/trip_oneWay</item>
+        <item>@string/trip_return</item>
+    </string-array>
+
+    <string name="class_economy">Economy</string>
+    <string name="class_business">Business</string>
+
+    <string-array name="class_type">
+        <item>@string/class_economy</item>
+        <item>@string/class_business</item>
+    </string-array>
+
     <string name="title_one">One</string>
     <string name="title_two">Two</string>
     <string name="title_three">Three</string>

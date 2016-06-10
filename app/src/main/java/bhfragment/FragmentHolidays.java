@@ -3,6 +3,7 @@ package bhfragment;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -43,6 +44,8 @@ public class FragmentHolidays extends Fragment implements DatePickerDialog.OnDat
 
     private static final String TAG = App.APP_TAG + FragmentHolidays.class.getSimpleName();
 
+    CoordinatorLayout clFragmentHolidays;
+
     EditText etMobileNo, etBookingDate;
     AutoCompleteTextView actDestination;
 //  RadioGroup rgType;
@@ -74,6 +77,8 @@ public class FragmentHolidays extends Fragment implements DatePickerDialog.OnDat
 
     String[] locationType;
     int selectedLocationType=0;
+
+    Calendar argCalendar=Calendar.getInstance();
 
     public FragmentHolidays() {
         // Required empty public constructor
@@ -138,6 +143,8 @@ public class FragmentHolidays extends Fragment implements DatePickerDialog.OnDat
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_holidays, container, false);
+
+        clFragmentHolidays=(CoordinatorLayout) rootView.findViewById(R.id.cl_fragmentHolidays);
 
         spAdult = (Spinner) rootView.findViewById(R.id.sp_adult);
         spAdult.setAdapter(app.getHotelAdultAdapter());
@@ -263,9 +270,9 @@ public class FragmentHolidays extends Fragment implements DatePickerDialog.OnDat
                                             FragmentHolidays.this.etMobileNo.requestFocus();
 
                                             CommonUtilities
-                                                    .showAlertDialog(getActivity(), "Holiday Booking",
+                                                    .showAlertDialog(getActivity(),clFragmentHolidays, "Holiday Booking",
                                                             "",
-                                                            "Holiday Booking in Bhagwati Holidays",etBookingDate.getText().toString());
+                                                            "Holiday Booking in Bhagwati Holidays",argCalendar);
 
 
                                         }
@@ -349,5 +356,8 @@ public class FragmentHolidays extends Fragment implements DatePickerDialog.OnDat
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
         String date = dayOfMonth + "-" + (monthOfYear + 1) + "-" + year;
         etBookingDate.setText(date);
+        argCalendar.set(Calendar.YEAR,year);
+        argCalendar.set(Calendar.MONTH,monthOfYear);
+        argCalendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
     }
 }

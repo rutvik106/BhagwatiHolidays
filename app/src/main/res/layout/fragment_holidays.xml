@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cl_fragmentHolidays"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:ripple="http://schemas.android.com/tools"
     android:background="@drawable/holiday"
@@ -261,26 +262,18 @@
 
 
 
-    <FrameLayout
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/done"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true">
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/done"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/fab"
-            android:src="@drawable/done"
-            android:layout_marginRight="@dimen/fab_margin_right"
-            android:layout_marginBottom="@dimen/fab_margin_bottom"
-            app:elevation="6dp"
-            app:fabSize="normal"
-            app:pressedTranslationZ="12dp" />
-
-    </FrameLayout>
+        android:layout_gravity="end|bottom"
+        android:layout_margin="16dp"
+        android:src="@drawable/done"
+        app:elevation="6dp"
+        app:fabSize="normal"
+        app:pressedTranslationZ="12dp" />
 
 
-
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

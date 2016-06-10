@@ -3,6 +3,7 @@ package bhfragment;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;;
 import android.text.Editable;
@@ -53,6 +54,8 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
 
     MultiStateToggleButton mstbClassType,mstbLocationType,mstbTripType;
 
+    CoordinatorLayout clFragmentAirTicket;
+
     String[] classType;
     int selectedClassType=0;
 
@@ -76,6 +79,8 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
     private int dateFlag;
 
     Map<Integer, OnGetDate> dateComponentMap = new HashMap<>();
+
+    Calendar argCalendar=Calendar.getInstance();
 
 
     @Override
@@ -104,6 +109,8 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_air_tickets, container, false);
+
+        clFragmentAirTicket=(CoordinatorLayout) rootView.findViewById(R.id.cl_fragmentAirTickets);
 
         etMobileNo = (EditText) rootView.findViewById(R.id.et_mobileNo);
 
@@ -301,8 +308,8 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
             public void onClick(View v) {
                 dateFlag = DEPART_DATE;
                 Calendar calendar = Calendar.getInstance();
-                calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-                        calendar.get(Calendar.DAY_OF_MONTH));
+                /*calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH));*/
 
                 datePickerDialog.setMinDate(calendar);
                 datePickerDialog.show(fragmentManager, "DepartDate");
@@ -350,6 +357,11 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
 
         String date = dayOfMonth + "-" + (monthOfYear + 1) + "-" + year;
         dateComponentMap.get(dateFlag).setText(date);
+        if(dateFlag==DEPART_DATE){
+            argCalendar.set(Calendar.YEAR,year);
+            argCalendar.set(Calendar.MONTH,monthOfYear);
+            argCalendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
+        }
 
     }
 
@@ -400,9 +412,9 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
                                             FragmentAirTickets.this.etMobileNo.requestFocus();
 
                                             CommonUtilities
-                                                    .showAlertDialog(getActivity(), "Air Ticket Booking",
+                                                    .showAlertDialog(getActivity(),clFragmentAirTicket, "Air Ticket Booking",
                                                             "",
-                                                            "Air Ticket Booking in Bhagwati Holidays",etDepartDate.getText().toString());
+                                                            "Air Ticket Booking in Bhagwati Holidays",argCalendar);
 
 
                                         }

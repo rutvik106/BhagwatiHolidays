@@ -4,6 +4,7 @@ import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -42,6 +43,8 @@ public class FragmentVisa extends Fragment implements DatePickerDialog.OnDateSet
 
     private static final String TAG = App.APP_TAG + FragmentVisa.class.getSimpleName();
 
+    CoordinatorLayout clFragmentVisa;
+
     FloatingActionButton fabDone;
     EditText etMobileNo, etDateOfTravel;
     AutoCompleteTextView actDestination;
@@ -64,6 +67,8 @@ public class FragmentVisa extends Fragment implements DatePickerDialog.OnDateSet
     String[] visaType;
 
     int selectedVisaType=1;
+
+    Calendar argCalendar=Calendar.getInstance();
 
     @Override
     public void onStart() {
@@ -90,6 +95,8 @@ public class FragmentVisa extends Fragment implements DatePickerDialog.OnDateSet
         View rootView = inflater.inflate(R.layout.fragment_visa, container, false);
 
         fragmentManager = getActivity().getFragmentManager();
+
+        clFragmentVisa=(CoordinatorLayout) rootView.findViewById(R.id.cl_fragmentVisa);
 
         fabDone = (FloatingActionButton) rootView.findViewById(R.id.done);
 
@@ -186,9 +193,9 @@ public class FragmentVisa extends Fragment implements DatePickerDialog.OnDateSet
                                             FragmentVisa.this.etMobileNo.requestFocus();
 
                                             CommonUtilities
-                                                    .showAlertDialog(getActivity(), "Visa Booking",
+                                                    .showAlertDialog(getActivity(),clFragmentVisa, "Visa Booking",
                                                             "",
-                                                            "Visa booking in Bhagwati Holidays",etDateOfTravel.getText().toString());
+                                                            "Visa booking in Bhagwati Holidays",argCalendar);
                                         }
                                     }, app);
 
@@ -210,6 +217,9 @@ public class FragmentVisa extends Fragment implements DatePickerDialog.OnDateSet
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
         String date = dayOfMonth + "-" + (monthOfYear + 1) + "-" + year;
         etDateOfTravel.setText(date);
+        argCalendar.set(Calendar.YEAR,year);
+        argCalendar.set(Calendar.MONTH,monthOfYear);
+        argCalendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
     }
 
     public boolean isFormParamValid(Map<String, String> formParams) {

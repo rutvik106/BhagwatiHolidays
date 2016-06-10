@@ -299,7 +299,9 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
     @Override
     public void onDrawerItemSelected(View view, int position) {
 
-        if(position==0){
+        //My Bookings
+        if(position==1){
+
             long startMillis= Calendar.getInstance().getTimeInMillis();
             Uri.Builder builder = CalendarContract.CONTENT_URI.buildUpon();
             builder.appendPath("time");
@@ -308,14 +310,19 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
                     .setData(builder.build());
             startActivity(intent);
         }
-        else if (position == 1) {
+        //Offers and Promotions
+        else if (position == 0) {
             startActivity(new Intent(this, OffersActivity.class));
-        } else if (position == 2) {
+        }
+        //Support
+        else if (position == 5) {
             app.trackEvent(SwipeTabActivity.class.getSimpleName(),"SUPPORT CLICKED","NAV ACTION");
             Intent supportIntent = new Intent(Intent.ACTION_DIAL);
             supportIntent.setData(Uri.parse("tel:07940223333"));
             startActivity(supportIntent);
-        } else if (position == 5) {
+        }
+        //Send Feedback
+        else if (position == 7) {
             app.trackEvent(SwipeTabActivity.class.getSimpleName(),"SEND FEEDBACK CLICKED","NAV ACTION");
             Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
             emailIntent.setType("plain/text");
@@ -323,9 +330,13 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
             emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Feedback");
             emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Text");
             startActivity(Intent.createChooser(emailIntent, "Send mail..."));
-        } else if (position == 7) {
+        }
+        //Locate Us
+        else if (position == 6) {
             startActivity(new Intent(SwipeTabActivity.this, LocateUsActivity.class));
-        } else if (position == 6) {
+        }
+        //Disable/Enable Notifications
+        else if (position == 4) {
 
             CommonUtilities.showSimpleAlertDialog(this,
                     "Alert",

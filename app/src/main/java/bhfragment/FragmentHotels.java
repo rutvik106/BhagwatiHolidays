@@ -3,6 +3,7 @@ package bhfragment;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -42,6 +43,8 @@ public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateS
 
     private static final String TAG = App.APP_TAG + FragmentHotels.class.getSimpleName();
 
+    CoordinatorLayout clFragmentHotels;
+
     EditText etMobileNo, etBookingDate;
     AutoCompleteTextView etDestination;
     //RadioGroup radioGroupType;
@@ -60,6 +63,8 @@ public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateS
     private GetTermsAsync getTermsAsync;
 
     boolean isFormValid = true;
+
+    Calendar argCalendar=Calendar.getInstance();
 
     @Override
     public void onAttach(Activity activity) {
@@ -83,6 +88,8 @@ public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateS
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_hotels, container, false);
+
+        clFragmentHotels=(CoordinatorLayout) rootView.findViewById(R.id.cl_fragmentHotels);
 
         spAdult = (Spinner) rootView.findViewById(R.id.sp_adult);
         spAdult.setAdapter(app.getHotelAdultAdapter());
@@ -195,9 +202,9 @@ public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateS
                                             FragmentHotels.this.etMobileNo.requestFocus();
 
                                             CommonUtilities
-                                                    .showAlertDialog(getActivity(), "Hotel Booking",
+                                                    .showAlertDialog(getActivity(),clFragmentHotels, "Hotel Booking",
                                                             "",
-                                                            "Hotel Booking in Bhagwati Holidays",etBookingDate.getText().toString());
+                                                            "Hotel Booking in Bhagwati Holidays",argCalendar);
                                         }
                                     }, app);
                             sendMail.execute(formParams);
@@ -218,6 +225,9 @@ public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateS
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
         String date = dayOfMonth + "-" + (monthOfYear + 1) + "-" + year;
         etBookingDate.setText(date);
+        argCalendar.set(Calendar.YEAR,year);
+        argCalendar.set(Calendar.MONTH,monthOfYear);
+        argCalendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
     }
 
     @Override

@@ -1,11 +1,16 @@
 package extras;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.provider.CalendarContract;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
@@ -23,6 +28,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import adapter.NavigationDrawerAdapter;
 import webservicehandler.PostHandler;
@@ -187,15 +193,8 @@ public final class CommonUtilities {
     }
 
 
-    public static void showAlertDialog(final Context context, final String calendarTitle
-            , final String calendarLocation, final String calendarDescription, final String date) {
-        final Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat df=new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-        try {
-            calendar.setTime(df.parse(date));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+    public static void showAlertDialog(final Context context,final CoordinatorLayout cl, final String calendarTitle
+            , final String calendarLocation, final String calendarDescription, final Calendar argCalendar) {
 
         Log.d(TAG, "In AlertDialog.......");
         new AlertDialog.Builder(context)
@@ -203,12 +202,14 @@ public final class CommonUtilities {
                 .setMessage("Inquiry successfully submitted! We will contact you shortly!")
                 .setPositiveButton("Set Reminder", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        CommonUtilities.createCalendarEntry(context,
+
+                        createSilentCalendarEntry(context,cl,calendarTitle,calendarDescription,argCalendar.getTimeInMillis(),(argCalendar.getTimeInMillis()+1152*60*1000));
+                        /*CommonUtilities.createCalendarEntry(context,
                                 calendarTitle,
                                 calendarLocation,
                                 calendarDescription,
                                 new GregorianCalendar(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-                                        calendar.get(Calendar.DAY_OF_MONTH)));
+                                        calendar.get(Calendar.DAY_OF_MONTH)));*/
                     }
                 })
                 .setNegativeButton("Done", new DialogInterface.OnClickListener() {
@@ -252,5 +253,38 @@ public final class CommonUtilities {
                 .show();
     }
 
+
+    public static void createSilentCalendarEntry(Context context,CoordinatorLayout cl,String title,String description,Long eventStartDate,Long eventEndDate){
+        final ContentValues event = new ContentValues();
+        event.put(CalendarContract.Events.CALENDAR_ID, 1);
+        event.put(CalendarContract.Events.TITLE, title);
+        event.put(CalendarContract.Events.DESCRIPTION, description);
+
+
+        /*Log.i(TAG,"argCalaendar.getTimeInMillis(): "+argCalaendar.getTimeInMillis());
+        Log.i(TAG,"argCalaendar.getTimeInMillis() + 1 * 60 * 1000: "+(argCalaendar.getTimeInMillis() + 1 * 60 * 1000));
+        Log.i(TAG,"argCalaendar.getTimeInMillis() + 5760 * 60 * 1000: "+(argCalaendar.getTimeInMillis() + 5760 * 60 * 1000));*/
+
+
+        event.put(CalendarContract.Events.DTSTART, eventStartDate);
+        event.put(CalendarContract.Events.DTEND, eventEndDate);
+
+        String timeZone = TimeZone.getDefault().getID();
+        event.put(CalendarContract.Events.EVENT_TIMEZONE, timeZone);
+
+        Uri baseUri;
+        if (Build.VERSION.SDK_INT >= 8) {
+            baseUri = Uri.parse("content://com.android.calendar/events");
+        } else {
+            baseUri = Uri.parse("content://calendar/events");
+        }
+        context.getContentResolver().insert(baseUri, event);
+
+        final Snackbar snackbar = Snackbar
+                .make(cl, "Reminder Set!", Snackbar.LENGTH_SHORT);
+
+        snackbar.show();
+
+    }
 
 }

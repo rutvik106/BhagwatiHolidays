@@ -39,7 +39,8 @@ dependencies {
     compile 'com.facebook.android:facebook-android-sdk:4.0.1'
     compile 'io.branch.sdk.android:library:1.5.4'
     compile 'com.google.android.gms:play-services-maps:8.4.0'
-    compile 'com.balysv:material-ripple:1.0.2'
+    compile 'com.android.support:percent:23.4.0'
+    compile 'com.aurelhubert:ahbottomnavigation:1.1.8'
 }
 
 apply plugin: 'com.google.gms.google-services'

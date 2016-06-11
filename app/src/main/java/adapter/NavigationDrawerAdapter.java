@@ -50,18 +50,21 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
         Log.i(TAG,"setting navigation drawer data....");
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         Set<String> navDrawerTitleSet = new LinkedHashSet<>();
-        navDrawerTitleSet.add("My Bookings");
         navDrawerTitleSet.add("Offers & Promotions");
-        navDrawerTitleSet.add("Support");
-        navDrawerTitleSet.add("Rate Us");
+        navDrawerTitleSet.add("My Bookings");
         navDrawerTitleSet.add("Share");
-        navDrawerTitleSet.add("Send Feedback");
+        navDrawerTitleSet.add("Rate Us");
+
         if (sp.getBoolean("IS_NOTIFICATION_DISABLED", false)) {
             navDrawerTitleSet.add("Enable Notifications");
         } else {
             navDrawerTitleSet.add("Disable Notifications");
         }
+
+        navDrawerTitleSet.add("Support");
         navDrawerTitleSet.add("Locate Us");
+        navDrawerTitleSet.add("Send Feedback");
+
 
         // preparing navigation drawer items
         for (String t : navDrawerTitleSet) {

@@ -74,4 +74,8 @@
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_payment">PaymentActivity</string>
 
+    <string name="flight">FLIGHT</string>
+    <string name="holiday">HOLIDAY</string>
+    <string name="hotel">HOTEL</string>
+
 </resources>

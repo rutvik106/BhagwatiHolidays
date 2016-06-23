@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+
 import extras.Log;
 
 import android.view.LayoutInflater;
@@ -215,7 +216,7 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
 
 
     @Override
-     public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.bh_menu, menu);
 
         // Associate searchable configuration with the SearchView
@@ -300,15 +301,18 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
     public void onDrawerItemSelected(View view, int position) {
 
         //My Bookings
-        if(position==1){
+        if (position == 1) {
 
-            long startMillis= Calendar.getInstance().getTimeInMillis();
-            Uri.Builder builder = CalendarContract.CONTENT_URI.buildUpon();
-            builder.appendPath("time");
-            ContentUris.appendId(builder, startMillis);
-            Intent intent = new Intent(Intent.ACTION_VIEW)
-                    .setData(builder.build());
-            startActivity(intent);
+//            long startMillis= Calendar.getInstance().getTimeInMillis();
+//            Uri.Builder builder = CalendarContract.CONTENT_URI.buildUpon();
+//            builder.appendPath("time");
+//            ContentUris.appendId(builder, startMillis);
+//            Intent intent = new Intent(Intent.ACTION_VIEW)
+//                    .setData(builder.build());
+//            startActivity(intent);
+            // TODO: 11-06-2016 Bottom bar
+
+            startActivity(new Intent(SwipeTabActivity.this, MyBookingActivity.class));
         }
         //Offers and Promotions
         else if (position == 0) {
@@ -316,14 +320,14 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
         }
         //Support
         else if (position == 5) {
-            app.trackEvent(SwipeTabActivity.class.getSimpleName(),"SUPPORT CLICKED","NAV ACTION");
+            app.trackEvent(SwipeTabActivity.class.getSimpleName(), "SUPPORT CLICKED", "NAV ACTION");
             Intent supportIntent = new Intent(Intent.ACTION_DIAL);
             supportIntent.setData(Uri.parse("tel:07940223333"));
             startActivity(supportIntent);
         }
         //Send Feedback
         else if (position == 7) {
-            app.trackEvent(SwipeTabActivity.class.getSimpleName(),"SEND FEEDBACK CLICKED","NAV ACTION");
+            app.trackEvent(SwipeTabActivity.class.getSimpleName(), "SEND FEEDBACK CLICKED", "NAV ACTION");
             Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
             emailIntent.setType("plain/text");
             emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{"info@bhagwatiholidays.com"});

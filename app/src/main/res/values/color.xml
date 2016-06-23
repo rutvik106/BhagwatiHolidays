@@ -16,6 +16,8 @@
 
     <color name="grey">#eeeeee</color>
 
+    <color name="color_tab">#FFFFFF</color>
+
     <!--<color name="colorPrimary">#303F9F</color>
     <color name="colorPrimaryDark">#3F51B5</color>
     <color name="colorAccent">#303F9F</color>-->

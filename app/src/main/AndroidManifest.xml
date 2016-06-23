@@ -63,7 +63,7 @@
         <activity
             android:name=".SwipeTabActivity"
             android:label="Bhagwati Holidays"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".OffersActivity"
             android:label="Offers"
@@ -83,7 +83,9 @@
         <activity android:name=".BusActivity" />
         <activity android:name=".LocateUsActivity" />
         <activity android:name=".SettingsActivity" />
-        <activity android:name=".HolidayFormActivity" />
+        <activity
+            android:name=".HolidayFormActivity"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity android:name=".SinglePackageViewActivity" />
         <activity android:name=".SingleOfferViewActivity" />
 
@@ -122,7 +124,21 @@
             android:name=".PaymentActivity"
             android:label="@string/title_activity_payment"
             android:theme="@style/MyMaterialTheme" />
-        <activity android:name=".MyBookingActivity"></activity>
+
+        <activity android:name=".MyBookingActivity"
+            android:parentActivityName=".SwipeTabActivity"/>
+        <activity
+            android:name=".BookingDetailsActivity">
+
+        </activity>
+        <activity
+            android:name=".HolidayBookingDetailsActivity">
+
+        </activity>
+        <activity
+            android:name=".HotelBookingDetailsActivity">
+
+        </activity>
     </application>
 
 </manifest>

@@ -15,10 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.rutvik.bhagwatiholidays.App;
 import com.rutvik.bhagwatiholidays.R;
@@ -46,7 +43,7 @@ public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateS
     CoordinatorLayout clFragmentHotels;
 
     EditText etMobileNo, etBookingDate;
-    AutoCompleteTextView etDestination;
+    AutoCompleteTextView actDestination;
     //RadioGroup radioGroupType;
 
     MultiStateToggleButton mstbLocationType;
@@ -119,6 +116,7 @@ public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateS
             @Override
             public void onValueChanged(int position) {
                 selectedLocationType=position;
+                CommonUtilities.hideKeyboard(getActivity(),getActivity().getCurrentFocus());
             }
         });
 
@@ -126,10 +124,30 @@ public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateS
 
         etMobileNo = (EditText) rootView.findViewById(R.id.et_mobileNo);
 
+        etMobileNo.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.length()==10){
+                    CommonUtilities.hideKeyboard(getActivity(),getActivity().getCurrentFocus());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+
         etBookingDate = (EditText) rootView.findViewById(R.id.et_bookingDate);
 
-        etDestination = (AutoCompleteTextView) rootView.findViewById(R.id.et_destination);
-        etDestination.addTextChangedListener(this);
+        actDestination = (AutoCompleteTextView) rootView.findViewById(R.id.et_destination);
+        actDestination.addTextChangedListener(this);
 
         etBookingDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -150,6 +168,7 @@ public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateS
         Calendar calendar = Calendar.getInstance();
         datePickerDialog = DatePickerDialog.newInstance(this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.setMinDate(calendar);
 
         fabDone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -178,7 +197,7 @@ public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateS
         formParams.put("Adult", spAdult.getSelectedItem().toString());
         formParams.put("Child", spChild.getSelectedItem().toString());
         formParams.put("Infant", spInfant.getSelectedItem().toString());
-        formParams.put("Destination", etDestination.getText().toString());
+        formParams.put("Destination", actDestination.getText().toString());
         formParams.put("No. of Nights", spNoOfNights.getSelectedItem().toString());
 
         if (isFormParamValid(formParams)) {
@@ -240,12 +259,13 @@ public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateS
         Log.i(TAG, "TEXT CHANGED TO: " + s.toString());
         if (!TextUtils.isEmpty(s.toString())) {
             Log.i(TAG, "TEXT CHENGED IN FROM: " + s.toString());
-            if (!TextUtils.isEmpty(s.toString()) && s.toString().length() > 2) {
+            if (!TextUtils.isEmpty(s.toString()) && s.toString().length() > 1) {
                 if (getTermsAsync != null) {
                     getTermsAsync.cancel(true);
                     getTermsAsync = null;
                 }
-                getTermsAsync = new GetTermsAsync(etDestination, getActivity(), CommonUtilities.URL_DESTINATIONS);
+                actDestination.showDropDown();
+                getTermsAsync = new GetTermsAsync(actDestination, getActivity(), CommonUtilities.URL_DESTINATIONS);
                 getTermsAsync.execute(s.toString());
             }
         }
@@ -273,7 +293,7 @@ public class FragmentHotels extends Fragment implements DatePickerDialog.OnDateS
             @Override
             public void validationResult(boolean status,String msg) {
                 //Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
-                etDestination.setError(msg);
+                actDestination.setError(msg);
                 isFormValid = isFormValid&status;
             }
         });

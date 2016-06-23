@@ -152,7 +152,7 @@
                             android:id="@+id/tv_packageDescription"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="hello"
+
                             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
                     </LinearLayout>

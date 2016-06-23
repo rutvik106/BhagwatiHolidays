@@ -15,6 +15,7 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -53,6 +54,8 @@ public final class CommonUtilities {
     public static final String URL_FB = "https://www.facebook.com/bhagwatiholidays";
 
     public static final String URL_WEBSITE_PACKAGE = "http://bhagwatiholidays.com/package.php?id=";
+
+    public static final String URL_WEBSERVICE="http://www.bhagwatiholidays.com/admin/webservice/index.php";
 
 
     public static void disableNotification(final Context context, final SharedPreferences sp, final NavigationDrawerAdapter adapter) {
@@ -286,5 +289,14 @@ public final class CommonUtilities {
         snackbar.show();
 
     }
+
+
+    public static void hideKeyboard(Context context,View currentlyFocusedView){
+        if (currentlyFocusedView != null) {
+            InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(currentlyFocusedView.getWindowToken(), 0);
+        }
+    }
+
 
 }

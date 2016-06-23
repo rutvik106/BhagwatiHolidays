@@ -1,9 +1,13 @@
 package com.rutvik.bhagwatiholidays;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -19,6 +23,8 @@ public class LocateUsActivity extends AppCompatActivity implements OnMapReadyCal
 
     App app;
 
+    TextView tvContactNumberLink;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +33,17 @@ public class LocateUsActivity extends AppCompatActivity implements OnMapReadyCal
         app=(App) getApplication();
 
         app.trackScreenView(LocateUsActivity.class.getSimpleName());
+
+        tvContactNumberLink=(TextView) findViewById(R.id.tv_contactNumberLink);
+        tvContactNumberLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                app.trackEvent(SwipeTabActivity.class.getSimpleName(), "SUPPORT CLICKED", "NAV ACTION");
+                Intent supportIntent = new Intent(Intent.ACTION_DIAL);
+                supportIntent.setData(Uri.parse("tel:07940223333"));
+                startActivity(supportIntent);
+            }
+        });
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);

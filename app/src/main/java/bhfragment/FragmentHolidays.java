@@ -174,6 +174,7 @@ public class FragmentHolidays extends Fragment implements DatePickerDialog.OnDat
             @Override
             public void onValueChanged(int position) {
                 selectedLocationType=position;
+                CommonUtilities.hideKeyboard(getActivity(),getActivity().getCurrentFocus());
             }
         });
 
@@ -182,6 +183,26 @@ public class FragmentHolidays extends Fragment implements DatePickerDialog.OnDat
         rbPackageType.setStepSize(1);
 
         etMobileNo = (EditText) rootView.findViewById(R.id.et_mobileNo);
+
+        etMobileNo.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.length()==10){
+                    CommonUtilities.hideKeyboard(getActivity(),getActivity().getCurrentFocus());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
 
         etBookingDate = (EditText) rootView.findViewById(R.id.et_bookingDate);
 
@@ -206,6 +227,7 @@ public class FragmentHolidays extends Fragment implements DatePickerDialog.OnDat
         Calendar calendar = Calendar.getInstance();
         datePickerDialog = DatePickerDialog.newInstance(this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.setMinDate(calendar);
 
         actDestination = (AutoCompleteTextView) rootView.findViewById(R.id.et_destination);
 
@@ -238,12 +260,13 @@ public class FragmentHolidays extends Fragment implements DatePickerDialog.OnDat
         formParams.put("Contact", etMobileNo.getText().toString());
         formParams.put("Email", app.getUser().getEmail());
         formParams.put("Type", locationType[selectedLocationType]);
-        formParams.put("Depart Date", etBookingDate.getText().toString());
+        formParams.put("Booking Date", etBookingDate.getText().toString());
         formParams.put("Destination",actDestination.getText().toString());
         formParams.put("Adult", spAdult.getSelectedItem().toString());
         formParams.put("Child", spChild.getSelectedItem().toString());
         formParams.put("Infant", spInfant.getSelectedItem().toString());
         formParams.put("Package Type",String.valueOf(rbPackageType.getRating()));
+        formParams.put("No. of Nights",spNoOfNights.getSelectedItem().toString());
 
         Log.d(TAG, "Check check........!!!!");
 
@@ -307,7 +330,7 @@ public class FragmentHolidays extends Fragment implements DatePickerDialog.OnDat
             }
         });
 
-        Validator.validateDate(formParams.get("Depart Date"), new Validator.ValidationListener() {
+        Validator.validateDate(formParams.get("Booking Date"), new Validator.ValidationListener() {
             @Override
             public void validationResult(boolean status,String msg) {
                 //Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
@@ -337,13 +360,14 @@ public class FragmentHolidays extends Fragment implements DatePickerDialog.OnDat
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         Log.i(TAG, "TEXT CHANGED TO: " + s.toString());
-        if (!TextUtils.isEmpty(s.toString()) && s.toString().length() > 2) {
+        if (!TextUtils.isEmpty(s.toString()) && s.toString().length() > 1 && actDestination.isEnabled()) {
             if (getTermsAsync != null) {
                 getTermsAsync.cancel(true);
                 getTermsAsync = null;
             }
             getTermsAsync = new GetTermsAsync(actDestination, getActivity(), CommonUtilities.URL_DESTINATIONS);
             getTermsAsync.execute(s.toString());
+            actDestination.showDropDown();
         }
     }
 

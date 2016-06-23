@@ -159,7 +159,6 @@ public class OffersActivity extends AppCompatActivity implements SearchView.OnQu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.offers_menu, menu);
-
         // Associate searchable configuration with the SearchView
         // SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));

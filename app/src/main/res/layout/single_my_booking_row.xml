@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="5dp"
+    android:layout_width="match_parent"
+    android:layout_height="70dp">
+
+    <ImageView
+        android:id="@+id/iv_myBooking"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_airticket4"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:padding="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/iv_myBooking"
+        android:layout_centerVertical="true"
+        android:orientation="vertical">
+
+    <TextView
+        android:marqueeRepeatLimit="marquee_forever"
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:id="@+id/tv_myBookingTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15dp"
+        android:textColor="#000000"
+        android:text="BOM-AMD"
+        android:layout_marginBottom="5dp"/>
+
+        <TextView
+            android:id="@+id/tv_myBookingDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12dp"
+            android:text="Mon, 02 May"/>
+
+    </LinearLayout>
+
+    <View android:id="@+id/separator"
+        android:background="#dddddd"
+        android:layout_width = "fill_parent"
+        android:layout_height="1dip"
+        android:layout_alignParentBottom="true"/>
+
+</RelativeLayout>

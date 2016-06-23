@@ -137,6 +137,7 @@ public class FragmentVisa extends Fragment implements DatePickerDialog.OnDateSet
         Calendar calendar = Calendar.getInstance();
         datePickerDialog = DatePickerDialog.newInstance(this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.setMinDate(calendar);
 
         etDateOfTravel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -264,13 +265,14 @@ public class FragmentVisa extends Fragment implements DatePickerDialog.OnDateSet
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         Log.i(TAG, "TEXT CHANGED TO: " + s.toString());
-        if (!TextUtils.isEmpty(s.toString()) && s.toString().length() > 2) {
+        if (!TextUtils.isEmpty(s.toString()) && s.toString().length() > 1) {
             if (getTermsAsync != null) {
                 getTermsAsync.cancel(true);
                 getTermsAsync = null;
             }
             getTermsAsync = new GetTermsAsync(actDestination, getActivity(), CommonUtilities.URL_DESTINATIONS);
             getTermsAsync.execute(s.toString());
+            actDestination.showDropDown();
         }
     }
 

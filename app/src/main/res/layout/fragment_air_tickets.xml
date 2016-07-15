@@ -6,12 +6,12 @@
     android:layout_height="match_parent"
     android:background="@drawable/airticket">
 
-    <!--<ImageView
+    <ImageView
         android:id="@+id/iv_swipeTabBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:src="@drawable/airticket"
-        android:scaleType="centerCrop"/>-->
+        android:scaleType="centerCrop"/>
 
     <ScrollView
         android:layout_width="match_parent"

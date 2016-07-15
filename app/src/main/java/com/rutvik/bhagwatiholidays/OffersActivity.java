@@ -14,7 +14,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
+import android.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -84,6 +84,8 @@ public class OffersActivity extends AppCompatActivity implements SearchView.OnQu
 
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setBackgroundDrawable(null);
+        getSupportActionBar().setElevation(4);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.rcv_offers);
 
@@ -120,12 +122,11 @@ public class OffersActivity extends AppCompatActivity implements SearchView.OnQu
     }
 
 
-
     @Override
     public void onStart() {
         super.onStart();
 
-        Branch branch = Branch.getInstance(this,"key_live_jobYwEC4RDj7qiGLV32VjhfiuuomI8ua");
+        Branch branch = Branch.getInstance(this, "key_live_jobYwEC4RDj7qiGLV32VjhfiuuomI8ua");
         branch.initSession(new Branch.BranchReferralInitListener() {
             @Override
             public void onInitFinished(JSONObject referringParams, BranchError error) {
@@ -281,7 +282,7 @@ public class OffersActivity extends AppCompatActivity implements SearchView.OnQu
 
         for (int i = 0; i < array.length(); i++) {
             JSONObject obj = array.getJSONObject(i);
-            if(obj.getString("visible").equals("1")) {
+            if (obj.getString("visible").equals("1")) {
                 SimpleOffersAndPromotions model = new SimpleOffersAndPromotions();
                 model.setImageUrl(obj.getString("image_url"));
                 model.setTitle(obj.getString("title"));

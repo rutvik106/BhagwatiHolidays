@@ -60,6 +60,7 @@ public class HolidayBookingDetailsActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
         tvBdEmail = (TextView) findViewById(R.id.tv_bdEmail);
         tvBdContact = (TextView) findViewById(R.id.tv_bdContact);
         tvBdLocationType = (TextView) findViewById(R.id.tv_bdLocationType);

@@ -20,12 +20,13 @@ public class HolidayFormActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_holiday_form);
-        app=(App) getApplication();
+        app = (App) getApplication();
         app.trackScreenView(HolidayFormActivity.class.getSimpleName());
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setBackgroundDrawable(null);
 
         setTitle("Holiday Booking");
 

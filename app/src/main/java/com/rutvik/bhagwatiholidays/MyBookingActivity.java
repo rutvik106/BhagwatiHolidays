@@ -56,6 +56,7 @@ public class MyBookingActivity extends AppCompatActivity {
 
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setBackgroundDrawable(null);
 
         bottomNavigation = (AHBottomNavigation) findViewById(R.id.bottom_navigation);
         //floatingActionButton = (FloatingActionButton) findViewById(R.id.floating_action_button);

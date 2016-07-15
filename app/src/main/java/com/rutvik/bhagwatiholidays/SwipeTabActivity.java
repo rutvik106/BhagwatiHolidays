@@ -18,7 +18,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
+import android.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 
 import extras.Log;
@@ -67,6 +67,8 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
 
     MenuItem search;
 
+    SearchView searchView;
+
     public com.nostra13.universalimageloader.core.ImageLoader imageLoader;
     public DisplayImageOptions options;
     PlusOneButton mPlusOneButton;
@@ -91,10 +93,11 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
         app.trackScreenView(SwipeTabActivity.class.getName());
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
+
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mToolbar.setLogo(R.drawable.bh_action_icon);
-
+        //mToolbar.setLogo(R.drawable.bh_action_icon);
+        getSupportActionBar().setTitle("");
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         viewPager.setOffscreenPageLimit(3);
         setupViewPager(viewPager);
@@ -221,8 +224,25 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
 
         // Associate searchable configuration with the SearchView
         // SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
+        searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
+
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.toolbar_logo));
+                return false;
+            }
+        });
+
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getSupportActionBar().setBackgroundDrawable((getResources().getDrawable(R.color.white)));
+            }
+        });
+
         search = menu.findItem(R.id.action_search);
+
         search.setVisible(isOnPackagesPage);
         //searchView.setVisibility(View.GONE);
         // searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
@@ -261,7 +281,11 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-
+            case R.id.action_search:
+                if(searchView.isActivated()) {
+                    getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.white));
+                }
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

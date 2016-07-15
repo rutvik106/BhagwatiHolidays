@@ -35,7 +35,7 @@ public class PostHandler {
     }
 
 
-    public void doPostRequest(String serverUrl, Map<String, String> params, ResponseCallback callback) {
+    public String doPostRequest(String serverUrl, Map<String, String> params, ResponseCallback callback) {
 
         if(serverUrl=="" || serverUrl==null){
             throw new IllegalArgumentException("Server Url cannot be blank or null");
@@ -84,6 +84,7 @@ public class PostHandler {
                 backOff *= 2;
             }
         }
+        return serverUrl;
     }
 
 

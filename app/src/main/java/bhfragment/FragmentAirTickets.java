@@ -26,6 +26,7 @@ import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import org.honorato.multistatetogglebutton.MultiStateToggleButton;
 import org.honorato.multistatetogglebutton.ToggleButton;
+import org.w3c.dom.Text;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -114,6 +115,25 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
 
         etMobileNo = (EditText) rootView.findViewById(R.id.et_mobileNo);
 
+        etMobileNo.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.length()==10){
+                    CommonUtilities.hideKeyboard(getActivity(),getActivity().getCurrentFocus());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         actFrom = (AutoCompleteTextView) rootView.findViewById(R.id.et_from);
         actFrom.setThreshold(3);
         actTo = (AutoCompleteTextView) rootView.findViewById(R.id.et_to);
@@ -156,6 +176,7 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
             @Override
             public void onValueChanged(int position) {
                 selectedClassType=position;
+                CommonUtilities.hideKeyboard(getActivity(),getActivity().getCurrentFocus());
             }
         });
 
@@ -165,6 +186,7 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
             @Override
             public void onValueChanged(int position) {
                 selectedLocationType=position;
+                CommonUtilities.hideKeyboard(getActivity(),getActivity().getCurrentFocus());
             }
         });
 
@@ -194,6 +216,10 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
                     dateFlag = DEPART_DATE;
+                    Calendar calendar = Calendar.getInstance();
+                    datePickerDialog = DatePickerDialog.newInstance(FragmentAirTickets.this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                            calendar.get(Calendar.DAY_OF_MONTH));
+                    datePickerDialog.setMinDate(calendar);
                     datePickerDialog.show(fragmentManager, "DepartDate");
                 }
             }
@@ -203,8 +229,17 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    dateFlag = RETURN_DATE;
-                    datePickerDialog.show(fragmentManager, "ReturnDate");
+                    if(!TextUtils.isEmpty(etDepartDate.getText())) {
+                        dateFlag = RETURN_DATE;
+                        datePickerDialog = DatePickerDialog.newInstance(FragmentAirTickets.this, argCalendar.get(Calendar.YEAR), argCalendar.get(Calendar.MONTH),
+                                argCalendar.get(Calendar.DAY_OF_MONTH));
+                        datePickerDialog.setMinDate(argCalendar);
+                        datePickerDialog.show(fragmentManager, "ReturnDate");
+                    }
+                    else{
+                        etDepartDate.requestFocus();
+                        Toast.makeText(getActivity(),"Set depart date first",Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -225,6 +260,7 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
                     }
                     getTermsAsync = new GetTermsAsync(actFrom, getActivity(), CommonUtilities.URL_FROM_TO);
                     getTermsAsync.execute(s.toString());
+                    actFrom.showDropDown();
                 }
             }
 
@@ -243,13 +279,14 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 Log.i(TAG, "TEXT CHENGED IN FROM: " + s.toString());
-                if (!TextUtils.isEmpty(s.toString()) && s.toString().length() > 2) {
+                if (!TextUtils.isEmpty(s.toString()) && s.toString().length() > 1) {
                     if (getTermsAsync != null) {
                         getTermsAsync.cancel(true);
                         getTermsAsync = null;
                     }
                     getTermsAsync = new GetTermsAsync(actTo, getActivity(), CommonUtilities.URL_FROM_TO);
                     getTermsAsync.execute(s.toString());
+                    actTo.showDropDown();
                 }
             }
 
@@ -308,9 +345,8 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
             public void onClick(View v) {
                 dateFlag = DEPART_DATE;
                 Calendar calendar = Calendar.getInstance();
-                /*calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-                        calendar.get(Calendar.DAY_OF_MONTH));*/
-
+                datePickerDialog = DatePickerDialog.newInstance(FragmentAirTickets.this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH));
                 datePickerDialog.setMinDate(calendar);
                 datePickerDialog.show(fragmentManager, "DepartDate");
             }
@@ -319,15 +355,19 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
         etReturnDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dateFlag = RETURN_DATE;
-                datePickerDialog.show(fragmentManager, "ReturnDate");
+                if(!TextUtils.isEmpty(etDepartDate.getText())) {
+                    dateFlag = RETURN_DATE;
+                    datePickerDialog = DatePickerDialog.newInstance(FragmentAirTickets.this, argCalendar.get(Calendar.YEAR), argCalendar.get(Calendar.MONTH),
+                            argCalendar.get(Calendar.DAY_OF_MONTH));
+                    datePickerDialog.setMinDate(argCalendar);
+                    datePickerDialog.show(fragmentManager, "ReturnDate");
+                }
+                else{
+                    etDepartDate.requestFocus();
+                    Toast.makeText(getActivity(),"Set depart date first",Toast.LENGTH_LONG).show();
+                }
             }
         });
-
-        Calendar calendar = Calendar.getInstance();
-        datePickerDialog = DatePickerDialog.newInstance(this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH));
-
 
         fabDone.setOnClickListener(new View.OnClickListener() {
             @Override

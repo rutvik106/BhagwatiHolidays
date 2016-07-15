@@ -136,22 +136,22 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
 
         TextView tabOne = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         tabOne.setText("FLIGHTS");
-        tabOne.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_airticket, 0, 0);
+        tabOne.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_airticket4, 0, 0);
         tabLayout.getTabAt(0).setCustomView(tabOne);
 
         TextView tabTwo = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         tabTwo.setText("HOTELS");
-        tabTwo.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_hotel_new, 0, 0);
+        tabTwo.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_hotel2, 0, 0);
         tabLayout.getTabAt(1).setCustomView(tabTwo);
 
         TextView tabThree = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         tabThree.setText("HOLIDAYS");
-        tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_holiday_new, 0, 0);
+        tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_holiday2, 0, 0);
         tabLayout.getTabAt(2).setCustomView(tabThree);
 
         TextView tabFour = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         tabFour.setText("VISA");
-        tabFour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_visa_new, 0, 0);
+        tabFour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_visa2, 0, 0);
         tabLayout.getTabAt(3).setCustomView(tabFour);
     }
 
@@ -310,9 +310,9 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
 //            Intent intent = new Intent(Intent.ACTION_VIEW)
 //                    .setData(builder.build());
 //            startActivity(intent);
-            // TODO: 11-06-2016 Bottom bar
 
             startActivity(new Intent(SwipeTabActivity.this, MyBookingActivity.class));
+
         }
         //Offers and Promotions
         else if (position == 0) {

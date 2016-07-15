@@ -28,12 +28,31 @@ Ahmedabad - 380015
 Gujarat. "
         android:textSize="18sp" />
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="CONTACT: 079-40223333"
-        android:textSize="18sp" />
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:text="Contact:  "
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_contactNumberLink"
+            android:textColor="@color/wallet_holo_blue_light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="079-40223333"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+
 
 </LinearLayout>
 

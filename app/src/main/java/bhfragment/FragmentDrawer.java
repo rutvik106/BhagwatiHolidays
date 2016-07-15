@@ -91,7 +91,7 @@ public class FragmentDrawer extends Fragment {
         View layout = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
         recyclerView = (RecyclerView) layout.findViewById(R.id.drawerList);
 
-        LikeView likeView = (LikeView) layout.findViewById(R.id.likeView);
+        LikeView likeView = (LikeView) layout.findViewById(R.id.likeView); //sometimes misbehave
         likeView.setLikeViewStyle(LikeView.Style.STANDARD);
         likeView.setAuxiliaryViewPosition(LikeView.AuxiliaryViewPosition.INLINE);
 
@@ -127,18 +127,21 @@ public class FragmentDrawer extends Fragment {
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 getActivity().invalidateOptionsMenu();
+                CommonUtilities.hideKeyboard(getActivity(),getActivity().getCurrentFocus());
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
                 getActivity().invalidateOptionsMenu();
+                CommonUtilities.hideKeyboard(getActivity(),getActivity().getCurrentFocus());
             }
 
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
                 super.onDrawerSlide(drawerView, slideOffset);
                 toolbar.setAlpha(1 - slideOffset / 2);
+                CommonUtilities.hideKeyboard(getActivity(),getActivity().getCurrentFocus());
             }
         };
 

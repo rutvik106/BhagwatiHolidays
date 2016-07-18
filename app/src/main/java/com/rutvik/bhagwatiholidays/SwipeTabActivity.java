@@ -51,7 +51,8 @@ import bhfragment.FragmentHotels;
 import bhfragment.FragmentVisa;
 import extras.CommonUtilities;
 
-public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener {
+public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener
+{
 
     private Toolbar mToolbar;
     private TabLayout tabLayout;
@@ -80,7 +81,8 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_swipe_tab);
 
@@ -124,57 +126,66 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
                 .displayer(new RoundedBitmapDisplayer(7))
                 .build();
 
-        try {
+        try
+        {
             imageLoader.displayImage(app.getUser().getProfilePic(), (android.widget.ImageView) drawerFragment.getView().findViewById(R.id.iv_userImage), options);
             ((TextView) drawerFragment.getView().findViewById(R.id.tv_userName)).setText(app.getUser().getName());
             ((TextView) drawerFragment.getView().findViewById(R.id.tv_userEmail)).setText(app.getUser().getEmail());
-        } catch (NullPointerException e) {
+        } catch (NullPointerException e)
+        {
             e.printStackTrace();
         }
 
 
     }
 
-    private void setupTabIcons() {
+    private void setupTabIcons()
+    {
 
-        TextView tabOne = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        /**TextView tabOne = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         tabOne.setText("FLIGHTS");
-        tabOne.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_airticket4, 0, 0);
-        tabLayout.getTabAt(0).setCustomView(tabOne);
+        tabOne.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_airticket4, 0, 0);*/
+        tabLayout.getTabAt(0).setIcon(R.drawable.ic_airticket4);
 
-        TextView tabTwo = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        /**TextView tabTwo = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         tabTwo.setText("HOTELS");
-        tabTwo.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_hotel2, 0, 0);
-        tabLayout.getTabAt(1).setCustomView(tabTwo);
+        tabTwo.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_hotel2, 0, 0);*/
+        tabLayout.getTabAt(1).setIcon(R.drawable.ic_hotel2);
 
-        TextView tabThree = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        /**TextView tabThree = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         tabThree.setText("HOLIDAYS");
-        tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_holiday2, 0, 0);
-        tabLayout.getTabAt(2).setCustomView(tabThree);
+        tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_holiday2, 0, 0);*/
+        tabLayout.getTabAt(2).setIcon(R.drawable.ic_holiday2);
 
-        TextView tabFour = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        /**TextView tabFour = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         tabFour.setText("VISA");
-        tabFour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_visa2, 0, 0);
-        tabLayout.getTabAt(3).setCustomView(tabFour);
+        tabFour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_visa2, 0, 0);*/
+        tabLayout.getTabAt(3).setIcon(R.drawable.ic_visa2);
     }
 
     @Override
-    public void onBackPressed() {
-        if (drawerFragment.getDrawerLayout().isDrawerOpen(GravityCompat.START)) {
+    public void onBackPressed()
+    {
+        if (drawerFragment.getDrawerLayout().isDrawerOpen(GravityCompat.START))
+        {
             drawerFragment.getDrawerLayout().closeDrawer(GravityCompat.START);
-        } else {
+        } else
+        {
 
             CommonUtilities.showSimpleAlertDialog(this,
                     "Alert",
                     "Do you want to exit Bhagwati Holidays?",
-                    "Yes", "No", new CommonUtilities.SimpleAlertDialog.OnClickListener() {
+                    "Yes", "No", new CommonUtilities.SimpleAlertDialog.OnClickListener()
+                    {
                         @Override
-                        public void positiveButtonClicked(DialogInterface dialog, int which) {
+                        public void positiveButtonClicked(DialogInterface dialog, int which)
+                        {
                             SwipeTabActivity.this.finish();
                         }
 
                         @Override
-                        public void negativeButtonClicked(DialogInterface dialog, int which) {
+                        public void negativeButtonClicked(DialogInterface dialog, int which)
+                        {
                             dialog.dismiss();
                         }
                     });
@@ -183,7 +194,8 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
         }
     }
 
-    private void setupViewPager(ViewPager viewPager) {
+    private void setupViewPager(ViewPager viewPager)
+    {
 
 
         adapter.addFragment(new FragmentAirTickets(), "FLIGHTS");
@@ -192,26 +204,32 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
         adapter.addFragment(new FragmentVisa(), "VISA");
         viewPager.setAdapter(adapter);
 
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
+        {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
+            {
 
             }
 
             @Override
-            public void onPageSelected(int position) {
-                if (position == 2) {
+            public void onPageSelected(int position)
+            {
+                if (position == 2)
+                {
                     isOnPackagesPage = true;
                     search.setVisible(isOnPackagesPage);
                     ((FragmentHolidayPackages) adapter.getItem(position)).loadOffersAsync();
-                } else {
+                } else
+                {
                     isOnPackagesPage = false;
                     search.setVisible(isOnPackagesPage);
                 }
             }
 
             @Override
-            public void onPageScrollStateChanged(int state) {
+            public void onPageScrollStateChanged(int state)
+            {
 
             }
         });
@@ -219,24 +237,29 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
         getMenuInflater().inflate(R.menu.bh_menu, menu);
 
         // Associate searchable configuration with the SearchView
         // SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
 
-        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+        searchView.setOnCloseListener(new SearchView.OnCloseListener()
+        {
             @Override
-            public boolean onClose() {
+            public boolean onClose()
+            {
                 getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.toolbar_logo));
                 return false;
             }
         });
 
-        searchView.setOnSearchClickListener(new View.OnClickListener() {
+        searchView.setOnSearchClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 getSupportActionBar().setBackgroundDrawable((getResources().getDrawable(R.color.white)));
             }
         });
@@ -246,16 +269,19 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
         search.setVisible(isOnPackagesPage);
         //searchView.setVisibility(View.GONE);
         // searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener()
+        {
             @Override
-            public boolean onQueryTextSubmit(String query) {
+            public boolean onQueryTextSubmit(String query)
+            {
 
 
                 return false;
             }
 
             @Override
-            public boolean onQueryTextChange(String newText) {
+            public boolean onQueryTextChange(String newText)
+            {
 
                 ((FragmentHolidayPackages) SwipeTabActivity.this.adapter.getItem(2)).searchForPackage(newText);
 
@@ -266,23 +292,28 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
     }
 
     @Override
-    protected void onResume() {
+    protected void onResume()
+    {
         super.onResume();
         mPlusOneButton.initialize(CommonUtilities.GPLUS_LINK, PLUS_ONE_REQUEST_CODE);
         AppEventsLogger.activateApp(this);
     }
 
     @Override
-    protected void onPause() {
+    protected void onPause()
+    {
         super.onPause();
         AppEventsLogger.activateApp(this);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
             case R.id.action_search:
-                if(searchView.isActivated()) {
+                if (searchView.isActivated())
+                {
                     getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.white));
                 }
                 return true;
@@ -322,35 +353,40 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
     }*/
 
     @Override
-    public void onDrawerItemSelected(View view, int position) {
+    public void onDrawerItemSelected(View view, int position)
+    {
 
         //My Bookings
-        if (position == 1) {
+        if (position == 1)
+        {
 
-//            long startMillis= Calendar.getInstance().getTimeInMillis();
-//            Uri.Builder builder = CalendarContract.CONTENT_URI.buildUpon();
-//            builder.appendPath("time");
-//            ContentUris.appendId(builder, startMillis);
-//            Intent intent = new Intent(Intent.ACTION_VIEW)
-//                    .setData(builder.build());
-//            startActivity(intent);
+            //            long startMillis= Calendar.getInstance().getTimeInMillis();
+            //            Uri.Builder builder = CalendarContract.CONTENT_URI.buildUpon();
+            //            builder.appendPath("time");
+            //            ContentUris.appendId(builder, startMillis);
+            //            Intent intent = new Intent(Intent.ACTION_VIEW)
+            //                    .setData(builder.build());
+            //            startActivity(intent);
 
             startActivity(new Intent(SwipeTabActivity.this, MyBookingActivity.class));
 
         }
         //Offers and Promotions
-        else if (position == 0) {
+        else if (position == 0)
+        {
             startActivity(new Intent(this, OffersActivity.class));
         }
         //Support
-        else if (position == 5) {
+        else if (position == 5)
+        {
             app.trackEvent(SwipeTabActivity.class.getSimpleName(), "SUPPORT CLICKED", "NAV ACTION");
             Intent supportIntent = new Intent(Intent.ACTION_DIAL);
             supportIntent.setData(Uri.parse("tel:07940223333"));
             startActivity(supportIntent);
         }
         //Send Feedback
-        else if (position == 7) {
+        else if (position == 7)
+        {
             app.trackEvent(SwipeTabActivity.class.getSimpleName(), "SEND FEEDBACK CLICKED", "NAV ACTION");
             Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
             emailIntent.setType("plain/text");
@@ -360,31 +396,38 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
             startActivity(Intent.createChooser(emailIntent, "Send mail..."));
         }
         //Locate Us
-        else if (position == 6) {
+        else if (position == 6)
+        {
             startActivity(new Intent(SwipeTabActivity.this, LocateUsActivity.class));
         }
         //Disable/Enable Notifications
-        else if (position == 4) {
+        else if (position == 4)
+        {
 
             CommonUtilities.showSimpleAlertDialog(this,
                     "Alert",
                     "Are you sure?, You will stop receiving latest offers updates.",
                     "Disable",
                     "Cancel",
-                    new CommonUtilities.SimpleAlertDialog.OnClickListener() {
+                    new CommonUtilities.SimpleAlertDialog.OnClickListener()
+                    {
                         @Override
-                        public void positiveButtonClicked(DialogInterface dialog, int which) {
+                        public void positiveButtonClicked(DialogInterface dialog, int which)
+                        {
                             app.trackEvent(SwipeTabActivity.class.getSimpleName(), "NOTIFICATION TOGGLED", "NAV ACTION");
                             Log.i(TAG, "IS_NOTIFICATION_DISABLED: " + sp.getBoolean("IS_NOTIFICATION_DISABLED", false));
-                            if (sp.getBoolean("IS_NOTIFICATION_DISABLED", false)) {
+                            if (sp.getBoolean("IS_NOTIFICATION_DISABLED", false))
+                            {
                                 CommonUtilities.enableNotification(SwipeTabActivity.this, sp, drawerFragment.getAdapter());
-                            } else {
+                            } else
+                            {
                                 CommonUtilities.disableNotification(SwipeTabActivity.this, sp, drawerFragment.getAdapter());
                             }
                         }
 
                         @Override
-                        public void negativeButtonClicked(DialogInterface dialog, int which) {
+                        public void negativeButtonClicked(DialogInterface dialog, int which)
+                        {
                             dialog.dismiss();
                         }
                     });
@@ -393,32 +436,38 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
         }
     }
 
-    class ViewPagerAdapter extends FragmentPagerAdapter {
+    class ViewPagerAdapter extends FragmentPagerAdapter
+    {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
 
-        public ViewPagerAdapter(FragmentManager manager) {
+        public ViewPagerAdapter(FragmentManager manager)
+        {
             super(manager);
         }
 
         @Override
-        public Fragment getItem(int position) {
+        public Fragment getItem(int position)
+        {
             return mFragmentList.get(position);
         }
 
         @Override
-        public int getCount() {
+        public int getCount()
+        {
             return mFragmentList.size();
         }
 
-        public void addFragment(Fragment fragment, String title) {
+        public void addFragment(Fragment fragment, String title)
+        {
             mFragmentList.add(fragment);
-            mFragmentTitleList.add(title);
+            //mFragmentTitleList.add(title);
         }
 
         @Override
-        public CharSequence getPageTitle(int position) {
-            return mFragmentTitleList.get(position);
+        public CharSequence getPageTitle(int position)
+        {
+            return null;//mFragmentTitleList.get(position);
         }
     }
 

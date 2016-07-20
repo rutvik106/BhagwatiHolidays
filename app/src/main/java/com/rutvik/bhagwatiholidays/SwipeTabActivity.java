@@ -1,6 +1,7 @@
 package com.rutvik.bhagwatiholidays;
 
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,6 +19,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 
@@ -79,6 +81,8 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
 
     SharedPreferences sp;
 
+    boolean isSearchBoxOpen=false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -98,6 +102,7 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.toolbar_logo));
         //mToolbar.setLogo(R.drawable.bh_action_icon);
         getSupportActionBar().setTitle("");
         viewPager = (ViewPager) findViewById(R.id.viewPager);
@@ -143,23 +148,23 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
     {
 
         /**TextView tabOne = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-        tabOne.setText("FLIGHTS");
-        tabOne.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_airticket4, 0, 0);*/
+         tabOne.setText("FLIGHTS");
+         tabOne.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_airticket4, 0, 0);*/
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_airticket4);
 
         /**TextView tabTwo = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-        tabTwo.setText("HOTELS");
-        tabTwo.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_hotel2, 0, 0);*/
+         tabTwo.setText("HOTELS");
+         tabTwo.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_hotel2, 0, 0);*/
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_hotel2);
 
         /**TextView tabThree = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-        tabThree.setText("HOLIDAYS");
-        tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_holiday2, 0, 0);*/
+         tabThree.setText("HOLIDAYS");
+         tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_holiday2, 0, 0);*/
         tabLayout.getTabAt(2).setIcon(R.drawable.ic_holiday2);
 
         /**TextView tabFour = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-        tabFour.setText("VISA");
-        tabFour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_visa2, 0, 0);*/
+         tabFour.setText("VISA");
+         tabFour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_visa2, 0, 0);*/
         tabLayout.getTabAt(3).setIcon(R.drawable.ic_visa2);
     }
 
@@ -209,7 +214,11 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
             {
-
+                View view = SwipeTabActivity.this.getCurrentFocus();
+                if (view != null) {
+                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
             }
 
             @Override
@@ -218,10 +227,20 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
                 if (position == 2)
                 {
                     isOnPackagesPage = true;
+                    if (isSearchBoxOpen)
+                    {
+                        Log.i(TAG,"SEARCH BOX IS OPEN SETTING WHITE BACKGROUND");
+                        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.white));
+                    }
+                    else {
+                        Log.i(TAG,"SEARCH BOX IS CLOSED SETTING LOGO IN BACKGROUND");
+                        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.toolbar_logo));
+                    }
                     search.setVisible(isOnPackagesPage);
                     ((FragmentHolidayPackages) adapter.getItem(position)).loadOffersAsync();
                 } else
                 {
+                    getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.toolbar_logo));
                     isOnPackagesPage = false;
                     search.setVisible(isOnPackagesPage);
                 }
@@ -250,6 +269,8 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
             @Override
             public boolean onClose()
             {
+                Log.i(TAG,"SEARCH VIEW ON CLOSED");
+                isSearchBoxOpen=false;
                 getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.toolbar_logo));
                 return false;
             }
@@ -260,6 +281,8 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
             @Override
             public void onClick(View v)
             {
+                Log.i(TAG,"SEARCH VIEW ON SEARCH CKLICKED");
+                isSearchBoxOpen=true;
                 getSupportActionBar().setBackgroundDrawable((getResources().getDrawable(R.color.white)));
             }
         });
@@ -312,8 +335,10 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
         switch (item.getItemId())
         {
             case R.id.action_search:
+                Log.i(TAG,"ACTION SEARCH CLICKED");
                 if (searchView.isActivated())
                 {
+                    Log.i(TAG,"SEARCH VIEW IS ACTIVE");
                     getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.white));
                 }
                 return true;
@@ -356,8 +381,13 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
     public void onDrawerItemSelected(View view, int position)
     {
 
+        //Offers and Promotions
+        if (position == 0)
+        {
+            startActivity(new Intent(this, OffersActivity.class));
+        }
         //My Bookings
-        if (position == 1)
+        else if (position == 1)
         {
 
             //            long startMillis= Calendar.getInstance().getTimeInMillis();
@@ -371,37 +401,13 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
             startActivity(new Intent(SwipeTabActivity.this, MyBookingActivity.class));
 
         }
-        //Offers and Promotions
-        else if (position == 0)
+        //Book Buses Activity
+        else if (position == 2)
         {
-            startActivity(new Intent(this, OffersActivity.class));
-        }
-        //Support
-        else if (position == 5)
-        {
-            app.trackEvent(SwipeTabActivity.class.getSimpleName(), "SUPPORT CLICKED", "NAV ACTION");
-            Intent supportIntent = new Intent(Intent.ACTION_DIAL);
-            supportIntent.setData(Uri.parse("tel:07940223333"));
-            startActivity(supportIntent);
-        }
-        //Send Feedback
-        else if (position == 7)
-        {
-            app.trackEvent(SwipeTabActivity.class.getSimpleName(), "SEND FEEDBACK CLICKED", "NAV ACTION");
-            Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
-            emailIntent.setType("plain/text");
-            emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{"info@bhagwatiholidays.com"});
-            emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Feedback");
-            emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Text");
-            startActivity(Intent.createChooser(emailIntent, "Send mail..."));
-        }
-        //Locate Us
-        else if (position == 6)
-        {
-            startActivity(new Intent(SwipeTabActivity.this, LocateUsActivity.class));
+            startActivity(new Intent(this, BusActivity.class));
         }
         //Disable/Enable Notifications
-        else if (position == 4)
+        else if (position == 5)
         {
 
             CommonUtilities.showSimpleAlertDialog(this,
@@ -434,6 +440,32 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
 
 
         }
+        //Support
+        else if (position == 6)
+        {
+            app.trackEvent(SwipeTabActivity.class.getSimpleName(), "SUPPORT CLICKED", "NAV ACTION");
+            Intent supportIntent = new Intent(Intent.ACTION_DIAL);
+            supportIntent.setData(Uri.parse("tel:07940223333"));
+            startActivity(supportIntent);
+        }
+        //Locate Us
+        else if (position == 7)
+        {
+            startActivity(new Intent(SwipeTabActivity.this, LocateUsActivity.class));
+        }
+
+        //Send Feedback
+        else if (position == 9)
+        {
+            app.trackEvent(SwipeTabActivity.class.getSimpleName(), "SEND FEEDBACK CLICKED", "NAV ACTION");
+            Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+            emailIntent.setType("plain/text");
+            emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{"info@bhagwatiholidays.com"});
+            emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Feedback");
+            emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Text");
+            startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+        }
+
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter

@@ -63,7 +63,7 @@
         <activity
             android:name=".SwipeTabActivity"
             android:label="Bhagwati Holidays"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"/>
         <activity
             android:name=".OffersActivity"
             android:label="Offers"

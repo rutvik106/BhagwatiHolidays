@@ -2,6 +2,7 @@ package bhfragment;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -21,6 +22,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.rutvik.bhagwatiholidays.App;
+import com.rutvik.bhagwatiholidays.FlightSearchResult;
 import com.rutvik.bhagwatiholidays.R;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
@@ -42,7 +44,8 @@ import extras.CommonUtilities;
  * Created by Rakshit on 20-11-2015.
  */
 
-public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnDateSetListener {
+public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnDateSetListener
+{
 
     private static final String TAG = App.APP_TAG + FragmentAirTickets.class.getSimpleName();
 
@@ -53,18 +56,18 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
     FloatingActionButton fabDone;
     AutoCompleteTextView actFrom, actTo;
 
-    MultiStateToggleButton mstbClassType,mstbLocationType,mstbTripType;
+    MultiStateToggleButton mstbClassType, mstbLocationType, mstbTripType;
 
     CoordinatorLayout clFragmentAirTicket;
 
     String[] classType;
-    int selectedClassType=0;
+    int selectedClassType = 0;
 
     String[] locationType;
-    int selectedLocationType=0;
+    int selectedLocationType = 0;
 
     String[] tripType;
-    int selectedTripType=0;
+    int selectedTripType = 0;
 
     private GetTermsAsync getTermsAsync;
 
@@ -81,55 +84,64 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
 
     Map<Integer, OnGetDate> dateComponentMap = new HashMap<>();
 
-    Calendar argCalendar=Calendar.getInstance();
+    Calendar argCalendar = Calendar.getInstance();
 
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(Activity activity)
+    {
         super.onAttach(activity);
 
-        classType=getResources().getStringArray(R.array.class_type);
-        tripType=getResources().getStringArray(R.array.trip_type);
-        locationType=getResources().getStringArray(R.array.location_type);
+        classType = getResources().getStringArray(R.array.class_type);
+        tripType = getResources().getStringArray(R.array.trip_type);
+        locationType = getResources().getStringArray(R.array.location_type);
 
         app = (App) activity.getApplication();
         app.trackScreenView(FragmentAirTickets.class.getSimpleName());
     }
 
-    public FragmentAirTickets() {
+    public FragmentAirTickets()
+    {
         // Required empty public constructor
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             Bundle savedInstanceState)
+    {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_air_tickets, container, false);
 
-        clFragmentAirTicket=(CoordinatorLayout) rootView.findViewById(R.id.cl_fragmentAirTickets);
+        clFragmentAirTicket = (CoordinatorLayout) rootView.findViewById(R.id.cl_fragmentAirTickets);
 
         etMobileNo = (EditText) rootView.findViewById(R.id.et_mobileNo);
 
-        etMobileNo.addTextChangedListener(new TextWatcher() {
+        etMobileNo.addTextChangedListener(new TextWatcher()
+        {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after)
+            {
 
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(s.length()==10){
-                    CommonUtilities.hideKeyboard(getActivity(),getActivity().getCurrentFocus());
+            public void onTextChanged(CharSequence s, int start, int before, int count)
+            {
+                if (s.length() == 10)
+                {
+                    CommonUtilities.hideKeyboard(getActivity(), getActivity().getCurrentFocus());
                 }
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(Editable s)
+            {
 
             }
         });
@@ -170,39 +182,47 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
 
         rbBusiness = (RadioButton) rootView.findViewById(R.id.rb_business);*/
 
-        mstbClassType=(MultiStateToggleButton) rootView.findViewById(R.id.mstb_classType);
+        mstbClassType = (MultiStateToggleButton) rootView.findViewById(R.id.mstb_classType);
         mstbClassType.setElements(R.array.class_type, 0);
-        mstbClassType.setOnValueChangedListener(new ToggleButton.OnValueChangedListener() {
+        mstbClassType.setOnValueChangedListener(new ToggleButton.OnValueChangedListener()
+        {
             @Override
-            public void onValueChanged(int position) {
-                selectedClassType=position;
-                CommonUtilities.hideKeyboard(getActivity(),getActivity().getCurrentFocus());
+            public void onValueChanged(int position)
+            {
+                selectedClassType = position;
+                CommonUtilities.hideKeyboard(getActivity(), getActivity().getCurrentFocus());
             }
         });
 
-        mstbLocationType=(MultiStateToggleButton) rootView.findViewById(R.id.mstb_locationType);
+        mstbLocationType = (MultiStateToggleButton) rootView.findViewById(R.id.mstb_locationType);
         mstbLocationType.setElements(R.array.location_type, 0);
-        mstbLocationType.setOnValueChangedListener(new ToggleButton.OnValueChangedListener() {
+        mstbLocationType.setOnValueChangedListener(new ToggleButton.OnValueChangedListener()
+        {
             @Override
-            public void onValueChanged(int position) {
-                selectedLocationType=position;
-                CommonUtilities.hideKeyboard(getActivity(),getActivity().getCurrentFocus());
+            public void onValueChanged(int position)
+            {
+                selectedLocationType = position;
+                CommonUtilities.hideKeyboard(getActivity(), getActivity().getCurrentFocus());
             }
         });
 
-        mstbTripType=(MultiStateToggleButton) rootView.findViewById(R.id.mstb_tripType);
+        mstbTripType = (MultiStateToggleButton) rootView.findViewById(R.id.mstb_tripType);
         mstbTripType.setElements(R.array.trip_type, 0);
-        mstbTripType.setOnValueChangedListener(new ToggleButton.OnValueChangedListener() {
+        mstbTripType.setOnValueChangedListener(new ToggleButton.OnValueChangedListener()
+        {
             @Override
-            public void onValueChanged(int position) {
-                if (position==1) {
+            public void onValueChanged(int position)
+            {
+                if (position == 1)
+                {
                     etReturnDate.setVisibility(View.VISIBLE);
 
-                } else {
+                } else
+                {
                     etReturnDate.setVisibility(View.GONE);
 
                 }
-                selectedTripType=position;
+                selectedTripType = position;
             }
         });
 
@@ -211,10 +231,13 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
 
         etReturnDate = (EditText) rootView.findViewById(R.id.et_returnDate);
         etReturnDate.setTextIsSelectable(false);
-        etDepartDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        etDepartDate.setOnFocusChangeListener(new View.OnFocusChangeListener()
+        {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
+            public void onFocusChange(View v, boolean hasFocus)
+            {
+                if (hasFocus)
+                {
                     dateFlag = DEPART_DATE;
                     Calendar calendar = Calendar.getInstance();
                     datePickerDialog = DatePickerDialog.newInstance(FragmentAirTickets.this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
@@ -225,36 +248,45 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
             }
         });
 
-        etReturnDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        etReturnDate.setOnFocusChangeListener(new View.OnFocusChangeListener()
+        {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    if(!TextUtils.isEmpty(etDepartDate.getText())) {
+            public void onFocusChange(View v, boolean hasFocus)
+            {
+                if (hasFocus)
+                {
+                    if (!TextUtils.isEmpty(etDepartDate.getText()))
+                    {
                         dateFlag = RETURN_DATE;
                         datePickerDialog = DatePickerDialog.newInstance(FragmentAirTickets.this, argCalendar.get(Calendar.YEAR), argCalendar.get(Calendar.MONTH),
                                 argCalendar.get(Calendar.DAY_OF_MONTH));
                         datePickerDialog.setMinDate(argCalendar);
                         datePickerDialog.show(fragmentManager, "ReturnDate");
-                    }
-                    else{
+                    } else
+                    {
                         etDepartDate.requestFocus();
-                        Toast.makeText(getActivity(),"Set depart date first",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Set depart date first", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
         });
 
-        actFrom.addTextChangedListener(new TextWatcher() {
+        actFrom.addTextChangedListener(new TextWatcher()
+        {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after)
+            {
 
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void onTextChanged(CharSequence s, int start, int before, int count)
+            {
                 Log.i(TAG, "TEXT CHENGED IN FROM: " + s.toString());
-                if (!TextUtils.isEmpty(s.toString()) && s.toString().length() > 3) {
-                    if (getTermsAsync != null) {
+                if (!TextUtils.isEmpty(s.toString()) && s.toString().length() > 3)
+                {
+                    if (getTermsAsync != null)
+                    {
                         getTermsAsync.cancel(true);
                         getTermsAsync = null;
                     }
@@ -265,22 +297,28 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(Editable s)
+            {
 
             }
         });
 
-        actTo.addTextChangedListener(new TextWatcher() {
+        actTo.addTextChangedListener(new TextWatcher()
+        {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after)
+            {
 
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void onTextChanged(CharSequence s, int start, int before, int count)
+            {
                 Log.i(TAG, "TEXT CHENGED IN FROM: " + s.toString());
-                if (!TextUtils.isEmpty(s.toString()) && s.toString().length() > 1) {
-                    if (getTermsAsync != null) {
+                if (!TextUtils.isEmpty(s.toString()) && s.toString().length() > 1)
+                {
+                    if (getTermsAsync != null)
+                    {
                         getTermsAsync.cancel(true);
                         getTermsAsync = null;
                     }
@@ -291,7 +329,8 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(Editable s)
+            {
 
             }
         });
@@ -314,23 +353,30 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
         });*/
 
 
-        dateComponentMap.put(DEPART_DATE, new OnGetDate() {
+        dateComponentMap.put(DEPART_DATE, new OnGetDate()
+        {
             @Override
-            public void setText(String text) {
+            public void setText(String text)
+            {
                 etDepartDate.setText(text);
             }
         });
 
-        dateComponentMap.put(RETURN_DATE, new OnGetDate() {
+        dateComponentMap.put(RETURN_DATE, new OnGetDate()
+        {
             @Override
-            public void setText(String text) {
-                final String t=text;
-                Validator.validateDates(etDepartDate.getText().toString(), text, new Validator.ValidationListener() {
+            public void setText(String text)
+            {
+                final String t = text;
+                Validator.validateDates(etDepartDate.getText().toString(), text, new Validator.ValidationListener()
+                {
                     @Override
-                    public void validationResult(boolean status,String msg) {
+                    public void validationResult(boolean status, String msg)
+                    {
                         //Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
                         etReturnDate.setError(msg);
-                        if(status==true){
+                        if (status == true)
+                        {
                             etReturnDate.setText(t);
                         }
                     }
@@ -340,9 +386,11 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-        etDepartDate.setOnClickListener(new View.OnClickListener() {
+        etDepartDate.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 dateFlag = DEPART_DATE;
                 Calendar calendar = Calendar.getInstance();
                 datePickerDialog = DatePickerDialog.newInstance(FragmentAirTickets.this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
@@ -352,60 +400,69 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
             }
         });
 
-        etReturnDate.setOnClickListener(new View.OnClickListener() {
+        etReturnDate.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
-                if(!TextUtils.isEmpty(etDepartDate.getText())) {
+            public void onClick(View v)
+            {
+                if (!TextUtils.isEmpty(etDepartDate.getText()))
+                {
                     dateFlag = RETURN_DATE;
                     datePickerDialog = DatePickerDialog.newInstance(FragmentAirTickets.this, argCalendar.get(Calendar.YEAR), argCalendar.get(Calendar.MONTH),
                             argCalendar.get(Calendar.DAY_OF_MONTH));
                     datePickerDialog.setMinDate(argCalendar);
                     datePickerDialog.show(fragmentManager, "ReturnDate");
-                }
-                else{
+                } else
+                {
                     etDepartDate.requestFocus();
-                    Toast.makeText(getActivity(),"Set depart date first",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Set depart date first", Toast.LENGTH_LONG).show();
                 }
             }
         });
 
-        fabDone.setOnClickListener(new View.OnClickListener() {
+        fabDone.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
 
+                startActivity(new Intent(getActivity(), FlightSearchResult.class));
 
-                app.trackEvent("FAB", "SUBMIT AIRTICKET INQUIRY", "AIRTICKET INQUIRY");
+                /**app.trackEvent("FAB", "SUBMIT AIRTICKET INQUIRY", "AIRTICKET INQUIRY");
 
-                Log.d(TAG, "press btn before....");
+                 Log.d(TAG, "press btn before....");
 
-                submitForm();
+                 submitForm();*/
 
             }
         });
-
 
         return rootView;
     }
 
 
-    public static interface OnGetDate {
+    public static interface OnGetDate
+    {
         void setText(String text);
     }
 
     @Override
-    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth)
+    {
 
         String date = dayOfMonth + "-" + (monthOfYear + 1) + "-" + year;
         dateComponentMap.get(dateFlag).setText(date);
-        if(dateFlag==DEPART_DATE){
-            argCalendar.set(Calendar.YEAR,year);
-            argCalendar.set(Calendar.MONTH,monthOfYear);
-            argCalendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
+        if (dateFlag == DEPART_DATE)
+        {
+            argCalendar.set(Calendar.YEAR, year);
+            argCalendar.set(Calendar.MONTH, monthOfYear);
+            argCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         }
 
     }
 
-    private void submitForm() {
+    private void submitForm()
+    {
 
 
         final Map<String, String> formParams = new LinkedHashMap<>();
@@ -415,7 +472,8 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
         formParams.put("Trip", tripType[selectedTripType]);
         formParams.put("Depart Date", etDepartDate.getText().toString());
 
-        if (!TextUtils.isEmpty(etReturnDate.getText().toString())) {
+        if (!TextUtils.isEmpty(etReturnDate.getText().toString()))
+        {
             formParams.put("Return Date", etReturnDate.getText().toString());
         }
 
@@ -428,7 +486,8 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
 
         Log.d(TAG, "Check check........!!!!");
 
-        if (isFormParamValid(formParams)) {
+        if (isFormParamValid(formParams))
+        {
 
 
             CommonUtilities.showSimpleAlertDialog(getActivity(),
@@ -436,25 +495,29 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
                     "Send inquiry to Bhagwati Holidays?",
                     "Send",
                     "Cancel",
-                    new CommonUtilities.SimpleAlertDialog.OnClickListener() {
+                    new CommonUtilities.SimpleAlertDialog.OnClickListener()
+                    {
                         @Override
-                        public void positiveButtonClicked(DialogInterface dialog, int which) {
+                        public void positiveButtonClicked(DialogInterface dialog, int which)
+                        {
 
                             final SendMail sendMail = new SendMail(app.getUser().getEmail(),
                                     SendMail.Type.AIRTICKET,
                                     getActivity(),
-                                    new SendMail.MailCallbackListener() {
+                                    new SendMail.MailCallbackListener()
+                                    {
                                         @Override
-                                        public void mailSentSuccessfully() {
+                                        public void mailSentSuccessfully()
+                                        {
 
                                             CommonUtilities.clearForm((ViewGroup) getActivity().findViewById(R.id.ll_formAirTicket));
 
                                             FragmentAirTickets.this.etMobileNo.requestFocus();
 
                                             CommonUtilities
-                                                    .showAlertDialog(getActivity(),clFragmentAirTicket, "Air Ticket Booking",
+                                                    .showAlertDialog(getActivity(), clFragmentAirTicket, "Air Ticket Booking",
                                                             "",
-                                                            "Air Ticket Booking in Bhagwati Holidays",argCalendar);
+                                                            "Air Ticket Booking in Bhagwati Holidays", argCalendar);
 
 
                                         }
@@ -465,11 +528,11 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
                         }
 
                         @Override
-                        public void negativeButtonClicked(DialogInterface dialog, int which) {
+                        public void negativeButtonClicked(DialogInterface dialog, int which)
+                        {
                             dialog.dismiss();
                         }
                     });
-
 
 
         }
@@ -477,54 +540,66 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
 
     }
 
-    public boolean isFormParamValid(Map<String, String> formParams) {
+    public boolean isFormParamValid(Map<String, String> formParams)
+    {
         Log.i(TAG, "inside is form param valid");
 
         isFormValid = true;
 
-        Validator.validateContact(formParams.get("Contact"), new Validator.ValidationListener() {
+        Validator.validateContact(formParams.get("Contact"), new Validator.ValidationListener()
+        {
             @Override
-            public void validationResult(boolean status,String msg) {
+            public void validationResult(boolean status, String msg)
+            {
                 //Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
                 etMobileNo.setError(msg);
-                isFormValid = isFormValid&status;
+                isFormValid = isFormValid & status;
             }
         });
 
-        Validator.validateFrom(formParams.get("From"), new Validator.ValidationListener() {
+        Validator.validateFrom(formParams.get("From"), new Validator.ValidationListener()
+        {
             @Override
-            public void validationResult(boolean status,String msg) {
+            public void validationResult(boolean status, String msg)
+            {
                 //Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
                 actFrom.setError(msg);
-                isFormValid = isFormValid&status;
+                isFormValid = isFormValid & status;
             }
         });
 
-        Validator.validTo(formParams.get("To"), new Validator.ValidationListener() {
+        Validator.validTo(formParams.get("To"), new Validator.ValidationListener()
+        {
             @Override
-            public void validationResult(boolean status,String msg) {
+            public void validationResult(boolean status, String msg)
+            {
                 //Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
                 actTo.setError(msg);
-                isFormValid = isFormValid&status;
+                isFormValid = isFormValid & status;
             }
         });
 
-        Validator.validateDate(formParams.get("Depart Date"), new Validator.ValidationListener() {
+        Validator.validateDate(formParams.get("Depart Date"), new Validator.ValidationListener()
+        {
             @Override
-            public void validationResult(boolean status,String msg) {
+            public void validationResult(boolean status, String msg)
+            {
                 //Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
                 etDepartDate.setError(msg);
-                isFormValid = isFormValid&status;
+                isFormValid = isFormValid & status;
             }
         });
 
-        if (formParams.get("Return Date") != null) {
-            Validator.validateDate(formParams.get("Return Date"), new Validator.ValidationListener() {
+        if (formParams.get("Return Date") != null)
+        {
+            Validator.validateDate(formParams.get("Return Date"), new Validator.ValidationListener()
+            {
                 @Override
-                public void validationResult(boolean status,String msg) {
+                public void validationResult(boolean status, String msg)
+                {
                     //Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
                     etReturnDate.setError(msg);
-                    isFormValid = isFormValid&status;
+                    isFormValid = isFormValid & status;
                 }
             });
         }

@@ -1,18 +1,14 @@
 {
   "project_info": {
-    "project_id": "bhagwati-holidays",
     "project_number": "456308692637",
-    "name": "Bhagwati Holidays"
+    "project_id": "bhagwati-holidays"
   },
   "client": [
     {
       "client_info": {
         "mobilesdk_app_id": "1:456308692637:android:633d1e421d2c50a4",
-        "client_id": "android:com.rutvik.bhagwatiholidays",
-        "client_type": 1,
         "android_client_info": {
-          "package_name": "com.rutvik.bhagwatiholidays",
-          "certificate_hash": []
+          "package_name": "com.rutvik.bhagwatiholidays"
         }
       },
       "oauth_client": [
@@ -25,28 +21,33 @@
           }
         },
         {
+          "client_id": "456308692637-kteglcmbarattivkdps3sj0jcr5r3p8e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rutvik.bhagwatiholidays",
+            "certificate_hash": "DF1970FD3D70F09C30A4773C8511F545167118F9"
+          }
+        },
+        {
           "client_id": "456308692637-f13nh3chrfufkt0vuv3m4qa852p2fkjn.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
-      "api_key": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDWglbshyYJ62AFJgYXncntdMq30PxL130"
+        }
+      ],
       "services": {
         "analytics_service": {
           "status": 2,
           "analytics_property": {
-            "tracking_id": "UA-74678717-1"
+            "tracking_id": "UA-67871476-1"
           }
-        },
-        "cloud_messaging_service": {
-          "status": 2,
-          "apns_config": []
         },
         "appinvite_service": {
           "status": 1,
           "other_platform_oauth_client": []
-        },
-        "google_signin_service": {
-          "status": 2
         },
         "ads_service": {
           "status": 1
@@ -54,6 +55,5 @@
       }
     }
   ],
-  "client_info": [],
-  "ARTIFACT_VERSION": "1"
+  "configuration_version": "1"
 }

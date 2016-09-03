@@ -3,6 +3,7 @@ package bhfragment;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -29,7 +30,12 @@ import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import org.honorato.multistatetogglebutton.MultiStateToggleButton;
 import org.honorato.multistatetogglebutton.ToggleButton;
 import org.w3c.dom.Text;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -425,8 +431,8 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
             @Override
             public void onClick(View v)
             {
-
-                startActivity(new Intent(getActivity(), FlightSearchResult.class));
+                parseXML();
+                //startActivity(new Intent(getActivity(), FlightSearchResult.class));
 
                 /**app.trackEvent("FAB", "SUBMIT AIRTICKET INQUIRY", "AIRTICKET INQUIRY");
 
@@ -605,6 +611,74 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
         }
 
         return isFormValid;
+    }
+
+    private void parseXML()
+    {
+        AssetManager assetManager = getActivity().getBaseContext().getAssets();
+        try
+        {
+            InputStream is = assetManager.open("CityList.xml");
+
+            XmlPullParserFactory xmlFactoryObject = XmlPullParserFactory.newInstance();
+            XmlPullParser myParser = xmlFactoryObject.newPullParser();
+
+            myParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+            myParser.setInput(is, null);
+
+
+            int event;
+            String text = null;
+
+            event = myParser.getEventType();
+
+            while (event != XmlPullParser.END_DOCUMENT)
+            {
+                String name = myParser.getName();
+
+                switch (event)
+                {
+                    case XmlPullParser.START_TAG:
+                        break;
+
+                    case XmlPullParser.TEXT:
+                        text = myParser.getText();
+                        break;
+
+                    case XmlPullParser.END_TAG:
+                        if (name.equals("CityCode"))
+                        {
+                            Log.i(TAG, "city code: " + text);
+                        } else if (name.equals("CityName"))
+                        {
+                            Log.i(TAG, "city name: " + text);
+                        } /**else if (name.equals("pressure"))
+                     {
+                     pressure = myParser.getAttributeValue(null, "value");
+                     } else if (name.equals("temperature"))
+                     {
+                     temperature = myParser.getAttributeValue(null, "value");
+                     } else
+                     {
+                     }*/
+                        break;
+                }
+                event = myParser.next();
+            }
+        } catch (
+                IOException e
+                )
+
+        {
+            e.printStackTrace();
+        } catch (
+                XmlPullParserException e
+                )
+
+        {
+
+        }
+
     }
 
 }

@@ -8,8 +8,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.rutvik.bhagwatiholidays.App;
 import com.rutvik.bhagwatiholidays.R;
 
+import extras.Log;
 import model.SingleFlightResult;
 
 /**
@@ -18,6 +20,8 @@ import model.SingleFlightResult;
 
 public class SingleFlightResultVH extends RecyclerView.ViewHolder
 {
+
+    private static final String TAG = App.APP_TAG + SingleFlightResultVH.class.getSimpleName();
 
     private ImageView ivAirLogo;
 
@@ -46,8 +50,10 @@ public class SingleFlightResultVH extends RecyclerView.ViewHolder
 
     public static void bind(final SingleFlightResultVH vh, final SingleFlightResult model)
     {
+        Log.i(TAG, "bind: AIR PRICE "+model.getAirPrice());
+
         vh.model = model;
-        vh.tvAirCode.setText(model.getAirCode());
+        vh.tvAirCode.setText(vh.model.getAirCode());
         vh.tvAirPrice.setText(model.getAirPrice());
         vh.tvStartTime.setText(model.getStartTime());
         vh.tvEndTime.setText(model.getEndTime());

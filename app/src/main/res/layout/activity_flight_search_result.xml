@@ -6,7 +6,7 @@
     android:id="@+id/activity_flight_search_result"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.rutvik.bhagwatiholidays.FlightSearchResult">
+    tools:context="com.rutvik.bhagwatiholidays.ActivityFlightSearchResult">
 
     <include
         android:id="@+id/toolbar"

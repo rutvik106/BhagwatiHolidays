@@ -78,4 +78,6 @@
     <string name="holiday">HOLIDAY</string>
     <string name="hotel">HOTEL</string>
 
+    <string name="rs">\u20B9</string>
+
 </resources>

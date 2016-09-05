@@ -1,7 +1,10 @@
 package model;
 
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.rutvik.bhagwatiholidays.App;
 
 /**
  * Created by rutvik on 31-08-2016 at 09:59 PM.
@@ -9,6 +12,8 @@ import android.widget.TextView;
 
 public class SingleFlightResult
 {
+
+    private static final String TAG = App.APP_TAG + SingleFlightResult.class.getSimpleName();
 
     private String flightName = "", airCode = "", startTime = "", endTime = "", airPrice = "", airPriceExtra = "",
             totalTime = "", isNonStop = "";
@@ -30,6 +35,7 @@ public class SingleFlightResult
 
     public String getAirCode()
     {
+        Log.i(TAG, "getAirCode: ");
         return airCode;
     }
 

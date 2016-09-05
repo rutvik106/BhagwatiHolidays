@@ -2,15 +2,17 @@ package adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.ViewGroup;
 
-import com.rutvik.bhagwatiholidays.FlightSearchResult;
+import com.rutvik.bhagwatiholidays.ActivityFlightSearchResult;
+import com.rutvik.bhagwatiholidays.App;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import component.FlightSearchResultComponent;
+import liveapimodels.flightsearchresult.FlightSearchResult;
 import model.SingleFlightResult;
 import viewholders.SingleFlightResultVH;
 
@@ -20,6 +22,8 @@ import viewholders.SingleFlightResultVH;
 
 public class FlightSearchResultAdapter extends RecyclerView.Adapter
 {
+
+    private static final String TAG = App.APP_TAG + FlightSearchResultAdapter.class.getSimpleName();
 
     private List<FlightSearchResultComponent> flightSearchResultComponentList;
 
@@ -31,10 +35,15 @@ public class FlightSearchResultAdapter extends RecyclerView.Adapter
         flightSearchResultComponentList = new LinkedList<>();
     }
 
-    public void addFlightSearchResult(FlightSearchResult flightDetails)
+    public void addFlightSearchResult(SingleFlightResult flightDetails)
     {
+
         flightSearchResultComponentList
                 .add(new FlightSearchResultComponent(FlightSearchResultComponent.FLIGHT_INFO, flightDetails));
+
+        Log.i(TAG, "addFlightSearchResult: ADDING FLIGHT DETAILS: " + flightSearchResultComponentList.size());
+
+        notifyItemInserted(flightSearchResultComponentList.size());
     }
 
     @Override
@@ -46,7 +55,6 @@ public class FlightSearchResultAdapter extends RecyclerView.Adapter
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-
         switch (viewType)
         {
             case FlightSearchResultComponent.FLIGHT_INFO:
@@ -59,7 +67,7 @@ public class FlightSearchResultAdapter extends RecyclerView.Adapter
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position)
     {
-        switch (position)
+        switch (getItemViewType(position))
         {
             case FlightSearchResultComponent.FLIGHT_INFO:
                 SingleFlightResultVH.bind((SingleFlightResultVH) holder,

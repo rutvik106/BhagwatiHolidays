@@ -1,9 +1,7 @@
 package bhfragment;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -18,39 +16,26 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.rutvik.bhagwatiholidays.App;
-import com.rutvik.bhagwatiholidays.FlightSearchResult;
-import com.rutvik.bhagwatiholidays.LiveAPI;
+import com.rutvik.bhagwatiholidays.ActivityFlightSearchResult;
 import com.rutvik.bhagwatiholidays.R;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import org.honorato.multistatetogglebutton.MultiStateToggleButton;
 import org.honorato.multistatetogglebutton.ToggleButton;
-import org.w3c.dom.Text;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import adapter.CityListAutocompleteAdapter;
 import extras.GetTermsAsync;
-import extras.SendMail;
 import extras.Validator;
 import extras.CommonUtilities;
 import liveapimodels.ApiConstants;
-import liveapimodels.City;
 
 /**
  * Created by Rakshit on 20-11-2015.
@@ -501,7 +486,7 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
     private void submitForm()
     {
 
-        final Map<String, String> formParams = new LinkedHashMap<>();
+        final HashMap<String, String> formParams = new HashMap<>();
         /**formParams.put("Contact", etMobileNo.getText().toString());
          formParams.put("Email", app.getUser().getEmail());
          formParams.put("Type", locationType[selectedLocationType]);
@@ -549,19 +534,10 @@ public class FragmentAirTickets extends Fragment implements DatePickerDialog.OnD
 
         if (isFormParamValid(formParams))
         {
-            final String authToken = app.getApiAuthentication().getTokenId();
-            if (!authToken.isEmpty())
-            {
-                new LiveAPI.SearchFlights(authToken, formParams)
-                {
 
-                    @Override
-                    protected void onPostExecute(liveapimodels.flightsearchresult.FlightSearchResult aVoid)
-                    {
-
-                    }
-                }.execute();
-            }
+            Intent i=new Intent(getActivity(),ActivityFlightSearchResult.class);
+            i.putExtra("post_param",formParams);
+            startActivity(i);
 
             /**CommonUtilities.showSimpleAlertDialog(getActivity(),
              "Alert",

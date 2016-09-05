@@ -1,6 +1,7 @@
 package com.rutvik.bhagwatiholidays;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
@@ -22,31 +23,38 @@ import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
 import org.json.JSONException;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import extras.AnalyticsTrackers;
 import io.branch.referral.Branch;
 import jsonobj.PackageItenary;
 import jsonobj.PackageList;
+import liveapimodels.Authentication;
+import liveapimodels.City;
 import model.User;
 import webservicehandler.PostHandler;
 
 /**
  * Created by ACER on 11-Nov-15.
  */
-public class App extends Application {
+public class App extends Application
+{
 
     public static final String APP_TAG = "BWT ";
 
     private User user;
 
-    public void setUser(User user) {
+    public void setUser(User user)
+    {
         this.user = user;
     }
 
-    public User getUser() {
+    public User getUser()
+    {
         return user;
     }
 
@@ -74,13 +82,22 @@ public class App extends Application {
 
     private ImageLoaderConfiguration imageLoaderConfiguration;
 
+    private Authentication apiAuthentication;
+
+    public Authentication getApiAuthentication()
+    {
+        return apiAuthentication;
+    }
 
 
     @Override
-    public void onCreate() {
+    public void onCreate()
+    {
         super.onCreate();
 
         Branch.getInstance(this, "key_live_jobYwEC4RDj7qiGLV32VjhfiuuomI8ua");
+
+        authenticateLiveApi();
 
         // UNIVERSAL IMAGE LOADER SETUP
         DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
@@ -102,9 +119,6 @@ public class App extends Application {
         AnalyticsTrackers.getInstance().get(AnalyticsTrackers.Target.APP);
 
 
-
-
-
         hotelAdultAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.my_spinner_item, hotelAdult);
         hotelChildAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.my_spinner_item, hotelChild);
         hotelInfantAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.my_spinner_item, hotelInfant);
@@ -119,37 +133,44 @@ public class App extends Application {
         //new test().execute();
     }
 
-    public ArrayAdapter<String> getHotelAdultAdapter() {
+    public ArrayAdapter<String> getHotelAdultAdapter()
+    {
         return hotelAdultAdapter;
     }
 
-    public ArrayAdapter<String> getHotelChildAdapter() {
+    public ArrayAdapter<String> getHotelChildAdapter()
+    {
         return hotelChildAdapter;
     }
 
-    public ArrayAdapter<String> getHotelInfantAdapter() {
+    public ArrayAdapter<String> getHotelInfantAdapter()
+    {
         return hotelInfantAdapter;
     }
 
-
-    public ArrayAdapter<String> getFlightAdultAdapter() {
+    public ArrayAdapter<String> getFlightAdultAdapter()
+    {
         return flightAdultAdapter;
     }
 
-    public ArrayAdapter<String> getFlightChildAdapter() {
+    public ArrayAdapter<String> getFlightChildAdapter()
+    {
         return flightChildAdapter;
     }
 
-    public ArrayAdapter<String> getFlightInfantAdapter() {
+    public ArrayAdapter<String> getFlightInfantAdapter()
+    {
         return flightInfantAdapter;
     }
 
-    public ArrayAdapter<String> getNoOfNightsAdapter() {
+    public ArrayAdapter<String> getNoOfNightsAdapter()
+    {
         return noOfNightsAdapter;
     }
 
 
-    public synchronized Tracker getGoogleAnalyticsTracker() {
+    public synchronized Tracker getGoogleAnalyticsTracker()
+    {
         AnalyticsTrackers analyticsTrackers = AnalyticsTrackers.getInstance();
         return analyticsTrackers.get(AnalyticsTrackers.Target.APP);
     }
@@ -159,7 +180,9 @@ public class App extends Application {
      *
      * @param screenName screen name to be displayed on GA dashboard
      */
-    public void trackScreenView(String screenName) {
+
+    public void trackScreenView(String screenName)
+    {
         Tracker t = getGoogleAnalyticsTracker();
 
         // Set screen name.
@@ -176,16 +199,19 @@ public class App extends Application {
      *
      * @param e exception to be tracked
      */
-    public void trackException(Exception e) {
-        if (e != null) {
+
+    public void trackException(Exception e)
+    {
+        if (e != null)
+        {
             Tracker t = getGoogleAnalyticsTracker();
 
             t.send(new HitBuilders.ExceptionBuilder()
-                            .setDescription(
-                                    new StandardExceptionParser(this, null)
-                                            .getDescription(Thread.currentThread().getName(), e))
-                            .setFatal(false)
-                            .build()
+                    .setDescription(
+                            new StandardExceptionParser(this, null)
+                                    .getDescription(Thread.currentThread().getName(), e))
+                    .setFatal(false)
+                    .build()
             );
         }
     }
@@ -197,7 +223,8 @@ public class App extends Application {
      * @param action   action of the event
      * @param label    label
      */
-    public void trackEvent(String category, String action, String label) {
+    public void trackEvent(String category, String action, String label)
+    {
         Tracker t = getGoogleAnalyticsTracker();
 
         // Build and send an Event.
@@ -205,59 +232,69 @@ public class App extends Application {
     }
 
 
+    public void authenticateLiveApi()
+    {
+        new LiveAPI.Authenticate()
+        {
+
+            @Override
+            protected void onPostExecute(Authentication authentication)
+            {
+                App.this.apiAuthentication = authentication;
+            }
+        }.execute();
+    }
+
 }
 
 
-/*
-class test extends AsyncTask<Void, Void, Void>
-{
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-    }
-
-    @Override
-    protected Void doInBackground(Void... params) {
-
-        HashMap<String,String> postParams = new HashMap<>();
-
-        postParams.put("method","get_package_list");
-
-        String response = new PostHandler("BWT",4,2000).doPostRequest("http://bhagwatiholidays.com/admin/webservice/index.php",postParams);
-
-        try {
-            PackageList packageList = new PackageList(response,"package_list");
-
-            for(PackageList.Package p:packageList.getPackageList())
-            {
-                Log.d("BWT", p.getThumb_href());
-
-                HashMap<String,String> postParams2 = new HashMap<>();
-
-                postParams2.put("method","get_single_package");
-                postParams2.put("package_id", p.getPackage_id());
-
-                String response2 = new PostHandler("BWT",4,2000).doPostRequest("http://bhagwatiholidays.com/admin/webservice/index.php",postParams2);
-
-                PackageItenary i=new PackageItenary(response2,"package");
-
-                for(String heading:i.getItenaryHeading())
-                {
-                    Log.i("BWT",heading);
-                }
-            }
-            //Log.i("BWT", packageList.toString());
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-
-        return null;
-    }
-
-    @Override
-    protected void onPostExecute(Void aVoid) {
-        super.onPostExecute(aVoid);
-    }
-}*/
+/**
+ * class test extends AsyncTask<Void, Void, Void>
+ * {
+ *
+ * @Override protected void onPreExecute() {
+ * super.onPreExecute();
+ * }
+ * @Override protected Void doInBackground(Void... params) {
+ * <p>
+ * HashMap<String,String> postParams = new HashMap<>();
+ * <p>
+ * postParams.put("method","get_package_list");
+ * <p>
+ * String response = new PostHandler("BWT",4,2000).doPostRequest("http://bhagwatiholidays.com/admin/webservice/index.php",postParams);
+ * <p>
+ * try {
+ * PackageList packageList = new PackageList(response,"package_list");
+ * <p>
+ * for(PackageList.Package p:packageList.getPackageList())
+ * {
+ * Log.d("BWT", p.getThumb_href());
+ * <p>
+ * HashMap<String,String> postParams2 = new HashMap<>();
+ * <p>
+ * postParams2.put("method","get_single_package");
+ * postParams2.put("package_id", p.getPackage_id());
+ * <p>
+ * String response2 = new PostHandler("BWT",4,2000).doPostRequest("http://bhagwatiholidays.com/admin/webservice/index.php",postParams2);
+ * <p>
+ * PackageItenary i=new PackageItenary(response2,"package");
+ * <p>
+ * for(String heading:i.getItenaryHeading())
+ * {
+ * Log.i("BWT",heading);
+ * }
+ * }
+ * //Log.i("BWT", packageList.toString());
+ * <p>
+ * } catch (JSONException e) {
+ * e.printStackTrace();
+ * }
+ * <p>
+ * <p>
+ * return null;
+ * }
+ * @Override protected void onPostExecute(Void aVoid) {
+ * super.onPostExecute(aVoid);
+ * }
+ * }
+ */

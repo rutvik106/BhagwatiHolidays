@@ -26,7 +26,11 @@ public class Authentication
 
     public String getTokenId()
     {
-        return TokenId;
+        if (TokenId != null)
+        {
+            return TokenId;
+        }
+        return "";
     }
 
     public void setTokenId(String TokenId)

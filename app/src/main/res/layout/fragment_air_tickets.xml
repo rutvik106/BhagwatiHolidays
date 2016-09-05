@@ -353,7 +353,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
-        android:src="@drawable/done"
+        android:src="@drawable/places_ic_search"
         app:elevation="6dp"
         app:fabSize="normal"
         app:pressedTranslationZ="12dp" />

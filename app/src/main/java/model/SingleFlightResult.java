@@ -6,6 +6,9 @@ import android.widget.TextView;
 
 import com.rutvik.bhagwatiholidays.App;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 /**
  * Created by rutvik on 31-08-2016 at 09:59 PM.
  */
@@ -16,7 +19,7 @@ public class SingleFlightResult
     private static final String TAG = App.APP_TAG + SingleFlightResult.class.getSimpleName();
 
     private String flightName = "", airCode = "", startTime = "", endTime = "", airPrice = "", airPriceExtra = "",
-            totalTime = "", isNonStop = "";
+            totalTime = "", isNonStop = "", flightNumber="";
 
     public SingleFlightResult()
     {
@@ -35,7 +38,6 @@ public class SingleFlightResult
 
     public String getAirCode()
     {
-        Log.i(TAG, "getAirCode: ");
         return airCode;
     }
 
@@ -66,7 +68,7 @@ public class SingleFlightResult
 
     public String getAirPrice()
     {
-        return airPrice;
+        return NumberFormat.getNumberInstance(Locale.getDefault()).format(Double.valueOf(airPrice));
     }
 
     public void setAirPrice(String airPrice)
@@ -104,5 +106,13 @@ public class SingleFlightResult
         this.isNonStop = isNonStop;
     }
 
+    public String getFlightNumber()
+    {
+        return flightNumber;
+    }
 
+    public void setFlightNumber(String flightNumber)
+    {
+        this.flightNumber = flightNumber;
+    }
 }

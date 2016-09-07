@@ -7,8 +7,8 @@ package liveapimodels;
 public class ApiConstants
 {
 
-    public static final String URL="http://192.168.0.102/live-api/webservice/webservice.php";
-    //public static final String URL="http://192.168.1.106/live-api/webservice/webservice.php";
+    //public static final String URL="http://192.168.0.100/live-api/webservice/webservice.php";
+    public static final String URL="http://www.bhagwatiholidays.com/admin/live-api/webservice/webservice.php";
 
 
     public static class CabinClass

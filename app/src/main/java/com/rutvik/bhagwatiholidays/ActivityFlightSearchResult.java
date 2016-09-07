@@ -7,11 +7,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.FrameLayout;
 
 import java.util.HashMap;
 
 import adapter.FlightSearchResultAdapter;
 import extras.Log;
+import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 import liveapimodels.flightsearchresult.FlightSearchResult;
 import liveapimodels.flightsearchresult.Results;
 import liveapimodels.flightsearchresult.Segments;
@@ -28,19 +31,25 @@ public class ActivityFlightSearchResult extends AppCompatActivity
 
     private HashMap<String, String> postParams;
 
+    private FrameLayout flLoading;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flight_search_result);
 
+        flLoading = (FrameLayout) findViewById(R.id.fl_loading);
+
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Search Result");
+        getSupportActionBar().setTitle("Available Flights");
 
         rvFlightSearchResult = (RecyclerView) findViewById(R.id.rv_flightSearchResult);
         rvFlightSearchResult.setHasFixedSize(true);
         rvFlightSearchResult.setLayoutManager(new LinearLayoutManager(this));
+
+        rvFlightSearchResult.setItemAnimator(new SlideInUpAnimator());
 
         adapter = new FlightSearchResultAdapter(this);
 
@@ -49,8 +58,15 @@ public class ActivityFlightSearchResult extends AppCompatActivity
         if (getIntent().getSerializableExtra("post_param") != null)
         {
             postParams = (HashMap<String, String>) getIntent().getSerializableExtra("post_param");
+
+            getSupportActionBar()
+                    .setSubtitle(postParams.get("origin").toString()+" - "+postParams.get("destination").toString());
+
             if (postParams != null)
             {
+                if(((App) getApplication()).getApiAuthentication()==null){
+                    return;
+                }
                 final String authToken = ((App) getApplication()).getApiAuthentication().getTokenId();
                 if (!authToken.isEmpty())
                 {
@@ -69,19 +85,16 @@ public class ActivityFlightSearchResult extends AppCompatActivity
 
                                 SingleFlightResult singleFlightResult = new SingleFlightResult();
 
-                                String rs = getResources().getString(R.string.rs);
-
-                                singleFlightResult.setAirPrice(rs + " " + result.getFare().getBaseFare());
-                                singleFlightResult.setAirCode(segment.getAirline().getAirlineCode() + " - " + segment.getAirline().getFlightNumber());
+                                singleFlightResult.setAirPrice(result.getFare().getBaseFare());
+                                singleFlightResult.setAirCode(segment.getAirline().getAirlineCode());
+                                singleFlightResult.setFlightNumber(segment.getAirline().getFlightNumber());
                                 singleFlightResult.setFlightName(segment.getAirline().getAirlineCode());
 
-                                String deptTime = segment.getOrigin().getDepTime();
-                                deptTime = deptTime.substring(deptTime.indexOf("T") + 1, deptTime.length() - 3);
-                                singleFlightResult.setStartTime(deptTime);
 
-                                String arrTime = segment.getDestination().getArrTime();
-                                arrTime = arrTime.substring(arrTime.indexOf("T") + 1, arrTime.length() - 3);
-                                singleFlightResult.setEndTime(arrTime);
+                                singleFlightResult.setStartTime(segment.getOrigin().getDepTime());
+
+
+                                singleFlightResult.setEndTime(segment.getDestination().getArrTime());
 
                                 if (segment.getStopPoint().isEmpty())
                                 {
@@ -94,7 +107,7 @@ public class ActivityFlightSearchResult extends AppCompatActivity
                                 adapter.addFlightSearchResult(singleFlightResult);
                             }
 
-                            adapter.notifyDataSetChanged();
+                            flLoading.setVisibility(View.GONE);
 
                         }
                     }.execute();

@@ -82,7 +82,7 @@ public class App extends Application
 
     private ImageLoaderConfiguration imageLoaderConfiguration;
 
-    private Authentication apiAuthentication;
+    public Authentication apiAuthentication;
 
     public Authentication getApiAuthentication()
     {
@@ -96,8 +96,6 @@ public class App extends Application
         super.onCreate();
 
         Branch.getInstance(this, "key_live_jobYwEC4RDj7qiGLV32VjhfiuuomI8ua");
-
-        authenticateLiveApi();
 
         // UNIVERSAL IMAGE LOADER SETUP
         DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
@@ -229,20 +227,6 @@ public class App extends Application
 
         // Build and send an Event.
         t.send(new HitBuilders.EventBuilder().setCategory(category).setAction(action).setLabel(label).build());
-    }
-
-
-    public void authenticateLiveApi()
-    {
-        new LiveAPI.Authenticate()
-        {
-
-            @Override
-            protected void onPostExecute(Authentication authentication)
-            {
-                App.this.apiAuthentication = authentication;
-            }
-        }.execute();
     }
 
 }

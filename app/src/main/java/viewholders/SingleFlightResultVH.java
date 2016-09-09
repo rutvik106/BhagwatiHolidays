@@ -15,13 +15,16 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.rutvik.bhagwatiholidays.App;
 import com.rutvik.bhagwatiholidays.R;
 
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import extras.Log;
+import model.FlightDetails;
 import model.SingleFlightResult;
 
 /**
@@ -46,7 +49,7 @@ public class SingleFlightResultVH extends RecyclerView.ViewHolder
     private SingleFlightResultVH(Context context, View itemView)
     {
         super(itemView);
-        this.itemView=itemView;
+        this.itemView = itemView;
         this.context = context;
         ivAirLogo = (ImageView) itemView.findViewById(R.id.iv_airLogo);
         tvAirCode = (TextView) itemView.findViewById(R.id.tv_airCode);
@@ -72,7 +75,9 @@ public class SingleFlightResultVH extends RecyclerView.ViewHolder
 
         String rs = vh.context.getResources().getString(R.string.rs);
 
-        vh.tvAirPrice.setText(rs + " " + model.getAirPrice());
+        rs = rs + " " + NumberFormat.getNumberInstance(Locale.getDefault()).format(Double.valueOf(model.getAirPrice()));
+
+        vh.tvAirPrice.setText(rs);
 
         String arrTime = model.getStartTime();
         arrTime = arrTime.substring(arrTime.indexOf("T") + 1, arrTime.length() - 3);

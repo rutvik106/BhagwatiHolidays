@@ -52,6 +52,7 @@ import bhfragment.FragmentHolidayPackages;
 import bhfragment.FragmentHotels;
 import bhfragment.FragmentVisa;
 import extras.CommonUtilities;
+import liveapimodels.Authentication;
 
 public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener
 {
@@ -81,7 +82,7 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
 
     SharedPreferences sp;
 
-    boolean isSearchBoxOpen=false;
+    boolean isSearchBoxOpen = false;
 
 
     @Override
@@ -89,6 +90,8 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_swipe_tab);
+
+        authenticateLiveApi();
 
         sp = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -215,8 +218,9 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
             {
                 View view = SwipeTabActivity.this.getCurrentFocus();
-                if (view != null) {
-                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (view != null)
+                {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 }
             }
@@ -229,11 +233,11 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
                     isOnPackagesPage = true;
                     if (isSearchBoxOpen)
                     {
-                        Log.i(TAG,"SEARCH BOX IS OPEN SETTING WHITE BACKGROUND");
+                        Log.i(TAG, "SEARCH BOX IS OPEN SETTING WHITE BACKGROUND");
                         getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.white));
-                    }
-                    else {
-                        Log.i(TAG,"SEARCH BOX IS CLOSED SETTING LOGO IN BACKGROUND");
+                    } else
+                    {
+                        Log.i(TAG, "SEARCH BOX IS CLOSED SETTING LOGO IN BACKGROUND");
                         getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.toolbar_logo));
                     }
                     search.setVisible(isOnPackagesPage);
@@ -269,8 +273,8 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
             @Override
             public boolean onClose()
             {
-                Log.i(TAG,"SEARCH VIEW ON CLOSED");
-                isSearchBoxOpen=false;
+                Log.i(TAG, "SEARCH VIEW ON CLOSED");
+                isSearchBoxOpen = false;
                 getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.toolbar_logo));
                 return false;
             }
@@ -281,8 +285,8 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
             @Override
             public void onClick(View v)
             {
-                Log.i(TAG,"SEARCH VIEW ON SEARCH CKLICKED");
-                isSearchBoxOpen=true;
+                Log.i(TAG, "SEARCH VIEW ON SEARCH CKLICKED");
+                isSearchBoxOpen = true;
                 getSupportActionBar().setBackgroundDrawable((getResources().getDrawable(R.color.white)));
             }
         });
@@ -335,10 +339,10 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
         switch (item.getItemId())
         {
             case R.id.action_search:
-                Log.i(TAG,"ACTION SEARCH CLICKED");
+                Log.i(TAG, "ACTION SEARCH CLICKED");
                 if (searchView.isActivated())
                 {
-                    Log.i(TAG,"SEARCH VIEW IS ACTIVE");
+                    Log.i(TAG, "SEARCH VIEW IS ACTIVE");
                     getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.white));
                 }
                 return true;
@@ -501,6 +505,20 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
         {
             return null;//mFragmentTitleList.get(position);
         }
+    }
+
+
+    public void authenticateLiveApi()
+    {
+        new LiveAPI.Authenticate()
+        {
+
+            @Override
+            protected void onPostExecute(Authentication authentication)
+            {
+                app.apiAuthentication = authentication;
+            }
+        }.execute();
     }
 
 }

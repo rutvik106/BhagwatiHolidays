@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.Collections;
 import java.util.HashMap;
 
 import adapter.ViewPagerAdapter;
@@ -74,6 +75,32 @@ public class ActivityFlightSearchResult extends AppCompatActivity
 
 
         tabLayout.setupWithViewPager(viewPager);
+
+        findViewById(R.id.ll_sortByPrice).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                if(oneWayFlight!=null){
+                    if(oneWayFlight.adapter!=null){
+                        if(oneWayFlight.adapter.getItemCount()>0){
+                            Log.i(TAG,"SORTING NOW !!!!!!!!");
+                            Collections.sort(oneWayFlight.adapter.flightSearchResultComponentList, new MultiFlightResult.FairComparator());
+                            oneWayFlight.adapter.notifyDataSetChanged();
+                        }
+                    }
+                }
+
+                if(returnFlight!=null){
+                    if(returnFlight.adapter!=null){
+                        if(returnFlight.adapter.getItemCount()>0){
+
+                        }
+                    }
+                }
+
+            }
+        });
 
 
     }

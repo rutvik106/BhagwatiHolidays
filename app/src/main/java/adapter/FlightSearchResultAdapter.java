@@ -27,7 +27,7 @@ public class FlightSearchResultAdapter extends RecyclerView.Adapter
 
     private static final String TAG = App.APP_TAG + FlightSearchResultAdapter.class.getSimpleName();
 
-    private List<FlightSearchResultComponent> flightSearchResultComponentList;
+    public List<FlightSearchResultComponent> flightSearchResultComponentList;
 
     private final Context context;
 

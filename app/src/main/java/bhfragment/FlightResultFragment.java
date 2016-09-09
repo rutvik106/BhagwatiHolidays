@@ -43,7 +43,7 @@ public class FlightResultFragment extends Fragment
 
     Context context;
 
-    private FlightSearchResultAdapter adapter;
+    public FlightSearchResultAdapter adapter;
 
 
     public FlightResultFragment()

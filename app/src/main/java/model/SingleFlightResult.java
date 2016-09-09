@@ -13,13 +13,13 @@ import java.util.Locale;
  * Created by rutvik on 31-08-2016 at 09:59 PM.
  */
 
-public class SingleFlightResult
+public class SingleFlightResult implements FlightDetails
 {
 
     private static final String TAG = App.APP_TAG + SingleFlightResult.class.getSimpleName();
 
     private String flightName = "", airCode = "", startTime = "", endTime = "", airPrice = "", airPriceExtra = "",
-            totalTime = "", isNonStop = "", flightNumber="";
+            totalTime = "", isNonStop = "", flightNumber = "";
 
     public SingleFlightResult()
     {
@@ -68,7 +68,7 @@ public class SingleFlightResult
 
     public String getAirPrice()
     {
-        return NumberFormat.getNumberInstance(Locale.getDefault()).format(Double.valueOf(airPrice));
+        return airPrice;
     }
 
     public void setAirPrice(String airPrice)
@@ -114,5 +114,11 @@ public class SingleFlightResult
     public void setFlightNumber(String flightNumber)
     {
         this.flightNumber = flightNumber;
+    }
+
+    @Override
+    public double getPrice()
+    {
+        return Double.valueOf(airPrice);
     }
 }

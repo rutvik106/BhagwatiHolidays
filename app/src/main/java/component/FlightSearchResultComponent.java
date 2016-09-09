@@ -1,10 +1,12 @@
 package component;
 
+import model.FlightDetails;
+
 /**
  * Created by rutvik on 31-08-2016 at 09:51 PM.
  */
 
-public class FlightSearchResultComponent<T>
+public class FlightSearchResultComponent<T> implements FlightDetails
 {
 
     public static final int FLIGHT_INFO = 0;
@@ -29,5 +31,11 @@ public class FlightSearchResultComponent<T>
     public int getViewType()
     {
         return viewType;
+    }
+
+    @Override
+    public double getPrice()
+    {
+        return ((FlightDetails)object).getPrice();
     }
 }

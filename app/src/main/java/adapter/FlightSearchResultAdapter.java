@@ -13,7 +13,9 @@ import java.util.List;
 
 import component.FlightSearchResultComponent;
 import liveapimodels.flightsearchresult.FlightSearchResult;
+import model.MultiFlightResult;
 import model.SingleFlightResult;
+import viewholders.MultiFlightResultVH;
 import viewholders.SingleFlightResultVH;
 
 /**
@@ -46,6 +48,16 @@ public class FlightSearchResultAdapter extends RecyclerView.Adapter
         notifyItemInserted(flightSearchResultComponentList.size());
     }
 
+    public void addMultiFlightSearchResult(MultiFlightResult resultList)
+    {
+        flightSearchResultComponentList
+                .add(new FlightSearchResultComponent(FlightSearchResultComponent.MULTI_FLIGHT_INFO, resultList));
+
+        Log.i(TAG, "addMultiFlightSearchResult: ADDING FLIGHT DETAILS: " + flightSearchResultComponentList.size());
+
+        notifyItemInserted(flightSearchResultComponentList.size());
+    }
+
     @Override
     public int getItemViewType(int position)
     {
@@ -59,6 +71,10 @@ public class FlightSearchResultAdapter extends RecyclerView.Adapter
         {
             case FlightSearchResultComponent.FLIGHT_INFO:
                 return SingleFlightResultVH.create(context, parent);
+
+            case FlightSearchResultComponent.MULTI_FLIGHT_INFO:
+                return MultiFlightResultVH.create(context, parent);
+
         }
 
         return null;
@@ -73,6 +89,12 @@ public class FlightSearchResultAdapter extends RecyclerView.Adapter
                 SingleFlightResultVH.bind((SingleFlightResultVH) holder,
                         (SingleFlightResult) flightSearchResultComponentList.get(position).getObject());
                 break;
+
+            case FlightSearchResultComponent.MULTI_FLIGHT_INFO:
+                MultiFlightResultVH.bind((MultiFlightResultVH) holder,
+                        (MultiFlightResult) flightSearchResultComponentList.get(position).getObject());
+                break;
+
         }
     }
 

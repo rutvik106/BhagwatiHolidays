@@ -25,7 +25,7 @@ public class ApiConstants
     public static class JourneyType
     {
         public static final String ONE_WAY = "1";
-        public static final String RETURN = "3";
+        public static final String RETURN = "2";
     }
 
 

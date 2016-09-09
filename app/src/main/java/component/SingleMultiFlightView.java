@@ -1,17 +1,11 @@
-package viewholders;
+package component;
 
 import android.content.Context;
-import android.support.v4.util.TimeUtils;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.rutvik.bhagwatiholidays.App;
 import com.rutvik.bhagwatiholidays.R;
 
@@ -21,31 +15,29 @@ import java.util.Date;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
-import extras.Log;
-import model.SingleFlightResult;
+import model.SingleMultiFlightResult;
 
 /**
- * Created by rutvik on 31-08-2016 at 10:00 PM.
+ * Created by rutvik on 09-09-2016 at 01:38 PM.
  */
 
-public class SingleFlightResultVH extends RecyclerView.ViewHolder
+public class SingleMultiFlightView
 {
 
-    private static final String TAG = App.APP_TAG + SingleFlightResultVH.class.getSimpleName();
+    private static final String TAG = App.APP_TAG + SingleMultiFlightView.class.getSimpleName();
 
     private ImageView ivAirLogo;
 
     private TextView tvAirCode, tvStartTime, tvEndTime, tvAirPrice, tvAirPriceExtra, tvTotalTime, tvIsNonStop;
 
-    private SingleFlightResult model;
+    private SingleMultiFlightResult model;
 
     private final Context context;
 
     private final View itemView;
 
-    private SingleFlightResultVH(Context context, View itemView)
+    private SingleMultiFlightView(Context context, View itemView)
     {
-        super(itemView);
         this.itemView=itemView;
         this.context = context;
         ivAirLogo = (ImageView) itemView.findViewById(R.id.iv_airLogo);
@@ -59,20 +51,18 @@ public class SingleFlightResultVH extends RecyclerView.ViewHolder
 
     }
 
-    public static SingleFlightResultVH create(final Context context, final ViewGroup parent)
+    public static SingleMultiFlightView create(final Context context)
     {
-        return new SingleFlightResultVH(context, LayoutInflater.from(context)
-                .inflate(R.layout.single_flight_result_row_item, parent, false));
+        return new SingleMultiFlightView(context, LayoutInflater.from(context)
+                .inflate(R.layout.single_flight_result_row_item, null, false));
     }
 
-    public static void bind(final SingleFlightResultVH vh, final SingleFlightResult model)
+    public static void bind(final SingleMultiFlightView vh, final SingleMultiFlightResult model)
     {
         vh.model = model;
         vh.tvAirCode.setText(model.getAirCode() + " - " + model.getFlightNumber());
 
-        String rs = vh.context.getResources().getString(R.string.rs);
-
-        vh.tvAirPrice.setText(rs + " " + model.getAirPrice());
+        vh.tvAirPrice.setText(model.getOriginDestination());
 
         String arrTime = model.getStartTime();
         arrTime = arrTime.substring(arrTime.indexOf("T") + 1, arrTime.length() - 3);
@@ -128,4 +118,5 @@ public class SingleFlightResultVH extends RecyclerView.ViewHolder
     {
         return itemView;
     }
+
 }

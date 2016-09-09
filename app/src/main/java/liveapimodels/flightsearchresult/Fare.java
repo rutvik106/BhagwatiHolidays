@@ -1,11 +1,13 @@
 package liveapimodels.flightsearchresult;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Created by rutvik on 03-09-2016 at 01:44 PM.
  */
 
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class Fare
 {
 
@@ -62,6 +64,9 @@ public class Fare
 
     @JsonProperty("AdditionalTxnFeeOfrd")
     private String AdditionalTxnFeeOfrd;
+
+    @JsonProperty("TransactionFee")
+    private String TransactionFee;
 
     public ChargeBU[] getChargeBU ()
     {
@@ -241,6 +246,16 @@ public class Fare
     public void setAdditionalTxnFeeOfrd (String AdditionalTxnFeeOfrd)
     {
         this.AdditionalTxnFeeOfrd = AdditionalTxnFeeOfrd;
+    }
+
+    public String getTransactionFee()
+    {
+        return TransactionFee;
+    }
+
+    public void setTransactionFee(String transactionFee)
+    {
+        TransactionFee = transactionFee;
     }
 
     @Override

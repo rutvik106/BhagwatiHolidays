@@ -9,6 +9,8 @@ public class FlightSearchResultComponent<T>
 
     public static final int FLIGHT_INFO = 0;
 
+    public static final int MULTI_FLIGHT_INFO = 1;
+
     final T object;
 
     final int viewType;

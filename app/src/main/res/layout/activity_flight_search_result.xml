@@ -21,16 +21,16 @@
             android:layout_height="match_parent">
 
             <LinearLayout
-                android:padding="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="5dp">
 
                 <TextView
-                    android:gravity="center"
                     android:id="@+id/tv_toolbarTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:text="Available Flights"
                     android:textColor="@android:color/black"
                     android:textSize="20sp"
@@ -42,11 +42,11 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:text="AMD"
-                        android:layout_gravity="center"
                         android:id="@+id/tv_origin"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="AMD"
                         android:textSize="16sp"/>
 
                     <ImageView
@@ -57,20 +57,20 @@
                         android:visibility="gone"/>
 
                     <ImageView
-                        android:layout_gravity="center"
                         android:id="@+id/iv_oneWay"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:src="@drawable/ic_arrow_forward_black_18dp"
                         android:visibility="visible"/>
 
 
                     <TextView
-                        android:text="BOM"
-                        android:layout_gravity="center"
                         android:id="@+id/tv_destination"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="BOM"
                         android:textSize="16sp"/>
 
                 </LinearLayout>
@@ -79,32 +79,46 @@
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:padding="5dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="right|center_vertical">
+                android:gravity="right|center_vertical"
+                android:padding="5dp">
 
                 <LinearLayout
                     android:id="@+id/ll_sortByPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:padding="8dp">
 
 
                     <TextView
-                        android:gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:textSize="22sp"
+                        android:gravity="center"
+                        android:text="@string/rs"
                         android:textColor="@android:color/black"
-                        android:text="@string/rs"/>
+                        android:textSize="22sp"/>
 
                     <ImageView
-                        android:tint="@color/bb_inActiveBottomBarItemColor"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:src="@drawable/ic_arrow_downward_black_24dp"/>
+                        android:src="@drawable/ic_arrow_downward_black_24dp"
+                        android:tint="@color/bb_inActiveBottomBarItemColor"/>
 
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_filterFlights"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:padding="8dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_filter_list_black_24dp"/>
 
                 </LinearLayout>
 

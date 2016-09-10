@@ -47,6 +47,16 @@ public class MultiFlightResultVH extends RecyclerView.ViewHolder
 
     public static void bind(MultiFlightResultVH vh, MultiFlightResult model)
     {
+/**        if(!model.isVisible()){
+            vh.itemView.setVisibility(View.GONE);
+            return;
+        }
+        else {
+            if(vh.itemView.getVisibility()==View.GONE)
+            {
+                vh.itemView.setVisibility(View.VISIBLE);
+            }
+        }*/
         vh.model=model;
         if (vh.llMultiFlightContainer != null)
         {

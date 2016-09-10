@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -65,29 +66,23 @@ public class FlightResultFragment extends Fragment
         View rootView = inflater.inflate(R.layout.flight_result_fragment, container, false);
 
         flLoading = (FrameLayout) rootView.findViewById(R.id.fl_loading);
+        flLoading.setVisibility(View.GONE);
 
         rvFlightSearchResult = (RecyclerView) rootView.findViewById(R.id.rv_flightSearchResult);
         rvFlightSearchResult.setHasFixedSize(true);
         rvFlightSearchResult.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        rvFlightSearchResult.setItemAnimator(new SlideInUpAnimator());
-
         adapter = new FlightSearchResultAdapter(getActivity());
 
         rvFlightSearchResult.setAdapter(adapter);
 
+        RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
+        itemAnimator.setAddDuration(1000);
+        itemAnimator.setRemoveDuration(1000);
+        rvFlightSearchResult.setItemAnimator(itemAnimator);
+
         return rootView;
 
-    }
-
-    public void addFlightSearchResult(SingleFlightResult result)
-    {
-        adapter.addFlightSearchResult(result);
-    }
-
-    public void addMultiFlightSearchResult(MultiFlightResult resultList)
-    {
-        adapter.addMultiFlightSearchResult(resultList);
     }
 
     public void hideProgressBar()

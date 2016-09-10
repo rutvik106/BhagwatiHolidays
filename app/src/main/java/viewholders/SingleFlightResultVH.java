@@ -70,6 +70,18 @@ public class SingleFlightResultVH extends RecyclerView.ViewHolder
 
     public static void bind(final SingleFlightResultVH vh, final SingleFlightResult model)
     {
+
+/**        if(!model.isVisible()){
+            vh.itemView.setVisibility(View.GONE);
+            return;
+        }
+        else {
+            if(vh.itemView.getVisibility()==View.GONE)
+            {
+                vh.itemView.setVisibility(View.VISIBLE);
+            }
+        }*/
+
         vh.model = model;
         vh.tvAirCode.setText(model.getAirCode() + " - " + model.getFlightNumber());
 

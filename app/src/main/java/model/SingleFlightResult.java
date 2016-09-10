@@ -21,6 +21,8 @@ public class SingleFlightResult implements FlightDetails
     private String flightName = "", airCode = "", startTime = "", endTime = "", airPrice = "", airPriceExtra = "",
             totalTime = "", isNonStop = "", flightNumber = "";
 
+    private boolean isVisible=true;
+
     public SingleFlightResult()
     {
 
@@ -121,4 +123,28 @@ public class SingleFlightResult implements FlightDetails
     {
         return Double.valueOf(airPrice);
     }
+
+    @Override
+    public boolean getFlightType(String name)
+    {
+        if (getFlightName().equals(name))
+        {
+            return true;
+        }
+        return false;
+    }
+
+/**    @Override
+    public boolean isVisible()
+    {
+        return isVisible;
+    }
+
+    @Override
+    public void setVisibility(boolean isVisible)
+    {
+        this.isVisible = isVisible;
+    }*/
+
+
 }

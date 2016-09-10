@@ -10,16 +10,20 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 import adapter.ViewPagerAdapter;
 import bhfragment.FlightResultFragment;
+import component.FlightSearchResultComponent;
 import extras.Log;
 import liveapimodels.ApiConstants;
 import liveapimodels.flightsearchresult.FlightSearchResult;
 import liveapimodels.flightsearchresult.Results;
 import liveapimodels.flightsearchresult.Segments;
+import model.FlightDetails;
 import model.MultiFlightResult;
 import model.SingleFlightResult;
 import model.SingleMultiFlightResult;
@@ -42,6 +46,10 @@ public class ActivityFlightSearchResult extends AppCompatActivity
 
     private ImageView ivOneWay, ivReturn;
 
+    public List<FlightSearchResultComponent> oneWayFlightSearchResultComponentList=new ArrayList<>();
+    public List<FlightSearchResultComponent> tempOneWayFlightSearchResultComponentList=new ArrayList<>();
+    public List<FlightSearchResultComponent> returnWayFlightSearchResultComponentList=new ArrayList<>();
+    public List<FlightSearchResultComponent> tempReturnWayFlightSearchResultComponentList=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -81,24 +89,59 @@ public class ActivityFlightSearchResult extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                if(oneWayFlight!=null){
-                    if(oneWayFlight.adapter!=null){
-                        if(oneWayFlight.adapter.getItemCount()>0){
-                            Log.i(TAG,"SORTING NOW !!!!!!!!");
-                            Collections.sort(oneWayFlight.adapter.flightSearchResultComponentList, new MultiFlightResult.FairComparator());
-                            oneWayFlight.adapter.notifyDataSetChanged();
+                if (oneWayFlight != null)
+                {
+                    if (oneWayFlight.adapter != null)
+                    {
+                        if (oneWayFlight.adapter.getItemCount() > 0)
+                        {
+                            Log.i(TAG, "SORTING NOW !!!!!!!!");
+                            Collections.sort(oneWayFlightSearchResultComponentList, new MultiFlightResult.FairComparator());
+                            oneWayFlight.adapter.animateTo(oneWayFlightSearchResultComponentList);
                         }
                     }
                 }
 
-                if(returnFlight!=null){
-                    if(returnFlight.adapter!=null){
-                        if(returnFlight.adapter.getItemCount()>0){
+                if (returnFlight != null)
+                {
+                    if (returnFlight.adapter != null)
+                    {
+                        if (returnFlight.adapter.getItemCount() > 0)
+                        {
 
                         }
                     }
                 }
 
+            }
+        });
+
+        findViewById(R.id.ll_filterFlights).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                if (oneWayFlight != null)
+                {
+                    if (oneWayFlight.adapter != null)
+                    {
+                        if (oneWayFlight.adapter.getItemCount() > 0)
+                        {
+                            filterFlightByType("6E");
+                        }
+                    }
+                }
+
+                if (returnFlight != null)
+                {
+                    if (returnFlight.adapter != null)
+                    {
+                        if (returnFlight.adapter.getItemCount() > 0)
+                        {
+
+                        }
+                    }
+                }
             }
         });
 
@@ -195,7 +238,7 @@ public class ActivityFlightSearchResult extends AppCompatActivity
                         //will be true for INTERNATIONAL FLIGHTS as they have multi stops
                         if (s[0].length > 1)
                         {
-                            final MultiFlightResult multiFlightResult= new MultiFlightResult();
+                            final MultiFlightResult multiFlightResult = new MultiFlightResult();
                             for (int j = 0; j < s[0].length; j++)
                             {
                                 final Segments segment = s[0][j];
@@ -226,7 +269,9 @@ public class ActivityFlightSearchResult extends AppCompatActivity
                             }
 
                             multiFlightResult.setPublishedFair(result.getFare().getPublishedFare());
-                            oneWayFlight.addMultiFlightSearchResult(multiFlightResult);
+
+                            oneWayFlightSearchResultComponentList.add(oneWayFlight.adapter.addMultiFlightSearchResult(multiFlightResult));
+
 
                         } else
                         {
@@ -248,7 +293,8 @@ public class ActivityFlightSearchResult extends AppCompatActivity
                                 singleFlightResult.setIsNonStop(segment.getStopPoint());
                             }
 
-                            oneWayFlight.addFlightSearchResult(singleFlightResult);
+                            oneWayFlightSearchResultComponentList.add(oneWayFlight.adapter.addFlightSearchResult(singleFlightResult));
+
                         }
                     }
 
@@ -279,7 +325,8 @@ public class ActivityFlightSearchResult extends AppCompatActivity
                                     singleFlightResult.setIsNonStop(segment.getStopPoint());
                                 }
 
-                                returnFlight.addFlightSearchResult(singleFlightResult);
+                                returnWayFlightSearchResultComponentList.add(returnFlight.adapter.addFlightSearchResult(singleFlightResult));
+                                //
                             }
 
                             returnFlight.hideProgressBar();
@@ -289,6 +336,32 @@ public class ActivityFlightSearchResult extends AppCompatActivity
             }
         }.execute();
 
+    }
+
+    public void filterFlightByType(String flightName)
+    {
+        if (oneWayFlight != null)
+        {
+            if (oneWayFlight.adapter.getItemCount() > 0)
+            {
+                try
+                {
+                    for (FlightSearchResultComponent component : oneWayFlightSearchResultComponentList)
+                    {
+                        if (component.getFlightType(flightName))
+                        {
+                            tempOneWayFlightSearchResultComponentList.add(component);
+                        }
+                    }
+
+                    oneWayFlight.adapter.animateTo(tempOneWayFlightSearchResultComponentList);
+
+                } catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
 }

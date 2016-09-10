@@ -21,6 +21,9 @@ public class MultiFlightResult implements FlightDetails
 
     private final List<SingleMultiFlightResult> singleMultiFlightResultList;
 
+
+    private boolean isVisible=true;
+
     public MultiFlightResult()
     {
         singleMultiFlightResultList = new ArrayList<>();
@@ -51,6 +54,28 @@ public class MultiFlightResult implements FlightDetails
     {
         return Double.valueOf(publishedFair);
     }
+
+    @Override
+    public boolean getFlightType(String name)
+    {
+        for (SingleMultiFlightResult singleMultiFlightResult : singleMultiFlightResultList)
+        {
+            return singleMultiFlightResult.getFlightName().equals(name);
+        }
+        return false;
+    }
+
+/**    @Override
+    public boolean isVisible()
+    {
+        return isVisible;
+    }
+
+    @Override
+    public void setVisibility(boolean isVisible)
+    {
+        this.isVisible=isVisible;
+    }*/
 
     public static class FairComparator implements Comparator<FlightDetails>
     {

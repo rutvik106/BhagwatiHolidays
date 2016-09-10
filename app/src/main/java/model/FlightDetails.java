@@ -9,4 +9,10 @@ public interface FlightDetails
 
     double getPrice();
 
+    boolean getFlightType(String name);
+/**
+    boolean isVisible();
+
+    void setVisibility(boolean isVisible);*/
+
 }

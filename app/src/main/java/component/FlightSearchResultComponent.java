@@ -13,6 +13,8 @@ public class FlightSearchResultComponent<T> implements FlightDetails
 
     public static final int MULTI_FLIGHT_INFO = 1;
 
+    public static final int EMPTY_VIEW = -1;
+
     final T object;
 
     final int viewType;
@@ -36,6 +38,26 @@ public class FlightSearchResultComponent<T> implements FlightDetails
     @Override
     public double getPrice()
     {
-        return ((FlightDetails)object).getPrice();
+        return ((FlightDetails) object).getPrice();
     }
+
+    @Override
+    public boolean getFlightType(String name)
+    {
+        return ((FlightDetails) object).getFlightType(name);
+    }
+
+/**    @Override
+    public boolean isVisible()
+    {
+        return ((FlightDetails) object).isVisible();
+    }
+
+    @Override
+    public void setVisibility(boolean isVisible)
+    {
+        ((FlightDetails) object).setVisibility(isVisible);
+    }*/
+
+
 }

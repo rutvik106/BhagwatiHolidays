@@ -13,7 +13,7 @@ public class FlightSearchResultComponent<T> implements FlightDetails
 
     public static final int MULTI_FLIGHT_INFO = 1;
 
-    public static final int EMPTY_VIEW = -1;
+    public static final int EMPTY_VIEW = 2;
 
     final T object;
 

@@ -71,14 +71,21 @@ public class FlightSearchResultAdapter extends RecyclerView.Adapter
         return component;
     }
 
+    public void addEmptyView(){
+        final FlightSearchResultComponent component=new FlightSearchResultComponent(FlightSearchResultComponent.EMPTY_VIEW, null);
+        flightSearchResultComponentList
+                .add(component);
+
+        Log.i(TAG, "addMultiFlightSearchResult: ADDING EMPTY VIEW: " + flightSearchResultComponentList.size());
+
+        notifyItemInserted(flightSearchResultComponentList.size());
+
+    }
+
 
     @Override
     public int getItemViewType(int position)
     {
-        if (flightSearchResultComponentList.size() == 0)
-        {
-            return FlightSearchResultComponent.EMPTY_VIEW;
-        }
         return flightSearchResultComponentList.get(position).getViewType();
     }
 
@@ -119,6 +126,7 @@ public class FlightSearchResultAdapter extends RecyclerView.Adapter
                 break;
 
             case FlightSearchResultComponent.EMPTY_VIEW:
+                EmptyVH.bind((EmptyVH) holder);
                 break;
 
         }
@@ -127,10 +135,6 @@ public class FlightSearchResultAdapter extends RecyclerView.Adapter
     @Override
     public int getItemCount()
     {
-        if (flightSearchResultComponentList.size() == 0)
-        {
-            return 1;
-        }
         return flightSearchResultComponentList.size();
     }
 
@@ -226,5 +230,9 @@ public class FlightSearchResultAdapter extends RecyclerView.Adapter
         }
     }
 
+    public void clear(){
+        flightSearchResultComponentList.clear();
+        notifyDataSetChanged();
+    }
 
 }

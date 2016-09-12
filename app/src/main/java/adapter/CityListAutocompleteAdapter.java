@@ -2,6 +2,7 @@ package adapter;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,7 +55,12 @@ public class CityListAutocompleteAdapter extends BaseAdapter implements Filterab
         this.otherAct = otherAct;
         this.otherActAdapter = otherActAdapter;
         dropdownItemMap = new HashMap<>();
-        new PrepareCityList(context).execute();
+        if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ) {
+            new PrepareCityList(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            new PrepareCityList(context).execute();
+        }
+
     }
 
     private CityListAutocompleteAdapter(CityListAutocompleteAdapter adapter)

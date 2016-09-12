@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.CalendarContract;
 import android.support.design.widget.TabLayout;
@@ -91,8 +93,6 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_swipe_tab);
 
-        authenticateLiveApi();
-
         sp = PreferenceManager.getDefaultSharedPreferences(this);
 
         mPlusOneButton = (PlusOneButton) findViewById(R.id.plus_one_button);
@@ -144,6 +144,7 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
             e.printStackTrace();
         }
 
+        authenticateLiveApi();
 
     }
 
@@ -510,15 +511,28 @@ public class SwipeTabActivity extends AppCompatActivity implements FragmentDrawe
 
     public void authenticateLiveApi()
     {
-        new LiveAPI.Authenticate()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
         {
-
-            @Override
-            protected void onPostExecute(Authentication authentication)
+            new LiveAPI.Authenticate()
             {
-                app.apiAuthentication = authentication;
-            }
-        }.execute();
+                @Override
+                protected void onPostExecute(Authentication authentication)
+                {
+                    app.apiAuthentication = authentication;
+                }
+            }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else
+        {
+            new LiveAPI.Authenticate()
+            {
+                @Override
+                protected void onPostExecute(Authentication authentication)
+                {
+                    app.apiAuthentication = authentication;
+                }
+            }.execute();
+        }
+
     }
 
 }

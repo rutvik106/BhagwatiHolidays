@@ -46,6 +46,11 @@ public class FlightResultFragment extends Fragment
 
     public FlightSearchResultAdapter adapter;
 
+    private LinearLayoutManager llm;
+
+    public boolean loading = true;
+    int pastVisibleItems, visibleItemCount, totalItemCount;
+
 
     public FlightResultFragment()
     {
@@ -70,16 +75,47 @@ public class FlightResultFragment extends Fragment
 
         rvFlightSearchResult = (RecyclerView) rootView.findViewById(R.id.rv_flightSearchResult);
         rvFlightSearchResult.setHasFixedSize(true);
-        rvFlightSearchResult.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        llm=new LinearLayoutManager(getActivity());
+
+        rvFlightSearchResult.setLayoutManager(llm);
 
         adapter = new FlightSearchResultAdapter(getActivity());
 
         rvFlightSearchResult.setAdapter(adapter);
 
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
-        itemAnimator.setAddDuration(1000);
-        itemAnimator.setRemoveDuration(1000);
+        itemAnimator.setAddDuration(500);
+        itemAnimator.setRemoveDuration(500);
         rvFlightSearchResult.setItemAnimator(itemAnimator);
+
+        if(loading){
+            for (int i=0;i<10;i++){
+                adapter.addEmptyView();
+            }
+        }
+
+        rvFlightSearchResult.setOnScrollListener(new RecyclerView.OnScrollListener()
+        {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+            {
+                if(dy > 0) //check for scroll down
+                {
+                    visibleItemCount = llm.getChildCount();
+                    totalItemCount = llm.getItemCount();
+                    pastVisibleItems = llm.findFirstVisibleItemPosition();
+
+                    if (loading)
+                    {
+                        if ( (visibleItemCount + pastVisibleItems) >= totalItemCount)
+                        {
+                            adapter.addEmptyView();
+                        }
+                    }
+                }
+            }
+        });
 
         return rootView;
 
@@ -88,6 +124,17 @@ public class FlightResultFragment extends Fragment
     public void hideProgressBar()
     {
         flLoading.setVisibility(View.GONE);
+    }
+
+    public void clearAdapter(){
+        if(llm!=null)
+        {
+            llm.removeAllViews();
+        }
+        if(adapter!=null)
+        {
+            adapter.clear();
+        }
     }
 
 }

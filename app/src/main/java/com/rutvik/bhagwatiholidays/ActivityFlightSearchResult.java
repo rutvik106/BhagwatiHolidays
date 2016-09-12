@@ -1,7 +1,9 @@
 package com.rutvik.bhagwatiholidays;
 
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -13,32 +15,41 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import adapter.FilterDrawerAdapter;
 import adapter.ViewPagerAdapter;
 import bhfragment.FlightResultFragment;
+import bhfragment.FragmentDrawer;
+import bhfragment.FragmentFilterDrawer;
 import component.FlightSearchResultComponent;
 import extras.Log;
 import liveapimodels.ApiConstants;
 import liveapimodels.flightsearchresult.FlightSearchResult;
 import liveapimodels.flightsearchresult.Results;
 import liveapimodels.flightsearchresult.Segments;
-import model.FlightDetails;
+import model.FilterCheckBox;
 import model.MultiFlightResult;
 import model.SingleFlightResult;
 import model.SingleMultiFlightResult;
+import viewholders.FilterCheckBoxVH;
 
 public class ActivityFlightSearchResult extends AppCompatActivity
+        implements FragmentDrawer.FragmentDrawerListener, FilterCheckBoxVH.FilterCheckBoxListener
 {
 
     private static final String TAG = App.APP_TAG + ActivityFlightSearchResult.class.getSimpleName();
+
+    LiveAPI.SearchFlights searchFlights;
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
 
     final ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-    FlightResultFragment oneWayFlight, returnFlight;
+    FlightResultFragment fragmentOneWayFlight, fragmentReturnFlight;
 
     private HashMap<String, String> postParams;
 
@@ -46,10 +57,18 @@ public class ActivityFlightSearchResult extends AppCompatActivity
 
     private ImageView ivOneWay, ivReturn;
 
-    public List<FlightSearchResultComponent> oneWayFlightSearchResultComponentList=new ArrayList<>();
-    public List<FlightSearchResultComponent> tempOneWayFlightSearchResultComponentList=new ArrayList<>();
-    public List<FlightSearchResultComponent> returnWayFlightSearchResultComponentList=new ArrayList<>();
-    public List<FlightSearchResultComponent> tempReturnWayFlightSearchResultComponentList=new ArrayList<>();
+    private FragmentFilterDrawer fragmentFilterDrawer;
+
+    private Map<String, String> FlightNameSet = new HashMap<>();
+
+    private List<String> filteredFlightCodeList = new ArrayList<>();
+
+    public FilterDrawerAdapter adapter;
+
+    public List<FlightSearchResultComponent> oneWayFlightSearchResultComponentList = new ArrayList<>();
+    public List<FlightSearchResultComponent> tempOneWayFlightSearchResultComponentList = new ArrayList<>();
+    public List<FlightSearchResultComponent> returnWayFlightSearchResultComponentList = new ArrayList<>();
+    public List<FlightSearchResultComponent> tempReturnWayFlightSearchResultComponentList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -89,24 +108,24 @@ public class ActivityFlightSearchResult extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                if (oneWayFlight != null)
+                if (fragmentOneWayFlight != null)
                 {
-                    if (oneWayFlight.adapter != null)
+                    if (fragmentOneWayFlight.adapter != null)
                     {
-                        if (oneWayFlight.adapter.getItemCount() > 0)
+                        if (fragmentOneWayFlight.adapter.getItemCount() > 0)
                         {
                             Log.i(TAG, "SORTING NOW !!!!!!!!");
                             Collections.sort(oneWayFlightSearchResultComponentList, new MultiFlightResult.FairComparator());
-                            oneWayFlight.adapter.animateTo(oneWayFlightSearchResultComponentList);
+                            fragmentOneWayFlight.adapter.animateTo(oneWayFlightSearchResultComponentList);
                         }
                     }
                 }
 
-                if (returnFlight != null)
+                if (fragmentReturnFlight != null)
                 {
-                    if (returnFlight.adapter != null)
+                    if (fragmentReturnFlight.adapter != null)
                     {
-                        if (returnFlight.adapter.getItemCount() > 0)
+                        if (fragmentReturnFlight.adapter.getItemCount() > 0)
                         {
 
                         }
@@ -121,29 +140,17 @@ public class ActivityFlightSearchResult extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                if (oneWayFlight != null)
-                {
-                    if (oneWayFlight.adapter != null)
-                    {
-                        if (oneWayFlight.adapter.getItemCount() > 0)
-                        {
-                            filterFlightByType("6E");
-                        }
-                    }
-                }
-
-                if (returnFlight != null)
-                {
-                    if (returnFlight.adapter != null)
-                    {
-                        if (returnFlight.adapter.getItemCount() > 0)
-                        {
-
-                        }
-                    }
-                }
+                fragmentFilterDrawer.getDrawerLayout().openDrawer(GravityCompat.END);
             }
         });
+
+
+        fragmentFilterDrawer = (FragmentFilterDrawer)
+                getSupportFragmentManager().findFragmentById(R.id.fragment_filter_drawer);
+        adapter = new FilterDrawerAdapter(this, this);
+        fragmentFilterDrawer
+                .setUp((DrawerLayout) findViewById(R.id.activity_flight_search_result), adapter);
+        fragmentFilterDrawer.setDrawerListener(this);
 
 
     }
@@ -158,20 +165,20 @@ public class ActivityFlightSearchResult extends AppCompatActivity
     private void setupViewPager(ViewPager viewPager)
     {
 
-        oneWayFlight = FlightResultFragment.getInstance(this);
-        returnFlight = FlightResultFragment.getInstance(this);
+        fragmentOneWayFlight = FlightResultFragment.getInstance(this);
+        fragmentReturnFlight = FlightResultFragment.getInstance(this);
 
         if (postParams.get("journey_type").equals(ApiConstants.JourneyType.ONE_WAY))
         {
             ivOneWay.setVisibility(View.VISIBLE);
-            viewPagerAdapter.addFragment(oneWayFlight, "ONE-WAY");
+            viewPagerAdapter.addFragment(fragmentOneWayFlight, "ONE-WAY");
             tabLayout.setVisibility(View.GONE);
         }
         if (postParams.get("journey_type").equals(ApiConstants.JourneyType.RETURN))
         {
             ivReturn.setVisibility(View.VISIBLE);
-            viewPagerAdapter.addFragment(oneWayFlight, "ONE-WAY");
-            viewPagerAdapter.addFragment(returnFlight, "RETURN");
+            viewPagerAdapter.addFragment(fragmentOneWayFlight, "ONE-WAY");
+            viewPagerAdapter.addFragment(fragmentReturnFlight, "RETURN");
         }
 
         viewPager.setAdapter(viewPagerAdapter);
@@ -196,6 +203,7 @@ public class ActivityFlightSearchResult extends AppCompatActivity
             {
                 try
                 {
+                    Log.i(TAG, "SEARCHING FOR FLIGHTS TOKEN IS: " + authToken);
                     searchFlightsAsync(authToken, postParams.get("journey_type"));
                 } catch (Exception e)
                 {
@@ -221,13 +229,26 @@ public class ActivityFlightSearchResult extends AppCompatActivity
     private void searchFlightsAsync(final String authToken, final String journeyType)
     {
 
-        new LiveAPI.SearchFlights(authToken, postParams)
+        Log.i(TAG,"SEARCHING FOR FLIGHTS");
+
+        searchFlights = new LiveAPI.SearchFlights(authToken, postParams)
         {
+
             @Override
             protected void onPostExecute(FlightSearchResult flightSearchResult)
             {
                 if (flightSearchResult != null)
                 {
+
+                    if (fragmentOneWayFlight != null)
+                    {
+                        fragmentOneWayFlight.clearAdapter();
+                    }
+                    if (fragmentReturnFlight != null)
+                    {
+                        fragmentReturnFlight.clearAdapter();
+                    }
+
                     Results[][] r = flightSearchResult.getResponse().getResults();
                     android.util.Log.i(TAG, "RESULT[][] length: " + r[0].length);
                     for (int i = 0; i < r[0].length; i++)
@@ -264,13 +285,16 @@ public class ActivityFlightSearchResult extends AppCompatActivity
                                     singleFlightResult.setIsNonStop(segment.getStopPoint());
                                 }
 
+                                FlightNameSet.put(segment.getAirline().getAirlineCode(),
+                                        segment.getAirline().getAirlineName());
                                 multiFlightResult.addSingleMultiFlightResult(singleFlightResult);
 
                             }
 
                             multiFlightResult.setPublishedFair(result.getFare().getPublishedFare());
 
-                            oneWayFlightSearchResultComponentList.add(oneWayFlight.adapter.addMultiFlightSearchResult(multiFlightResult));
+                            oneWayFlightSearchResultComponentList.add(fragmentOneWayFlight.adapter
+                                    .addMultiFlightSearchResult(multiFlightResult));
 
 
                         } else
@@ -293,17 +317,22 @@ public class ActivityFlightSearchResult extends AppCompatActivity
                                 singleFlightResult.setIsNonStop(segment.getStopPoint());
                             }
 
-                            oneWayFlightSearchResultComponentList.add(oneWayFlight.adapter.addFlightSearchResult(singleFlightResult));
+                            FlightNameSet.put(segment.getAirline().getAirlineCode(),
+                                    segment.getAirline().getAirlineName());
+                            oneWayFlightSearchResultComponentList.add(fragmentOneWayFlight.adapter.addFlightSearchResult(singleFlightResult));
 
                         }
+
                     }
 
-                    oneWayFlight.hideProgressBar();
+
+                    fragmentOneWayFlight.hideProgressBar();
+                    fragmentOneWayFlight.loading = false;
 
                     //will be true for journey type RETURN
                     if (journeyType.equals(ApiConstants.JourneyType.RETURN))
                     {
-                        if (returnFlight != null)
+                        if (fragmentReturnFlight != null)
                         {
                             for (int i = 0; i < r[1].length; i++)
                             {
@@ -325,36 +354,54 @@ public class ActivityFlightSearchResult extends AppCompatActivity
                                     singleFlightResult.setIsNonStop(segment.getStopPoint());
                                 }
 
-                                returnWayFlightSearchResultComponentList.add(returnFlight.adapter.addFlightSearchResult(singleFlightResult));
+                                returnWayFlightSearchResultComponentList.add(fragmentReturnFlight.adapter.addFlightSearchResult(singleFlightResult));
                                 //
                             }
 
-                            returnFlight.hideProgressBar();
+                            fragmentReturnFlight.hideProgressBar();
+                            fragmentReturnFlight.loading = false;
                         }
                     }
+
+
+                    final Iterator<Map.Entry<String, String>> flightNameIterator = FlightNameSet.entrySet().iterator();
+                    while (flightNameIterator.hasNext())
+                    {
+                        final Map.Entry<String, String> entry = flightNameIterator.next();
+                        adapter
+                                .addFilterCheckBox(new FilterCheckBox(entry.getValue(), entry.getKey()));
+                        filteredFlightCodeList.add(entry.getKey());
+                    }
+                    adapter.notifyDataSetChanged();
                 }
             }
-        }.execute();
+        };
+
+        searchFlights.execute();
 
     }
 
-    public void filterFlightByType(String flightName)
+    public void filterFlightByType()
     {
-        if (oneWayFlight != null)
+        if (fragmentOneWayFlight != null)
         {
-            if (oneWayFlight.adapter.getItemCount() > 0)
+            if (fragmentOneWayFlight.adapter.getItemCount() > 0)
             {
                 try
                 {
+                    tempOneWayFlightSearchResultComponentList.clear();
                     for (FlightSearchResultComponent component : oneWayFlightSearchResultComponentList)
                     {
-                        if (component.getFlightType(flightName))
+                        for (String s : filteredFlightCodeList)
                         {
-                            tempOneWayFlightSearchResultComponentList.add(component);
+                            if (component.getFlightType(s))
+                            {
+                                tempOneWayFlightSearchResultComponentList.add(component);
+                            }
                         }
                     }
 
-                    oneWayFlight.adapter.animateTo(tempOneWayFlightSearchResultComponentList);
+                    fragmentOneWayFlight.adapter.animateTo(tempOneWayFlightSearchResultComponentList);
 
                 } catch (Exception e)
                 {
@@ -364,4 +411,35 @@ public class ActivityFlightSearchResult extends AppCompatActivity
         }
     }
 
+    @Override
+    public void onBackPressed()
+    {
+        if (fragmentFilterDrawer.getDrawerLayout().isDrawerOpen(GravityCompat.END))
+        {
+            fragmentFilterDrawer.getDrawerLayout().closeDrawer(GravityCompat.END);
+        } else
+        {
+            searchFlights.cancel(true);
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public void onDrawerItemSelected(View view, int position)
+    {
+
+    }
+
+    @Override
+    public void onCheckChanged(FilterCheckBox model, boolean b)
+    {
+        if (model.isChecked())
+        {
+            filteredFlightCodeList.add(model.getValue());
+        } else
+        {
+            filteredFlightCodeList.remove(model.getValue());
+        }
+        filterFlightByType();
+    }
 }

@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                 android:id="@+id/cl_fragmentAirTickets"
+                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                 android:layout_width="match_parent"
+                                                 android:layout_height="match_parent"
+                                                 android:background="@drawable/airticket">
+
+    <ImageView
+        android:id="@+id/iv_swipeTabBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/airticket"
+        android:scaleType="centerCrop"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -15,207 +24,324 @@
 
 
             <LinearLayout
+                android:id="@+id/ll_formAirTicket"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="10dp"
+                android:alpha=".9"
                 android:background="#FFFFFF"
-                android:elevation="8dp"
+                android:elevation="5dp"
                 android:orientation="vertical"
                 android:padding="5dp">
 
-                <EditText
-                    android:id="@+id/et_mobileNo"
+
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:textSize="16sp"
-                    android:hint="Mobile No." />
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <EditText
+                        android:visibility="gone"
+                        android:id="@+id/et_mobileNo"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Type :"
-                        android:layout_gravity="center"
+                        android:layout_marginTop="5dp"
+                        android:hint="Contact"
+                        android:inputType="number"
                         android:textSize="16sp" />
 
+                </android.support.design.widget.TextInputLayout>
+
+
+                <TextView
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:padding="5dp"
+                    android:text="Type"
+                    android:textSize="16sp" />
+
+
+                <org.honorato.multistatetogglebutton.MultiStateToggleButton
+                    android:visibility="gone"
+                    android:id="@+id/mstb_locationType"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/ripple"
+                    app:mstbPrimaryColor="@color/colorAccent"
+                    app:mstbSecondaryColor="@color/grey"
+                    app:values="@array/location_type" />
+
+
+                <!--<LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+
                     <RadioGroup
-                        android:layout_width="fill_parent"
+                        android:id="@+id/rgType"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
                         <RadioButton
                             android:id="@+id/rb_india"
-                            android:checked="true"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
+                            android:layout_weight="1"
+                            android:checked="true"
                             android:text="India"
                             android:textSize="16sp" />
 
                         <RadioButton
-                            android:id="@+id/rb_worldWild"
-                            android:layout_width="wrap_content"
+                            android:id="@+id/rb_worldwide"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="10dp"
-                            android:text="Worldwild"
+                            android:layout_weight="1"
+                            android:text="Worldwide"
                             android:textSize="16sp" />
                     </RadioGroup>
 
-                </LinearLayout>
+                </LinearLayout>-->
 
-                <EditText
-                    android:id="@+id/et_from"
-                    android:layout_width="match_parent"
+
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:hint="From"
+                    android:padding="5dp"
+                    android:text="Trip"
                     android:textSize="16sp" />
 
-                <EditText
-                    android:id="@+id/et_to"
+                <org.honorato.multistatetogglebutton.MultiStateToggleButton
+                    android:id="@+id/mstb_tripType"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    app:mstbPrimaryColor="@color/colorAccent"
+                    app:mstbSecondaryColor="@color/grey"
+                    app:values="@array/trip_type" />
+
+                <!--<LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:hint="To"
-                    android:textSize="16sp" />
+                    android:orientation="horizontal"
+                    android:weightSum="2">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="A"
-                        android:textSize="16sp" />
-
-                    <Spinner
-                        android:id="@+id/sp_adult"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="C"
-                        android:textSize="16sp" />
-
-                    <Spinner
-                        android:id="@+id/sp_child"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="I"
-                        android:textSize="16sp" />
-
-                    <Spinner
-                        android:id="@+id/sp_infant"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp" />
-
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Trip :"
-                        android:layout_gravity="center"
-                        android:textSize="16sp" />
 
                     <RadioGroup
-                        android:layout_width="fill_parent"
+                        android:id="@+id/rgTrip"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
                         <RadioButton
-                            android:checked="true"
-                            android:id="@+id/rb_return"
-                            android:layout_width="wrap_content"
+                            android:id="@+id/rb_oneWay"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:text="Return"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:text="One Way"
                             android:textSize="16sp" />
 
                         <RadioButton
-                            android:id="@+id/rb_oneWay"
-                            android:layout_width="wrap_content"
+                            android:id="@+id/rb_return"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="10dp"
-                            android:text="One Way"
+                            android:layout_weight="1"
+                            android:text="Return"
                             android:textSize="16sp" />
                     </RadioGroup>
 
+                </LinearLayout>-->
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true">
+
+
+                    <EditText
+                        android:id="@+id/et_departDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Depart Date"
+                        android:visibility="visible" />
+
+                </android.support.design.widget.TextInputLayout>
+
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true">
+
+
+                    <EditText
+                        android:id="@+id/et_returnDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Return Date"
+                        android:visibility="gone" />
+
+                </android.support.design.widget.TextInputLayout>
+
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true">
+
+
+                    <AutoCompleteTextView
+                        android:id="@+id/et_from"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:hint="From"
+                        android:inputType="textNoSuggestions"
+                        android:textSize="16sp" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:inputType="text">
+
+
+                    <AutoCompleteTextView
+                        android:id="@+id/et_to"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:hint="To"
+                        android:inputType="textNoSuggestions"
+                        android:textSize="16sp" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    android:weightSum="3">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/adult" />
+
+                    <Spinner
+                        android:id="@+id/sp_adult"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/child" />
+
+                    <Spinner
+                        android:id="@+id/sp_child"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1" />
+
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/infant" />
+
+                    <Spinner
+                        android:id="@+id/sp_infant"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1" />
+
                 </LinearLayout>
 
-                <EditText
+                <!--<EditText
                     android:id="@+id/et_departureDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:hint="Departure Date"
-                    android:textSize="16sp" />
+                    android:textSize="16sp" />-->
 
-                <LinearLayout
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
+                    android:layout_marginTop="5dp"
+                    android:padding="5dp"
+                    android:text="Class"
+                    android:textSize="16sp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Class :"
-                        android:layout_gravity="center"
-                        android:textSize="16sp" />
+                <org.honorato.multistatetogglebutton.MultiStateToggleButton
+                    android:id="@+id/mstb_classType"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    app:mstbPrimaryColor="@color/colorAccent"
+                    app:mstbSecondaryColor="@color/grey"
+                    app:values="@array/class_type" />
+
+                <!--<LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
 
                     <RadioGroup
-                        android:layout_width="fill_parent"
+                        android:id="@+id/rgClass"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
                         <RadioButton
                             android:id="@+id/rb_economy"
-                            android:checked="true"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
+                            android:layout_weight="1"
+                            android:checked="true"
                             android:text="Economy"
                             android:textSize="16sp" />
 
                         <RadioButton
                             android:id="@+id/rb_business"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="10dp"
+                            android:layout_weight="1"
                             android:text="Business"
                             android:textSize="16sp" />
                     </RadioGroup>
 
-                </LinearLayout>
+                </LinearLayout>-->
 
             </LinearLayout>
 
@@ -223,22 +349,17 @@
 
     </ScrollView>
 
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/done"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:borderWidth="0dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
+        android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
-        app:rippleColor="@android:color/transparent"
-        android:stateListAnimator="@anim/anim"
-        android:src="@drawable/done"
+        android:src="@drawable/ic_search_white_24dp"
         app:elevation="6dp"
-        app:backgroundTint="#2196f3"
         app:fabSize="normal"
         app:pressedTranslationZ="12dp" />
 
 
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

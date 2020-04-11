@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cl_fragmentHolidays"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:ripple="http://schemas.android.com/tools"
+    android:background="@drawable/holiday"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+<!--    <ImageView
+        android:id="@+id/iv_swipeTabBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/holiday"
+        android:scaleType="centerCrop"/>-->
 
     <ScrollView
         android:layout_width="match_parent"
@@ -15,160 +25,215 @@
 
 
             <LinearLayout
+                android:alpha=".9"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="10dp"
                 android:background="#FFFFFF"
-                android:elevation="8dp"
+                android:id="@+id/ll_formHoliday"
                 android:orientation="vertical"
+                android:elevation="5dp"
                 android:padding="5dp">
+
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true">
 
                 <EditText
                     android:id="@+id/et_mobileNo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:textSize="16sp"
-                    android:hint="Mobile No." />
+                    android:hint="Contact"
+                    android:inputType="number"
+                    android:textSize="16sp" />
+
+                </android.support.design.widget.TextInputLayout>
+
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true">
 
                 <EditText
                     android:id="@+id/et_bookingDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:textSize="16sp"
-                    android:hint="Booking Date" />
+                    android:hint="Booking Date"
+                    android:textSize="16sp" />
 
-                <LinearLayout
+                </android.support.design.widget.TextInputLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Type"
+                    android:padding="5dp"
+                    android:layout_marginTop="5dp"
+                    android:textSize="16sp" />
+
+                <org.honorato.multistatetogglebutton.MultiStateToggleButton
+                    android:id="@+id/mstb_locationType"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    app:values="@array/location_type"
+                    app:mstbPrimaryColor="@color/colorAccent"
+                    app:mstbSecondaryColor="@color/grey"/>
+
+                <!--<LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
+                    android:weightSum="2"
                     android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_gravity="center"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Type :"
-                        android:textSize="16sp" />
+
 
                     <RadioGroup
-                        android:layout_width="fill_parent"
+                        android:id="@+id/rg_type"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
                         <RadioButton
                             android:id="@+id/rb_india"
-                            android:checked="true"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
+
+                            android:checked="true"
                             android:text="India"
                             android:textSize="16sp" />
 
                         <RadioButton
-                            android:id="@+id/rb_worldWild"
-                            android:layout_width="wrap_content"
+                            android:id="@+id/rb_worldWide"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="10dp"
-                            android:text="Worldwild"
+
+                            android:text="Worldwide"
                             android:textSize="16sp" />
                     </RadioGroup>
 
-                </LinearLayout>
+                </LinearLayout>-->
 
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="10dp"
+                    android:weightSum="3"
                     android:orientation="horizontal">
 
-                    <TextView
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="A"
-                        android:textSize="16sp" />
+                        android:src="@drawable/adult" />
 
                     <Spinner
                         android:id="@+id/sp_adult"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp" />
+                        android:layout_marginLeft="5dp"/>
 
-                    <TextView
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="C"
-                        android:textSize="16sp" />
+                        android:src="@drawable/child" />
 
                     <Spinner
                         android:id="@+id/sp_child"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp" />
 
-                    <TextView
+
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="I"
-                        android:textSize="16sp" />
+                        android:src="@drawable/infant" />
 
                     <Spinner
                         android:id="@+id/sp_infant"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp" />
 
                 </LinearLayout>
 
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true">
 
-                <EditText
+
+                <AutoCompleteTextView
                     android:id="@+id/et_destination"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
+                    android:inputType="textNoSuggestions"
                     android:hint="Destination"
+                    android:textSize="16sp" />
+
+                </android.support.design.widget.TextInputLayout>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="No of Nights"
+                    android:padding="5dp"
                     android:textSize="16sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
                     android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="No of Nights :"
-                        android:textSize="16sp" />
+
 
                     <Spinner
                         android:id="@+id/sp_noOfNights"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"></Spinner>
+                        android:layout_height="wrap_content"></Spinner>
 
                 </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Package Type"
+                    android:padding="5dp"
+                    android:layout_marginTop="5dp"
+                    android:textSize="16sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
                     android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Package Type :"
-                        android:layout_gravity="center"
-                        android:textSize="16sp" />
 
                     <RatingBar
                         android:id="@+id/rb_packageType"
                         android:layout_width="wrap_content"
-
                         android:layout_height="wrap_content" />
 
                 </LinearLayout>
@@ -179,21 +244,37 @@
 
     </ScrollView>
 
-    <android.support.design.widget.FloatingActionButton
+    <!--<android.support.design.widget.FloatingActionButton
         android:id="@+id/done"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:borderWidth="0dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_margin="16dp"
-        app:rippleColor="@android:color/transparent"
+        android:src="@drawable/done"
         android:stateListAnimator="@anim/anim"
+        app:backgroundTint="#2196f3"
+        app:borderWidth="0dp"
+        app:elevation="6dp"
+        app:fabSize="normal"
+        app:pressedTranslationZ="12dp"
+        app:rippleColor="@android:color/transparent" />-->
+
+
+
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="16dp"
         android:src="@drawable/done"
         app:elevation="6dp"
-        app:backgroundTint="#2196f3"
         app:fabSize="normal"
         app:pressedTranslationZ="12dp" />
 
-</RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>

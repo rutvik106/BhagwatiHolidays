@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <!--<color name="colorPrimary">#3F51B5</color>-->
+    <color name="colorPrimary">#FFFFFF</color>
+    <!--<color name="colorPrimaryDark">#303F9F</color>-->
+    <color name="colorPrimaryDark">#43a047</color>
+    <color name="colorPrimaryExtraDark">#fff</color>
     <color name="textColorPrimary">#FFFFFF</color>
     <color name="windowBackground">#FFFFFF</color>
     <color name="navigationBarColor">#000000</color>
-    <color name="colorAccent">#2196f3</color>
+    <color name="colorAccent">#43a047</color>
+
+    <!--Colors for btn BOOK-NOW-->
+    <color name="btnNormal">#F44336</color>
+    <color name="btnPressed">#D73B2F</color>
+
+    <color name="grey">#eeeeee</color>
+
+    <color name="color_tab">#FFFFFF</color>
 
     <!--<color name="colorPrimary">#303F9F</color>
     <color name="colorPrimaryDark">#3F51B5</color>

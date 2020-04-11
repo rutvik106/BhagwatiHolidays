@@ -1,6 +1,83 @@
 <resources>
-    <string name="app_name">BhagwatiHolidays</string>
+    <string name="app_name">Trip Enjoy</string>
 
     <string name="title">Bhagwati Holidays</string>
+
+
+    <!--<string name="appbar_scrolling_view_behavior" translatable="false">android.support.design.widget.AppBarLayout$ScrollingViewBehavior</string>
+-->
+
+    <string name="facebook_app_id">658868440928736</string>
+
+    <!--Drawer OPEN-CLOSE-->
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
+
+    <!--Navigation drawer item label-->
+    <string name="nav_item_booking">Bookings</string>
+    <string name="nav_item_offers">Offers &amp; Promotions</string>
+    <string name="nav_item_support">Support</string>
+    <string name="nav_item_rateus">Rate Us</string>
+    <string name="nav_item_share">Share</string>
+    <string name="nav_item_sendFeedback">Send Feedback</string>
+    <string name="nav_item_disableNotification">Disable Notification</string>
+    <string name="nav_item_locateus">Locate Us</string>
+
+    <!--Navigation drawer array-->
+    <string-array name="nav_drawer_labels">
+        <item>@string/nav_item_booking</item>
+        <item>@string/nav_item_offers</item>
+        <item>@string/nav_item_support</item>
+        <item>@string/nav_item_rateus</item>
+        <item>@string/nav_item_share</item>
+        <item>@string/nav_item_sendFeedback</item>
+        <item>@string/nav_item_disableNotification</item>
+        <item>@string/nav_item_locateus</item>
+    </string-array>
+
+
+    <string name="visa_business">Business</string>
+    <string name="visa_visitors">Visitors</string>
+
+    <string-array name="visa_type">
+        <item>@string/visa_business</item>
+        <item>@string/visa_visitors</item>
+    </string-array>
+
+    <string name="location_india">India</string>
+    <string name="location_worldwide">Worldwide</string>
+
+    <string-array name="location_type">
+        <item>@string/location_india</item>
+        <item>@string/location_worldwide</item>
+    </string-array>
+
+    <string name="trip_oneWay">One Way</string>
+    <string name="trip_return">Return</string>
+
+    <string-array name="trip_type">
+        <item>@string/trip_oneWay</item>
+        <item>@string/trip_return</item>
+    </string-array>
+
+    <string name="class_economy">Economy</string>
+    <string name="class_business">Business</string>
+
+    <string-array name="class_type">
+        <item>@string/class_economy</item>
+        <item>@string/class_business</item>
+    </string-array>
+
+    <string name="title_one">One</string>
+    <string name="title_two">Two</string>
+    <string name="title_three">Three</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_payment">PaymentActivity</string>
+
+    <string name="flight">FLIGHT</string>
+    <string name="holiday">HOLIDAY</string>
+    <string name="hotel">HOTEL</string>
+
+    <string name="rs">\u20B9</string>
 
 </resources>
